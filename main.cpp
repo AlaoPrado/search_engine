@@ -1,41 +1,80 @@
 #include <CkSpider.h>
+#include <exception> 
 #include <iostream>
+#include <string>
+#include <chrono>
+#include <iomanip>
+#include "Utils.h"
 
-int main(){
+void inline crawlUrl(const std::string urlToCrawl, const int numAdditionalLinks){
+  constexpr int MIN_NUM_LINKS = 10;
+  std::chrono::steady_clock::time_point start, end;
+  std::chrono::duration<double> duration;
+  double totalTime = 0;
   CkSpider spider;
 
-  //  The spider object crawls a single web site at a time.  As you'll see
-  //  in later examples, you can collect outbound links and use them to
-  //  crawl the web.  For now, we'll simply spider 10 pages of chilkatsoft.com
-  spider.Initialize("www.chilkatsoft.com");
+  spider.Initialize(urlToCrawl.c_str());
 
-  //  Add the 1st URL:
-  spider.AddUnspidered("http://www.chilkatsoft.com/");
+  search_engine::utils::assertTrue(spider.get_NumUnspidered() > 0, 
+    "Error: the first parameter must be a valid URL.");
+  search_engine::utils::assertTrue(numAdditionalLinks > 0, 
+    "Error: the second parameter must be a positive number.");
 
-  //  Begin crawling the site by calling CrawlNext repeatedly.
-  int i;
-  for (i = 0; i <= 9; i++){
-    bool success;
-    success = spider.CrawlNext();
-    if (success == true){
-      //  Show the URL of the page just spidered.
-      std::cout << spider.lastUrl() << "\r\n";
-      //  The HTML is available in the LastHtml property
-    } else{
-      //  Did we get an error or are there no more URLs to crawl?
-      if (spider.get_NumUnspidered() == 0)
-      {
-        std::cout << "No more URLs to spider"
-                  << "\r\n";
-      }
-      else
-      {
-        std::cout << spider.lastErrorText() << "\r\n";
-      }
-    }
+  bool crawlSuccess;
 
-    //  Sleep 1 second before spidering the next URL.
+  start = std::chrono::steady_clock::now();
+  crawlSuccess = spider.CrawlNext();
+  end = std::chrono::steady_clock::now();
+  duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+  totalTime += duration.count();
+
+  search_engine::utils::assertTrue(crawlSuccess, spider.lastErrorText());
+  search_engine::utils::assertTrue(spider.get_NumUnspidered() >= MIN_NUM_LINKS, 
+    "Error: the url must contain " + std::to_string(MIN_NUM_LINKS) + 
+    " or more links.");
+  
+  std::cout << spider.lastUrl() << std::endl;
+  std::cout << spider.lastHtmlTitle() << std::endl;
+
+  for(int i = 0; i < numAdditionalLinks; i++){
+    start = std::chrono::steady_clock::now();
+    crawlSuccess = spider.CrawlNext();
+    end = std::chrono::steady_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+    totalTime += duration.count();
+
+    search_engine::utils::assertTrue(crawlSuccess, spider.lastErrorText());
+
+    std::cout << spider.lastUrl() << std::endl;
+    std::cout << spider.lastHtmlTitle() << std::endl;
     spider.SleepMs(1000);
   }
+  std::cout << std::fixed << std::setprecision(6);
+  std::cout << "Average time (seconds): " << totalTime / (numAdditionalLinks + 1) << std::endl;
+}
+
+int main(const int argc, const char **argv){
+  try{
+    search_engine::utils::assertTrue(argc > 2,
+      "Error: an url and a number must be passed by parameter.");
+
+    const std::string urlToCrawl = argv[1];
+    int numAdditionalLinks = 0;
+    
+    try{
+      numAdditionalLinks = std::stoi(argv[2]);
+    } 
+    catch(std::exception &e){
+      search_engine::utils::assertTrue(false, 
+        "Error: the second parameter must be a number.");
+    }
+
+    crawlUrl(urlToCrawl, numAdditionalLinks);
+  } 
+  catch(std::exception &e){
+    std::cout << e.what() << std::endl;
+    return 1;
+  }
+
   return 0;
 }
