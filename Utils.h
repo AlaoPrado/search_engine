@@ -1,6 +1,5 @@
 #include <stdexcept>
 #include <string>
-#include <iostream>
 
 namespace search_engine { 
 namespace utils {
