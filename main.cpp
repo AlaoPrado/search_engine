@@ -8,6 +8,7 @@
 
 void inline crawlUrl(const std::string urlToCrawl, const int numAdditionalLinks){
   constexpr int MIN_NUM_LINKS = 10;
+  constexpr int SLEEP_TIME_MS = 1000;
   std::chrono::steady_clock::time_point start, end;
   std::chrono::duration<double> duration;
   double totalTime = 0;
@@ -19,6 +20,8 @@ void inline crawlUrl(const std::string urlToCrawl, const int numAdditionalLinks)
     "Error: the first parameter must be a valid URL.");
   search_engine::utils::assertTrue(numAdditionalLinks > 0, 
     "Error: the second parameter must be a positive number.");
+
+  spider.put_Utf8(true);
 
   bool crawlSuccess;
 
@@ -47,7 +50,7 @@ void inline crawlUrl(const std::string urlToCrawl, const int numAdditionalLinks)
 
     std::cout << spider.lastUrl() << std::endl;
     std::cout << spider.lastHtmlTitle() << std::endl;
-    spider.SleepMs(1000);
+    spider.SleepMs(SLEEP_TIME_MS);
   }
   std::cout << std::fixed << std::setprecision(6);
   std::cout << "Average time (seconds): " << totalTime / (numAdditionalLinks + 1) << std::endl;
