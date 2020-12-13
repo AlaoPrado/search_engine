@@ -4,9 +4,10 @@
 #include <string>
 #include <chrono>
 #include <iomanip>
-#include "Utils.h"
+#include "Utils.hpp"
 
-void inline crawlUrl(const std::string urlToCrawl, const int numAdditionalLinks){
+void inline crawlUrl(const std::string urlToCrawl, 
+                     const int numAdditionalLinks){
   constexpr int MIN_NUM_LINKS = 10;
   constexpr int SLEEP_TIME_MS = 1000;
   std::chrono::steady_clock::time_point start, end;
@@ -38,6 +39,7 @@ void inline crawlUrl(const std::string urlToCrawl, const int numAdditionalLinks)
   
   std::cout << spider.lastUrl() << std::endl;
   std::cout << spider.lastHtmlTitle() << std::endl;
+  spider.SleepMs(SLEEP_TIME_MS);
 
   for(int i = 0; i < numAdditionalLinks; i++){
     start = std::chrono::steady_clock::now();

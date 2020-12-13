@@ -10,5 +10,4 @@ void inline assertTrue(const bool condition, const std::string message){
   }
 }
 
-}
-}
+}}
