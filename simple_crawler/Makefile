@@ -1,11 +1,12 @@
-CXX = g++ -std=c++11
+include ../Makefile.inc
+
 CXXFILES = *.cpp
 OBJFILES = *.o
 PROGRAM = a.out
 CHILKATPATH = /home/alan/Downloads/chilkat/chilkat-9.5.0-x86_64-linux-gcc
 CHILKATINC = $(CHILKATPATH)/include
 CHILKATLIB =  $(CHILKATPATH)/lib
-BUILDFLAGS = -O3 -Wall -Wextra -I$(CHILKATINC)
+BUILDFLAGS = $(COMMONBUILDFLAGS) -I$(CHILKATINC)
 LINKFLAGS = -Wl,-rpath=$(CHILKATLIB) -L$(CHILKATLIB) -lchilkat-9.5.0 -lresolv -lpthread
 
 all: build link
