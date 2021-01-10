@@ -1,4 +1,5 @@
 #include "../utils/Assert.hpp"
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <string>
