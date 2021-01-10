@@ -25,7 +25,7 @@ PriorityUrlScheduler::~PriorityUrlScheduler() { delete this->priorityQueue; }
 std::size_t PriorityUrlScheduler::countUrlSize(std::string url) {
   const std::vector<std::string> validProtocols = {"http://", "https://"};
 
-  std::size_t position;
+  std::size_t position = std::string::npos;
   std::string protocol;
   for (auto currentProtocol : validProtocols) {
     position = url.find(currentProtocol);

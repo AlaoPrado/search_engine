@@ -7,7 +7,7 @@
 #include <iostream>
 namespace search_engine {
 
-LongTermCrawler::LongTermCrawler(bool verbose) : Crawl(verbose) {}
+LongTermCrawler::LongTermCrawler(bool verbose) : Crawler(verbose) {}
 
 void LongTermCrawler::pushUrlsIntoScheduler(
     CkSpider &spider, std::map<std::string, bool> &viewedUrls,
@@ -21,7 +21,8 @@ void LongTermCrawler::pushUrlsIntoScheduler(
 
     std::string url = utils::canonicalizeUrl(spider.getUnspideredUrl(i));
     std::string urlWithouProtocol = utils::removeUrlProtocol(urlWithouProtocol);
-    if (it.find(urlWithouProtocol) != viewedUrls.end()) {
+    it = viewedUrls.find(urlWithouProtocol);
+    if (it != viewedUrls.end()) {
       try {
         this->priorityUrlScheduler.push(url);
         viewedUrls[urlWithouProtocol] = true;
@@ -46,7 +47,8 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
   for (std::size_t i = 0; i < numPagesToCrawl; i++) {
     url = this->priorityUrlScheduler.pop();
     CkSpider spider;
-    Crawl::crawlUrl(spider, url, totalTime, lastCrawlTime, totalTime == 0);
+    Crawl::crawlUrl(spider, url, this->mustMatchPatterns, this->avoidPatterns,
+                    totalTime, lastCrawlTime, totalTime == 0);
     std::cout << spider.lastUrl() << std::endl;
     std::cout << spider.lastHtmlTitle() << std::endl;
     this->pushUrlsIntoScheduler(spider, *viewedUrls, numPagesToCrawl);

@@ -22,20 +22,20 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
                      std::vector<std::string> &mustMatchPatterns,
                      std::vector<std::string> &avoidPatterns, double &totalTime,
                      Crawl::timePoint &lastCrawlEndTime,
-                     bool useLastCrawlEndTime = false) {
+                     bool useLastCrawlEndTime) {
 
   bool crawlSuccess;
   Crawl::timePoint currentTime;
   Crawl::millis duration;
 
-  spider.Initialize(urlToCrawl.c_str());
+  spider.Initialize(url.c_str());
 
   for (auto mustMatchPattern : mustMatchPatterns) {
     spider.AddMustMatchPattern(mustMatchPattern.c_str());
   }
 
   for (auto avoidPattern : avoidPatterns) {
-    spider.AddAvoidPattern(avoidPattern..c_str());
+    spider.AddAvoidPattern(avoidPattern.c_str());
     spider.AddAvoidOutboundLinkPattern(avoidPattern.c_str());
   }
 

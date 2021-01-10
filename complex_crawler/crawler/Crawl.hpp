@@ -3,6 +3,7 @@
 #include <CkSpider.h>
 #include <chrono>
 #include <string>
+#include <vector>
 
 namespace search_engine {
 

@@ -6,13 +6,22 @@ PROGRAM = a.out
 CHILKATPATH = /home/alan/Downloads/chilkat/chilkat-9.5.0-x86_64-linux-gcc
 CHILKATINC = $(CHILKATPATH)/include
 CHILKATLIB =  $(CHILKATPATH)/lib
-BUILDFLAGS = $(COMMONBUILDFLAGS) -I$(CHILKATINC)
+CHILKBUILDFLAGS = $(COMMONBUILDFLAGS) -I$(CHILKATINC)
 LINKFLAGS = -Wl,-rpath=$(CHILKATLIB) -L$(CHILKATLIB) -lchilkat-9.5.0 -lresolv -lpthread
 
 all: build link
 
-build:
-	$(CXX) -c $(CXXFILES) $(BUILDFLAGS)
+build: build_crawler build_utils
+	$(CXX) -c $(CXXFILES) $(COMMONBUILDFLAGS)
+
+build_crawler: build_crawler_scheduler
+	$(CXX) -c crawler/$(CXXFILES) $(CHILKBUILDFLAGS)
+
+build_crawler_scheduler:
+	$(CXX) -c crawler/scheduler/$(CXXFILES) $(COMMONBUILDFLAGS)
+
+build_utils:
+	$(CXX) -c ../utils/$(CXXFILES) $(COMMONBUILDFLAGS)
 
 link:
 	$(CXX) -o $(PROGRAM) $(OBJFILES) $(LINKFLAGS)
