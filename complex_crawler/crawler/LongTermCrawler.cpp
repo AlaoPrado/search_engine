@@ -20,7 +20,7 @@ void LongTermCrawler::pushUrlsIntoScheduler(
     }
 
     std::string url = utils::canonicalizeUrl(spider.getUnspideredUrl(i));
-    std::string urlWithouProtocol = utils::removeUrlProtocol(urlWithouProtocol);
+    std::string urlWithouProtocol = utils::removeUrlProtocol(url);
     it = viewedUrls.find(urlWithouProtocol);
     if (it != viewedUrls.end()) {
       try {
