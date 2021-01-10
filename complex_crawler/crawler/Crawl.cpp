@@ -16,7 +16,7 @@ void Crawl::crawlSleepUntilMs(CkSpider &spider,
   }
 }
 
-void Crawl::crawl(CkSpider &spider, std::string &url,
+void Crawl::crawlUrl(CkSpider &spider, std::string &url,
                   Crawl::timePoint &lastCrawlEndTime, double &totalTime) {
 
   bool crawlSuccess;
