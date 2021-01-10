@@ -1,3 +1,4 @@
+#include "crawler/LongTermCrawler.hpp"
 #include "../utils/Assert.hpp"
 #include <exception>
 #include <fstream>
@@ -21,6 +22,9 @@ int main(const int argc, const char **argv) {
     while (std::getline(seedFile, line)) {
       seedUrls.push_back(line);
     }
+
+    search_engine::LongTermCrawler crawler;
+    crawler.crawl(seedUrls, 1);
 
   } catch (std::exception &e) {
     std::cout << e.what() << std::endl;
