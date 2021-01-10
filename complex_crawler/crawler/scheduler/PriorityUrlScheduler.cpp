@@ -1,5 +1,6 @@
 #include "PriorityUrlScheduler.hpp"
 #include "../../../utils/Assert.hpp"
+#include <exception>
 
 namespace search_engine {
 
