@@ -2,6 +2,7 @@
 
 #include <CkSpider.h>
 #include <chrono>
+#include <string>
 
 namespace search_engine {
 
@@ -14,8 +15,8 @@ private:
 
 public:
   static void crawlSleepUntilMs(CkSpider &spider,
-                               Crawl::timePoint &lastCrawlEndTime,
-                               Crawl::timePoint &currentTime);
+                                Crawl::timePoint &lastCrawlEndTime,
+                                Crawl::timePoint &currentTime);
   static void crawlUrl(CkSpider &spider, std::string &url,
                        Crawl::timePoint &lastCrawlEndTime, double &totalTime);
 };
