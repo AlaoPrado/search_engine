@@ -48,12 +48,8 @@ std::size_t PriorityUrlScheduler::countUrlSize(std::string url) {
 }
 
 void PriorityUrlScheduler::push(std::string url) {
-  try {
-    std::size_t urlSize = this->countUrlSize(url);
-    this->priorityQueue->push(std::make_pair(urlSize, url));
-  } catch (std::exception &e) {
-    // ignore exception
-  }
+  std::size_t urlSize = this->countUrlSize(url);
+  this->priorityQueue->push(std::make_pair(urlSize, url));
 }
 
 std::string PriorityUrlScheduler::pop() {
