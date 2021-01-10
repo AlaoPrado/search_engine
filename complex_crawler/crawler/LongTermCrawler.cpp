@@ -49,7 +49,7 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
     Crawl::crawlUrl(spider, url, totalTime, lastCrawlTime, totalTime == 0);
     std::cout << spider.lastUrl() << std::endl;
     std::cout << spider.lastHtmlTitle() << std::endl;
-    this->pushUrlsIntoScheduler(spider, *viewedUrls, i);
+    this->pushUrlsIntoScheduler(spider, *viewedUrls, numPagesToCrawl);
   }
 }
 
