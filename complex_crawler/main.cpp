@@ -1,5 +1,5 @@
-#include "crawler/LongTermCrawler.hpp"
 #include "../utils/Assert.hpp"
+#include "crawler/LongTermCrawler.hpp"
 #include <exception>
 #include <fstream>
 #include <iostream>
@@ -12,6 +12,9 @@ int main(const int argc, const char **argv) {
         argc > 1, "Error: a file name must be passed by parameter");
 
     const std::string fileName = argv[1];
+    const std::size_t numPagesToCrawl =
+        (std::size_t)((argc > 2) ? std::stoi(argv[2]) : 10);
+
     std::ifstream seedFile(fileName);
 
     search_engine::utils::assertTrue(seedFile.is_open(),
@@ -24,7 +27,7 @@ int main(const int argc, const char **argv) {
     }
 
     search_engine::LongTermCrawler crawler;
-    crawler.crawl(seedUrls, 1);
+    crawler.crawl(seedUrls, numPagesToCrawl);
 
   } catch (std::exception &e) {
     std::cout << e.what() << std::endl;

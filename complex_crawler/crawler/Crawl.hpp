@@ -16,8 +16,7 @@ public:
   typedef std::chrono::steady_clock::time_point timePoint;
 
   static void crawlSleepUntilMs(CkSpider &spider,
-                                Crawl::timePoint &lastCrawlEndTime,
-                                Crawl::timePoint &currentTime);
+                                Crawl::timePoint &lastCrawlEndTime);
   static void crawlUrl(CkSpider &spider, std::string &url,
                        std::vector<std::string> &mustMatchPatterns,
                        std::vector<std::string> &avoidPatterns,

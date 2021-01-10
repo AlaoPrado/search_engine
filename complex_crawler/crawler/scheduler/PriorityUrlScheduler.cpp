@@ -2,7 +2,6 @@
 #include "../../../utils/Assert.hpp"
 #include <string>
 #include <vector>
-
 namespace search_engine {
 
 UrlCompare::UrlCompare() {}
@@ -10,7 +9,7 @@ UrlCompare::UrlCompare() {}
 bool UrlCompare::operator()(
     const std::pair<std::size_t, std::string> &x,
     const std::pair<std::size_t, std::string> &y) const {
-  return x.first < y.first;
+  return x.first > y.first;
 }
 
 PriorityUrlScheduler::PriorityUrlScheduler() {
@@ -34,7 +33,8 @@ std::size_t PriorityUrlScheduler::countUrlSize(std::string url) {
       break;
     }
   }
-  utils::assertTrue(position == 0, "Error: invalid url");
+  utils::assertTrue(position == 0,
+                    "Error(PriorityUrlScheduler): invalid url protocol");
 
   const std::string separator = "/";
   std::size_t urltSize = 0;
@@ -52,6 +52,8 @@ void PriorityUrlScheduler::push(std::string url) {
 }
 
 std::string PriorityUrlScheduler::pop() {
+  utils::assertTrue(this->size() > 0,
+                    "Error(PriorityUrlScheduler): pop when scheduler is empty");
   std::pair<std::size_t, std::string> urlPair = this->priorityQueue->top();
   this->priorityQueue->pop();
   return urlPair.second;

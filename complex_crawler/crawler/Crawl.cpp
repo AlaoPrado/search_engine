@@ -2,17 +2,19 @@
 #include "../../utils/Assert.hpp"
 #include <CkSpider.h>
 #include <chrono>
+#include <iostream>
 #include <string>
 #include <vector>
 
 namespace search_engine {
 
 void Crawl::crawlSleepUntilMs(CkSpider &spider,
-                              Crawl::timePoint &lastCrawlEndTime,
-                              Crawl::timePoint &currentTime) {
+                              Crawl::timePoint &lastCrawlEndTime) {
+  Crawl::timePoint currentTime = std::chrono::steady_clock::now();
   Crawl::millis duration =
       std::chrono::duration_cast<Crawl::millis>(currentTime - lastCrawlEndTime);
   int sleepTimeMs = Crawl::CRAWL_AWAIT_TIME_MS - duration.count();
+  std::cout << sleepTimeMs << std::endl;
   if (sleepTimeMs > 0) {
     spider.SleepMs(sleepTimeMs);
   }
@@ -45,8 +47,7 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
   spider.put_Utf8(true);
 
   if (useLastCrawlEndTime) {
-    currentTime = std::chrono::steady_clock::now();
-    Crawl::crawlSleepUntilMs(spider, lastCrawlEndTime, currentTime);
+    Crawl::crawlSleepUntilMs(spider, lastCrawlEndTime);
   }
 
   currentTime = std::chrono::steady_clock::now();
