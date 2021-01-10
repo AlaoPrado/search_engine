@@ -1,5 +1,6 @@
 #include "Crawl.hpp"
 #include "../../utils/Assert.hpp"
+#include <CkSpider.h>
 #include <chrono>
 
 namespace search_engine {
