@@ -2,6 +2,8 @@
 #include "../../utils/Assert.hpp"
 #include <CkSpider.h>
 #include <chrono>
+#include <string>
+#include <vector>
 
 namespace search_engine {
 
@@ -17,7 +19,10 @@ void Crawl::crawlSleepUntilMs(CkSpider &spider,
 }
 
 void Crawl::crawlUrl(CkSpider &spider, std::string &url,
-                  Crawl::timePoint &lastCrawlEndTime, double &totalTime) {
+                     std::vector<std::string> &mustMatchPatterns,
+                     std::vector<std::string> &avoidPatterns, double &totalTime,
+                     Crawl::timePoint &lastCrawlEndTime,
+                     bool useLastCrawlEndTime = false) {
 
   bool crawlSuccess;
   Crawl::timePoint currentTime;
@@ -25,13 +30,24 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
 
   spider.Initialize(urlToCrawl.c_str());
 
+  for (auto mustMatchPattern : mustMatchPatterns) {
+    spider.AddMustMatchPattern(mustMatchPattern.c_str());
+  }
+
+  for (auto avoidPattern : avoidPatterns) {
+    spider.AddAvoidPattern(avoidPattern..c_str());
+    spider.AddAvoidOutboundLinkPattern(avoidPattern.c_str());
+  }
+
   search_engine::utils::assertTrue(spider.get_NumUnspidered() > 0,
                                    "Error: invalid url");
 
   spider.put_Utf8(true);
 
-  currentTime = std::chrono::steady_clock::now();
-  Crawl::crawlSleepUntilMs(spider, lastCrawlEndTime, currentTime);
+  if (useLastCrawlEndTime) {
+    currentTime = std::chrono::steady_clock::now();
+    Crawl::crawlSleepUntilMs(spider, lastCrawlEndTime, currentTime);
+  }
 
   currentTime = std::chrono::steady_clock::now();
   crawlSuccess = spider.CrawlNext();

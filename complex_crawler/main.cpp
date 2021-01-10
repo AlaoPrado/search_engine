@@ -16,10 +16,10 @@ int main(const int argc, const char **argv) {
     search_engine::utils::assertTrue(seedFile.is_open(),
                                      "Error: invalid file name");
 
-    std::vector<std::string> seedList;
+    std::vector<std::string> seedUrls;
     std::string line;
     while (std::getline(seedFile, line)) {
-      seedList.push_back(line);
+      seedUrls.push_back(line);
     }
 
   } catch (std::exception &e) {
