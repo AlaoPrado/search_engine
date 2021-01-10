@@ -1,6 +1,5 @@
 #include "PriorityUrlScheduler.hpp"
 #include "../../../utils/Assert.hpp"
-#include <exception>
 #include <string>
 #include <vector>
 
