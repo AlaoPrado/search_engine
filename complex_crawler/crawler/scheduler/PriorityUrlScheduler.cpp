@@ -1,33 +1,44 @@
 #include "PriorityUrlScheduler.hpp"
 #include "../../../utils/Assert.hpp"
 #include <exception>
+#include <string>
+#include <vector>
 
 namespace search_engine {
 
 UrlCompare::UrlCompare() {}
 
-bool UrlCompare::operator()(const std::pair<uint, std::string> &x,
-                            const std::pair<uint, std::string> &y) const {
+bool UrlCompare::operator()(
+    const std::pair<std::size_t, std::string> &x,
+    const std::pair<std::size_t, std::string> &y) const {
   return x.first < y.first;
 }
 
 PriorityUrlScheduler::PriorityUrlScheduler() {
   this->priorityQueue =
-      new std::priority_queue<std::pair<uint, std::string>,
-                              std::vector<std::pair<uint, std::string>>,
+      new std::priority_queue<std::pair<std::size_t, std::string>,
+                              std::vector<std::pair<std::size_t, std::string>>,
                               UrlCompare>();
 }
 
 PriorityUrlScheduler::~PriorityUrlScheduler() { delete this->priorityQueue; }
 
-uint PriorityUrlScheduler::urlSizeCounter(std::string url) {
-  const std::string protocol = "http://";
-  std::size_t position = url.find(protocol);
+std::size_t PriorityUrlScheduler::countUrlSize(std::string url) {
+  const std::vector<std::string> validProtocols = {"http://", "https://"};
 
+  std::size_t position;
+  std::string protocol;
+  for (auto currentProtocol : validProtocols) {
+    position = url.find(currentProtocol);
+    if (position == 0) {
+      protocol = currentProtocol;
+      break;
+    }
+  }
   utils::assertTrue(position == 0, "Error: invalid url");
 
   const std::string separator = "/";
-  uint urltSize = 0;
+  std::size_t urltSize = 0;
   position = url.find(separator, protocol.length());
   while (position != std::string::npos) {
     urltSize++;
@@ -38,7 +49,7 @@ uint PriorityUrlScheduler::urlSizeCounter(std::string url) {
 
 void PriorityUrlScheduler::push(std::string url) {
   try {
-    uint urlSize = this->urlSizeCounter(url);
+    std::size_t urlSize = this->countUrlSize(url);
     this->priorityQueue->push(std::make_pair(urlSize, url));
   } catch (std::exception &e) {
     // ignore exception
@@ -46,7 +57,7 @@ void PriorityUrlScheduler::push(std::string url) {
 }
 
 std::string PriorityUrlScheduler::pop() {
-  std::pair<uint, std::string> urlPair = this->priorityQueue->top();
+  std::pair<std::size_t, std::string> urlPair = this->priorityQueue->top();
   this->priorityQueue->pop();
   return urlPair.second;
 }
