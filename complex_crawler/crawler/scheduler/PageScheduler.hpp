@@ -9,6 +9,7 @@ public:
   virtual ~PageScheduler(){};
   virtual std::string pop() = 0;
   virtual void push(std::string url) = 0;
+  virtual std::size_t size() = 0;
 };
 
 } // namespace search_engine

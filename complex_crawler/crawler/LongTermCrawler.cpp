@@ -1,7 +1,7 @@
 #include "LongTermCrawler.hpp"
 #include "../../utils/Url.hpp"
 #include "Crawl.hpp"
-#include "scheduler/PriorityUrlScheduler.hpp"
+#include "scheduler/PriorityPageScheduler.hpp"
 #include <CkSpider.h>
 #include <chrono>
 #include <exception>
@@ -9,7 +9,7 @@
 namespace search_engine {
 
 LongTermCrawler::LongTermCrawler(bool verbose) : Crawler(verbose) {
-  this->pageScheduler = new PriorityUrlScheduler();
+  this->pageScheduler = new PriorityPageScheduler();
 }
 
 LongTermCrawler::~LongTermCrawler() { delete this->pageScheduler; }

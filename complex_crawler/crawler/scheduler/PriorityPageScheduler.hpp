@@ -14,17 +14,17 @@ public:
   bool operator()(UrlEntry &x, UrlEntry &y) const;
 };
 
-class PriorityUrlScheduler : public PageScheduler {
+class PriorityPageScheduler : public PageScheduler {
 private:
   std::priority_queue<UrlEntry, std::vector<UrlEntry>, UrlCompare>
       *priorityQueue;
 
 public:
-  PriorityUrlScheduler();
-  ~PriorityUrlScheduler();
+  PriorityPageScheduler();
+  virtual ~PriorityPageScheduler() override;
   virtual std::string pop() override;
   virtual void push(std::string url) override;
-  int size();
+  virtual std::size_t size() override;
 };
 
 } // namespace search_engine
