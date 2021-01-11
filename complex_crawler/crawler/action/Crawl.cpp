@@ -1,5 +1,5 @@
 #include "Crawl.hpp"
-#include "../../utils/Assert.hpp"
+#include "../../../utils/Assert.hpp"
 #include <CkSpider.h>
 #include <chrono>
 #include <iostream>

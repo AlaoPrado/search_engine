@@ -14,8 +14,11 @@ all: build link
 build: build_crawler build_utils
 	$(CXX) -c $(CXXFILES) $(CHILKBUILDFLAGS)
 
-build_crawler: build_crawler_scheduler
+build_crawler: buid_crawler_action build_crawler_scheduler
 	$(CXX) -c crawler/$(CXXFILES) $(CHILKBUILDFLAGS)
+
+buid_crawler_action:
+	$(CXX) -c crawler/action/$(CXXFILES) $(CHILKBUILDFLAGS)
 
 build_crawler_scheduler:
 	$(CXX) -c crawler/scheduler/$(CXXFILES) $(CHILKBUILDFLAGS)
@@ -34,4 +37,5 @@ clean_storage:
 	rm -rf storage/*.html
 	rm -rf storage/*.txt
 
-.PHONY: all build build_crawler build_crawler_scheduler build_utils link clean clean_storage
+.PHONY: all build build_crawler buid_crawler_action build_crawler_scheduler \
+				build_utils link clean clean_storage
