@@ -8,6 +8,10 @@
 namespace search_engine {
 
 class Crawl {
+public:
+  typedef std::chrono::milliseconds millis;
+  typedef std::chrono::steady_clock::time_point timePoint;
+
 private:
   constexpr static int CRAWL_AWAIT_TIME_MS = 1000;
 
@@ -16,9 +20,6 @@ private:
                                 Crawl::timePoint &lastCrawlEndTime);
 
 public:
-  typedef std::chrono::milliseconds millis;
-  typedef std::chrono::steady_clock::time_point timePoint;
-
   static void crawlUrl(CkSpider &spider, std::string &url,
                        std::vector<std::string> &mustMatchPatterns,
                        std::vector<std::string> &avoidPatterns,
