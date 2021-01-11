@@ -3,8 +3,8 @@
 
 void *ThreadPool::threadRun(void *param) {
   Task *task;
-  TaskQueue *workQueue;
-  workQueue = reinterpret_cast<TaskQueue *>(param);
+  SynchronizedQueue *workQueue;
+  workQueue = reinterpret_cast<SynchronizedQueue *>(param);
   task = workQueue->pop();
   while (task != NULL) {
     task->run();
@@ -16,7 +16,7 @@ void *ThreadPool::threadRun(void *param) {
 ThreadPool::ThreadPool(int size) {
   this->size = size;
   this->pool = new pthread_t[size];
-  this->workQueue = new TaskQueue();
+  this->workQueue = new SynchronizedQueue();
   for (int i = 0; i < this->size; i++) {
     if (!pthread_create(&(this->pool[i]), NULL, this->threadRun,
                         (void *)this->workQueue)) {

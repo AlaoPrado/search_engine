@@ -1,12 +1,12 @@
-#include "TaskQueue.hpp"
+#include "SynchronizedQueue.hpp"
 
-TaskQueue::TaskQueue() {
+SynchronizedQueue::SynchronizedQueue() {
   this->taskQueue = new std::queue<Task *>();
   pthread_mutex_init(&mutex, 0);
   pthread_cond_init(&cond, 0);
 }
 
-TaskQueue::~TaskQueue() {
+SynchronizedQueue::~SynchronizedQueue() {
   while (!this->taskQueue->empty()) {
     delete this->taskQueue->front();
     this->taskQueue->pop();
@@ -17,14 +17,14 @@ TaskQueue::~TaskQueue() {
   pthread_cond_destroy(&cond);
 }
 
-void TaskQueue::push(Task *task) {
+void SynchronizedQueue::push(Task *task) {
   pthread_mutex_lock(&mutex);
   this->taskQueue->push(task);
   pthread_cond_signal(&cond);
   pthread_mutex_unlock(&mutex);
 }
 
-Task *TaskQueue::pop() {
+Task *SynchronizedQueue::pop() {
   Task *task = NULL;
   pthread_mutex_lock(&mutex);
 

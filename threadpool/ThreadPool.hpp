@@ -1,12 +1,12 @@
 #pragma once
 
-#include "TaskQueue.hpp"
+#include "SynchronizedQueue.hpp"
 #include <pthread.h>
 
 class ThreadPool {
 private:
   pthread_t *pool;
-  TaskQueue *workQueue;
+  SynchronizedQueue *workQueue;
 
   static void *threadRun(void *);
 
