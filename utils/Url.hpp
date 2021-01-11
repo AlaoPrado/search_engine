@@ -5,6 +5,8 @@
 namespace search_engine {
 namespace utils {
 
+std::string baseUrl(std::string url);
+
 std::string canonicalizeUrl(std::string url);
 
 std::size_t countUrlSize(std::string url);

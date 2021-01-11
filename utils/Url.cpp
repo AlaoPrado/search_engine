@@ -6,6 +6,19 @@
 namespace search_engine {
 namespace utils {
 
+std::string baseUrl(std::string url) {
+  if (url.length() > 0) {
+    url = removeUrlProtocol(url);
+
+    const std::string domainEnd = ".br";
+    std::size_t position = url.find(domainEnd);
+    utils::assertTrue(position != std::string::npos,
+                      "Error(utils/baseUrl): invalid url domain");
+    url.erase(position + domainEnd.length(), url.length());
+  }
+  return url;
+}
+
 std::string canonicalizeUrl(std::string url) {
   if (url.length() > 0) {
     if (url[url.length() - 1] == '/') {
@@ -34,7 +47,7 @@ std::size_t countUrlSize(std::string url) {
     }
   }
   utils::assertTrue(position == 0,
-                    "Error(PriorityUrlScheduler): invalid url protocol");
+                    "Error(utils/countUrlSize): invalid url protocol");
 
   const std::string separator = "/";
   std::size_t urltSize = 0;
