@@ -9,7 +9,8 @@
 
 namespace search_engine {
 
-Crawler::Crawler(bool verbose) : verbose(verbose) {
+Crawler::Crawler(std::string storageDirectory, bool verbose)
+    : storageDirectory(storageDirectory), verbose(verbose) {
   this->mustMatchPatterns.push_back("*.br*");
   this->avoidPatterns.push_back("*.pdf");
   this->viewedUrls = new std::map<std::string, bool>();

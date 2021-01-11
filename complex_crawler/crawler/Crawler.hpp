@@ -13,6 +13,7 @@ private:
   void pushUrlIntoScheduler(std::string url);
 
 protected:
+  std::string storageDirectory;
   bool verbose;
   std::vector<std::string> mustMatchPatterns, avoidPatterns;
   PageScheduler *pageScheduler;
@@ -23,7 +24,7 @@ protected:
   void pushUrlsIntoScheduler(CkSpider &spider, std::size_t numPagesToCrawl);
 
 public:
-  Crawler(bool verbose = true);
+  Crawler(std::string storageDirectory, bool verbose = true);
   virtual ~Crawler();
   virtual void crawl(std::vector<std::string> &seedUrls,
                      std::size_t numPagesToCrawl) = 0;

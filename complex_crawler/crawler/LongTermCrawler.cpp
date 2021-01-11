@@ -8,7 +8,8 @@
 #include <iostream>
 namespace search_engine {
 
-LongTermCrawler::LongTermCrawler(bool verbose) : Crawler(verbose) {
+LongTermCrawler::LongTermCrawler(std::string storageDirectory, bool verbose)
+    : Crawler(storageDirectory, verbose) {
   this->pageScheduler = new PriorityPageScheduler();
 }
 
@@ -16,7 +17,6 @@ LongTermCrawler::~LongTermCrawler() { delete this->pageScheduler; }
 
 void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
                             std::size_t numPagesToCrawl) {
-
   this->pushUrlsIntoScheduler(seedUrls, numPagesToCrawl);
 
   std::string url;

@@ -8,9 +8,9 @@
 
 namespace search_engine {
 
-class LongTermCrawler : public Crawler {  
+class LongTermCrawler : public Crawler {
 public:
-  LongTermCrawler(bool verbose = true);
+  LongTermCrawler(std::string storageDirectory, bool verbose = true);
   ~LongTermCrawler();
   virtual void crawl(std::vector<std::string> &seedUrls,
                      std::size_t numPagesToCrawl) override;

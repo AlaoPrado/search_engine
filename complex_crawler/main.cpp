@@ -25,8 +25,10 @@ int main(const int argc, const char **argv) {
     while (std::getline(seedFile, line)) {
       seedUrls.push_back(line);
     }
+    seedFile.close();
 
-    search_engine::LongTermCrawler crawler;
+    std::string storageDirectory("storage/");
+    search_engine::LongTermCrawler crawler(storageDirectory);
     crawler.crawl(seedUrls, numPagesToCrawl);
 
   } catch (std::exception &e) {
