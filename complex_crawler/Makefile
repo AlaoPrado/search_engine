@@ -11,10 +11,10 @@ LINKFLAGS = -Wl,-rpath=$(CHILKATLIB) -L$(CHILKATLIB) -lchilkat-9.5.0 -lresolv -l
 
 all: build link
 
-build: build_crawler build_utils
+build: build_crawler build_threadpool build_utils
 	$(CXX) -c $(CXXFILES) $(CHILKBUILDFLAGS)
 
-build_crawler: buid_crawler_action build_crawler_scheduler
+build_crawler: buid_crawler_action build_crawler_scheduler build_crawler_task
 	$(CXX) -c crawler/$(CXXFILES) $(CHILKBUILDFLAGS)
 
 buid_crawler_action:
@@ -23,8 +23,14 @@ buid_crawler_action:
 build_crawler_scheduler:
 	$(CXX) -c crawler/scheduler/$(CXXFILES) $(CHILKBUILDFLAGS)
 
+build_crawler_task:
+	$(CXX) -c crawler/task/$(CXXFILES) $(CHILKBUILDFLAGS)
+
+build_threadpool:
+	$(CXX) -c ../threadpool/$(CXXFILES) $(CHILKBUILDFLAGS)
+
 build_utils:
-	$(CXX) -c ../utils/$(CXXFILES) $(COMMONBUILDFLAGS)
+	$(CXX) -c ../utils/$(CXXFILES) $(CHILKBUILDFLAGS)
 
 link:
 	$(CXX) -o $(PROGRAM) $(OBJFILES) $(LINKFLAGS)

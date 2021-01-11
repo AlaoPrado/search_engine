@@ -2,6 +2,8 @@
 
 #include <pthread.h>
 
+namespace search_engine {
+
 class MasterFlag {
 private:
   pthread_mutex_t mutex;
@@ -16,3 +18,5 @@ public:
   void wait();
   void signal();
 };
+
+} // namespace search_engine

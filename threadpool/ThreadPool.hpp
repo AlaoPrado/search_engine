@@ -1,12 +1,15 @@
 #pragma once
 
-#include "SynchronizedQueue.hpp"
+#include "../utils/SynchronizedQueue.hpp"
+#include "Task.hpp"
 #include <pthread.h>
 
+namespace search_engine {
+  
 class ThreadPool {
 private:
   pthread_t *pool;
-  SynchronizedQueue *workQueue;
+  utils::SynchronizedQueue<Task> *workQueue;
 
   static void *threadRun(void *);
 
@@ -17,3 +20,5 @@ public:
   int getSize();
   int size;
 };
+
+} // namespace search_engine

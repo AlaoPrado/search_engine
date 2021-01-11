@@ -1,5 +1,7 @@
 #include "MasterFlag.hpp"
 
+namespace search_engine {
+
 MasterFlag::MasterFlag(int taskLimit) {
   pthread_mutex_init(&this->mutex, 0);
   pthread_cond_init(&this->cond, 0);
@@ -38,3 +40,5 @@ void MasterFlag::signal() {
   }
   pthread_mutex_unlock(&this->mutex);
 }
+
+} // namespace search_engine
