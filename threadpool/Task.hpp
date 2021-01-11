@@ -1,14 +1,8 @@
 #pragma once
 
-#include "MasterFlag.hpp"
-#include <vector>
-
 class Task {
-protected:
-  MasterFlag *masterFlag;
-
 public:
-  Task(MasterFlag *masterFlag);
+  Task();
   virtual ~Task();
   virtual void run() = 0;
 };
