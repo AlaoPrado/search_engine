@@ -14,40 +14,10 @@ LongTermCrawler::LongTermCrawler(bool verbose) : Crawler(verbose) {
 
 LongTermCrawler::~LongTermCrawler() { delete this->pageScheduler; }
 
-void LongTermCrawler::pushUrlsIntoScheduler(
-    CkSpider &spider, std::map<std::string, bool> &viewedUrls,
-    std::size_t numPagesToCrawl) {
-  std::map<std::string, bool>::iterator it;
-
-  for (int i = 0; i < spider.get_NumUnspidered(); i++) {
-    if (viewedUrls.size() >= numPagesToCrawl) {
-      break;
-    }
-
-    std::string url = utils::canonicalizeUrl(spider.getUnspideredUrl(i));
-    std::string urlWithouProtocol = utils::removeUrlProtocol(url);
-    it = viewedUrls.find(urlWithouProtocol);
-    if (it == viewedUrls.end()) {
-      try {
-        this->pageScheduler->push(url);
-        viewedUrls[urlWithouProtocol] = true;
-      } catch (std::exception &e) {
-        std::cout << e.what() << std::endl;
-      }
-    }
-  }
-}
-
 void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
                             std::size_t numPagesToCrawl) {
-  auto *viewedUrls = new std::map<std::string, bool>();
 
-  for (auto url : seedUrls) {
-    std::string canonicalUrl = utils::canonicalizeUrl(url);
-    this->pageScheduler->push(canonicalUrl);
-    std::string urlWithouProtocol = utils::removeUrlProtocol(url);
-    (*viewedUrls)[urlWithouProtocol] = true;
-  }
+  this->pushUrlsIntoScheduler(seedUrls, numPagesToCrawl);
 
   std::string url;
   Crawl::timePoint lastCrawlTime;
@@ -61,10 +31,8 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
     std::cout << spider.lastUrl() << std::endl;
     std::cout << spider.lastHtmlTitle() << std::endl;
     std::cout << spider.get_NumUnspidered() << std::endl;
-    this->pushUrlsIntoScheduler(spider, *viewedUrls, numPagesToCrawl);
+    this->pushUrlsIntoScheduler(spider, numPagesToCrawl);
   }
-
-  delete viewedUrls;
 }
 
 } // namespace search_engine

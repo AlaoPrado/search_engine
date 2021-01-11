@@ -8,12 +8,7 @@
 
 namespace search_engine {
 
-class LongTermCrawler : public Crawler {
-private:
-  void pushUrlsIntoScheduler(CkSpider &spider,
-                             std::map<std::string, bool> &viewedUrls,
-                             std::size_t numPagesToCrawl);
-
+class LongTermCrawler : public Crawler {  
 public:
   LongTermCrawler(bool verbose = true);
   ~LongTermCrawler();
