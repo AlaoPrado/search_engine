@@ -9,7 +9,7 @@ namespace search_engine {
 
 class Crawl {
 private:
-  constexpr static int CRAWL_AWAIT_TIME_MS = 2000;
+  constexpr static int CRAWL_AWAIT_TIME_MS = 1000;
 
 public:
   typedef std::chrono::milliseconds millis;
