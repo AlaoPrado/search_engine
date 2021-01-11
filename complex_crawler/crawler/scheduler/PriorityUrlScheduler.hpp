@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PageScheduler.hpp"
 #include "UrlEntry.hpp"
 #include <queue>
 #include <string>
@@ -13,7 +14,7 @@ public:
   bool operator()(UrlEntry &x, UrlEntry &y) const;
 };
 
-class PriorityUrlScheduler {
+class PriorityUrlScheduler : public PageScheduler {
 private:
   std::priority_queue<UrlEntry, std::vector<UrlEntry>, UrlCompare>
       *priorityQueue;
@@ -21,8 +22,8 @@ private:
 public:
   PriorityUrlScheduler();
   ~PriorityUrlScheduler();
-  std::string pop();
-  void push(std::string url);
+  virtual std::string pop() override;
+  virtual void push(std::string url) override;
   int size();
 };
 

@@ -1,13 +1,18 @@
 #include "LongTermCrawler.hpp"
 #include "../../utils/Url.hpp"
 #include "Crawl.hpp"
+#include "scheduler/PriorityUrlScheduler.hpp"
 #include <CkSpider.h>
 #include <chrono>
 #include <exception>
 #include <iostream>
 namespace search_engine {
 
-LongTermCrawler::LongTermCrawler(bool verbose) : Crawler(verbose) {}
+LongTermCrawler::LongTermCrawler(bool verbose) : Crawler(verbose) {
+  this->pageScheduler = new PriorityUrlScheduler();
+}
+
+LongTermCrawler::~LongTermCrawler() { delete this->pageScheduler; }
 
 void LongTermCrawler::pushUrlsIntoScheduler(
     CkSpider &spider, std::map<std::string, bool> &viewedUrls,
@@ -24,7 +29,7 @@ void LongTermCrawler::pushUrlsIntoScheduler(
     it = viewedUrls.find(urlWithouProtocol);
     if (it == viewedUrls.end()) {
       try {
-        this->priorityUrlScheduler.push(url);
+        this->pageScheduler->push(url);
         viewedUrls[urlWithouProtocol] = true;
       } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
@@ -39,7 +44,7 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
 
   for (auto url : seedUrls) {
     std::string canonicalUrl = utils::canonicalizeUrl(url);
-    this->priorityUrlScheduler.push(canonicalUrl);
+    this->pageScheduler->push(canonicalUrl);
     std::string urlWithouProtocol = utils::removeUrlProtocol(url);
     (*viewedUrls)[urlWithouProtocol] = true;
   }
@@ -49,12 +54,13 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
   double totalTime = 0;
 
   for (std::size_t i = 0; i < numPagesToCrawl; i++) {
-    url = this->priorityUrlScheduler.pop();
+    url = this->pageScheduler->pop();
     CkSpider spider;
     Crawl::crawlUrl(spider, url, this->mustMatchPatterns, this->avoidPatterns,
                     totalTime, lastCrawlTime, totalTime > 0);
     std::cout << spider.lastUrl() << std::endl;
     std::cout << spider.lastHtmlTitle() << std::endl;
+    std::cout << spider.get_NumUnspidered() << std::endl;
     this->pushUrlsIntoScheduler(spider, *viewedUrls, numPagesToCrawl);
   }
 
