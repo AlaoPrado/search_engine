@@ -26,4 +26,8 @@ build_utils:
 link:
 	$(CXX) -o $(PROGRAM) $(OBJFILES) $(LINKFLAGS)
 
-.PHONY: all build link
+clean:
+	rm -rf *.o
+	rm -rf *.out
+
+.PHONY: all build build_crawler build_crawler_scheduler build_utils link clean

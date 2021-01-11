@@ -17,4 +17,8 @@ build:
 link:
 	$(CXX) -o $(PROGRAM) $(OBJFILES) $(LINKFLAGS)
 
+clean:
+	rm -rf *.o
+	rm -rf *.out
+
 .PHONY: all build link
