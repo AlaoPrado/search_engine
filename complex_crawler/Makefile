@@ -30,4 +30,8 @@ clean:
 	rm -rf *.o
 	rm -rf *.out
 
-.PHONY: all build build_crawler build_crawler_scheduler build_utils link clean
+clean_storage:
+	rm -rf storage/*.html
+	rm -rf storage/*.txt
+
+.PHONY: all build build_crawler build_crawler_scheduler build_utils link clean clean_storage

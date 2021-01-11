@@ -9,11 +9,13 @@
 int main(const int argc, const char **argv) {
   try {
     search_engine::utils::assertTrue(
-        argc > 1, "Error: a file name must be passed by parameter");
+        argc > 1,
+        "Error: a file name and a storage folder must be passed by parameter");
 
     const std::string fileName = argv[1];
+    const std::string storageFolderDirectory = argc > 2 ? argv[2] : "storage/";
     const std::size_t numPagesToCrawl =
-        (std::size_t)((argc > 2) ? std::stoi(argv[2]) : 10);
+        (std::size_t)(argc > 3 ? std::stoi(argv[3]) : 10);
 
     std::ifstream seedFile(fileName);
 
@@ -27,8 +29,7 @@ int main(const int argc, const char **argv) {
     }
     seedFile.close();
 
-    std::string storageDirectory("storage/");
-    search_engine::LongTermCrawler crawler(storageDirectory);
+    search_engine::LongTermCrawler crawler(storageFolderDirectory);
     crawler.crawl(seedUrls, numPagesToCrawl);
 
   } catch (std::exception &e) {

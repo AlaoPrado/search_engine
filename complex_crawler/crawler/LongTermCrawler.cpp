@@ -1,6 +1,7 @@
 #include "LongTermCrawler.hpp"
 #include "../../utils/Url.hpp"
 #include "Crawl.hpp"
+#include "PageStorage.hpp"
 #include "scheduler/PriorityPageScheduler.hpp"
 #include <CkSpider.h>
 #include <chrono>
@@ -28,9 +29,12 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
     CkSpider spider;
     Crawl::crawlUrl(spider, url, this->mustMatchPatterns, this->avoidPatterns,
                     totalTime, lastCrawlTime, totalTime > 0);
-    std::cout << spider.lastUrl() << std::endl;
-    std::cout << spider.lastHtmlTitle() << std::endl;
-    std::cout << spider.get_NumUnspidered() << std::endl;
+    if(verbose){
+      std::cout << spider.lastUrl() << std::endl;
+      std::cout << spider.get_NumUnspidered() << std::endl;
+    }
+
+    PageStorage::storePage(this->storageDirectory, spider, i);
     this->pushUrlsIntoScheduler(spider, numPagesToCrawl);
   }
 }

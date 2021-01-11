@@ -18,6 +18,13 @@ void PageStorage::storePage(std::string directory, CkSpider &spider,
 
   indexFile << spider.lastUrl() << " " << pageId << std::endl;
   indexFile.close();
+
+  const std::string fileExtension = ".html";
+  std::ofstream htmlFile(directory + std::to_string(pageId) + fileExtension,
+                         std::ofstream::out | std::ofstream::trunc);
+
+  htmlFile << spider.lastHtml() << std::endl;
+  htmlFile.close();
 }
 
 } // namespace search_engine
