@@ -24,9 +24,8 @@ void Crawler::pushUrlIntoScheduler(std::string url) {
 
   std::string canonicalUrl = utils::canonicalizeUrl(url);
   std::string urlWithouProtocol = utils::removeUrlProtocol(canonicalUrl);
-  std::map<std::string, bool>::iterator it =
-      this->viewedUrls->find(urlWithouProtocol);
 
+  auto it = this->viewedUrls->find(urlWithouProtocol);
   if (it == this->viewedUrls->end()) {
     try {
       this->pageScheduler->push(canonicalUrl);
