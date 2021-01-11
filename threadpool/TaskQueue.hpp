@@ -4,15 +4,15 @@
 #include <pthread.h>
 #include <queue>
 
-class SynchronizedQueue {
+class TaskQueue {
 private:
   std::queue<Task *> *taskQueue;
   pthread_mutex_t mutex;
   pthread_cond_t cond;
 
 public:
-  SynchronizedQueue();
-  ~SynchronizedQueue();
+  TaskQueue();
+  ~TaskQueue();
   void push(Task *task);
   Task *pop();
 };
