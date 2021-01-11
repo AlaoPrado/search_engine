@@ -11,15 +11,18 @@ private:
   std::queue<T *> *queue;
   pthread_mutex_t mutex;
   pthread_cond_t cond;
+  pthread_mutex_t *memoryMutex;
 
 public:
-  SynchronizedQueue();
+  SynchronizedQueue(pthread_mutex_t *memoryMutex = NULL);
   ~SynchronizedQueue();
   void push(T *obj);
   T *pop();
 };
 
-template <typename T> SynchronizedQueue<T>::SynchronizedQueue() {
+template <typename T>
+SynchronizedQueue<T>::SynchronizedQueue(pthread_mutex_t *memoryMutex) {
+  this->memoryMutex = memoryMutex;
   this->queue = new std::queue<T *>();
   pthread_mutex_init(&mutex, 0);
   pthread_cond_init(&cond, 0);
@@ -38,7 +41,15 @@ template <typename T> SynchronizedQueue<T>::~SynchronizedQueue() {
 
 template <typename T> void SynchronizedQueue<T>::push(T *obj) {
   pthread_mutex_lock(&mutex);
-  this->queue->push(obj);
+
+  if (this->memoryMutex != NULL) {
+    pthread_mutex_lock(this->memoryMutex);
+    this->queue->push(obj);
+    pthread_mutex_unlock(this->memoryMutex);
+  } else {
+    this->queue->push(obj);
+  }
+
   pthread_cond_signal(&cond);
   pthread_mutex_unlock(&mutex);
 }
