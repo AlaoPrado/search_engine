@@ -11,6 +11,8 @@ class Crawl {
 private:
   constexpr static int CRAWL_AWAIT_TIME_MS = 1000;
 
+  Crawl() {}
+
 public:
   typedef std::chrono::milliseconds millis;
   typedef std::chrono::steady_clock::time_point timePoint;
