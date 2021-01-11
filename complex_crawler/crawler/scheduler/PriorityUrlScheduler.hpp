@@ -18,8 +18,6 @@ private:
   std::priority_queue<UrlEntry, std::vector<UrlEntry>, UrlCompare>
       *priorityQueue;
 
-  std::size_t countUrlSize(std::string url);
-
 public:
   PriorityUrlScheduler();
   ~PriorityUrlScheduler();

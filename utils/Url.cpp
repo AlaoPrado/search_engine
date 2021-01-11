@@ -1,5 +1,7 @@
 #include "Url.hpp"
+#include "Assert.hpp"
 #include <string>
+#include <vector>
 
 namespace search_engine {
 namespace utils {
@@ -17,6 +19,31 @@ std::string canonicalizeUrl(std::string url) {
     }
   }
   return url;
+}
+
+std::size_t countUrlSize(std::string url) {
+  const std::vector<std::string> validProtocols = {"http://", "https://"};
+
+  std::size_t position = std::string::npos;
+  std::string protocol;
+  for (auto currentProtocol : validProtocols) {
+    position = url.find(currentProtocol);
+    if (position == 0) {
+      protocol = currentProtocol;
+      break;
+    }
+  }
+  utils::assertTrue(position == 0,
+                    "Error(PriorityUrlScheduler): invalid url protocol");
+
+  const std::string separator = "/";
+  std::size_t urltSize = 0;
+  position = url.find(separator, protocol.length());
+  while (position != std::string::npos) {
+    urltSize++;
+    position = url.find(separator, position + separator.length());
+  }
+  return urltSize;
 }
 
 std::string removeUrlProtocol(std::string url) {

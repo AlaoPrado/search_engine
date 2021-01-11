@@ -7,6 +7,8 @@ namespace utils {
 
 std::string canonicalizeUrl(std::string url);
 
+std::size_t countUrlSize(std::string url);
+
 std::string removeUrlProtocol(std::string url);
 
 } // namespace utils
