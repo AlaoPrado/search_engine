@@ -1,4 +1,5 @@
 #include "Crawler.hpp"
+#include "../../utils/Assert.hpp"
 #include "../../utils/Url.hpp"
 #include <CkSpider.h>
 #include <exception>
@@ -17,10 +18,14 @@ Crawler::Crawler(bool verbose) : verbose(verbose) {
 Crawler::~Crawler() { delete this->viewedUrls; }
 
 void Crawler::pushUrlIntoScheduler(std::string url) {
+  utils::assertTrue(this->pageScheduler,
+                    "Error(Crawler): pageScheduler has not been initialized");
+
   std::string canonicalUrl = utils::canonicalizeUrl(url);
   std::string urlWithouProtocol = utils::removeUrlProtocol(canonicalUrl);
   std::map<std::string, bool>::iterator it =
       this->viewedUrls->find(urlWithouProtocol);
+
   if (it == this->viewedUrls->end()) {
     try {
       this->pageScheduler->push(canonicalUrl);
