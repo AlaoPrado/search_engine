@@ -6,17 +6,13 @@ namespace search_engine {
 
 UrlCompare::UrlCompare() {}
 
-bool UrlCompare::operator()(
-    const std::pair<std::size_t, std::string> &x,
-    const std::pair<std::size_t, std::string> &y) const {
-  return x.first > y.first;
+bool UrlCompare::operator()(UrlEntry &x, UrlEntry &y) const {
+  return x.getSize() > y.getSize();
 }
 
 PriorityUrlScheduler::PriorityUrlScheduler() {
   this->priorityQueue =
-      new std::priority_queue<std::pair<std::size_t, std::string>,
-                              std::vector<std::pair<std::size_t, std::string>>,
-                              UrlCompare>();
+      new std::priority_queue<UrlEntry, std::vector<UrlEntry>, UrlCompare>();
 }
 
 PriorityUrlScheduler::~PriorityUrlScheduler() { delete this->priorityQueue; }
@@ -48,15 +44,15 @@ std::size_t PriorityUrlScheduler::countUrlSize(std::string url) {
 
 void PriorityUrlScheduler::push(std::string url) {
   std::size_t urlSize = this->countUrlSize(url);
-  this->priorityQueue->push(std::make_pair(urlSize, url));
+  this->priorityQueue->push(UrlEntry(url, urlSize));
 }
 
 std::string PriorityUrlScheduler::pop() {
   utils::assertTrue(this->size() > 0,
                     "Error(PriorityUrlScheduler): pop when scheduler is empty");
-  std::pair<std::size_t, std::string> urlPair = this->priorityQueue->top();
+  UrlEntry urlEntry = this->priorityQueue->top();
   this->priorityQueue->pop();
-  return urlPair.second;
+  return urlEntry.getUrl();
 }
 
 int PriorityUrlScheduler::size() { return this->priorityQueue->size(); }
