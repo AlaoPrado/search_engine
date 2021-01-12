@@ -14,7 +14,7 @@ public:
   typedef std::chrono::steady_clock::time_point timePoint;
 
 private:
-  constexpr static int CRAWL_AWAIT_TIME_MS = 1000;
+  constexpr static int CRAWL_AWAIT_TIME_MS = 2000;
 
   Crawl() {}
   static void crawlSleepUntilMs(CkSpider &spider,
