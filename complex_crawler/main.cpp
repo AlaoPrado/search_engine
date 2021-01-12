@@ -26,10 +26,17 @@ int main(const int argc, const char **argv) {
 
     search_engine::utils::assertTrue(
         crawlerType == LONG_TERM_CRAWLER || crawlerType == SHORT_TERM_CRAWLER,
-        "Error: the third paramete must be 0 or 1");
+        "Error: the third parameter must be 0 (long term crawler) or 1 (short "
+        "term crawler)");
 
     const std::size_t numPagesToCrawl =
         (std::size_t)(argc > 4 ? std::stoi(argv[4]) : 10);
+
+    const int numThreads = argc > 5 ? std::stoi(argv[5]) : 1;
+
+    search_engine::utils::assertTrue(
+        numThreads > 0,
+        "Error: the fifth parameter must valid number of threads");
 
     std::ifstream seedFile(fileName);
 
@@ -48,7 +55,7 @@ int main(const int argc, const char **argv) {
             ? (search_engine::Crawler *)new search_engine::LongTermCrawler(
                   storageFolderDirectory)
             : (search_engine::Crawler *)new search_engine::ShortTermCrawler(
-                  storageFolderDirectory);
+                  storageFolderDirectory, true, numThreads);
 
     crawler->crawl(seedUrls, numPagesToCrawl);
     delete crawler;
