@@ -1,5 +1,6 @@
 #include "LongTermCrawler.hpp"
 #include "../../utils/Url.hpp"
+#include "SiteAttributes.hpp"
 #include "action/Crawl.hpp"
 #include "action/PageStorage.hpp"
 #include "action/PushIntoScheduler.hpp"
@@ -18,22 +19,38 @@ LongTermCrawler::~LongTermCrawler() {}
 void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
                             std::size_t numPagesToCrawl) {
   this->pageScheduler = new PriorityPageScheduler();
-  
+
   PushIntoScheduler::push(this->pageScheduler, seedUrls, this->viewedUrls,
                           numPagesToCrawl);
-  
+
   std::string url;
-  Crawl::timePoint lastCrawlTime;
-  double totalTime = 0;
+  auto *siteAttributesMap = new std::map<std::string, SiteAttributes>();
+  auto *lastCrawlEndTimeMap = new std::map<std::string, Crawl::timePoint>();
 
   for (std::size_t i = 0; i < numPagesToCrawl; i++) {
     url = this->pageScheduler->pop();
+
+    bool useLastCrawlEndTime = true;
+    std::string baseUrl = utils::baseUrl(url);
+
+    auto it = lastCrawlEndTimeMap->find(baseUrl);
+    if (it == lastCrawlEndTimeMap->end()) {
+      siteAttributesMap->operator[](baseUrl) = SiteAttributes();
+      lastCrawlEndTimeMap->operator[](baseUrl) =
+          std::chrono::steady_clock::now();
+      useLastCrawlEndTime = false;
+    }
+
+    SiteAttributes *siteAttribute = &(siteAttributesMap->operator[](baseUrl));
+    Crawl::timePoint *lastCrawlEndTime =
+        &(lastCrawlEndTimeMap->operator[](baseUrl));
+
     CkSpider spider;
     Crawl::crawlUrl(spider, url, this->mustMatchPatterns, this->avoidPatterns,
-                    totalTime, lastCrawlTime, totalTime > 0);
-    if (verbose) {
-      std::cout << spider.lastUrl() << std::endl;
-      std::cout << spider.get_NumUnspidered() << std::endl;
+                    *siteAttribute, *lastCrawlEndTime, useLastCrawlEndTime);
+
+    if (!useLastCrawlEndTime) { // firt time crawling web site
+      siteAttribute->addNumPagesLeve1(spider.get_NumUnspidered());
     }
 
     PageStorage::storePage(this->storageDirectory, spider, i);
@@ -41,7 +58,22 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
                             numPagesToCrawl);
   }
 
+  if (verbose) {
+    for (auto it = siteAttributesMap->begin(); it != siteAttributesMap->end();
+         it++) {
+      std::cout << "Web site " << it->first << std::endl;
+      std::cout << "Number of URLs at level 1 crawled: "
+                << it->second.getNumPagesLeve1() << std::endl;
+      std::cout << "Average crawl time for (milliseconds): "
+                << it->second.getAverageTime() << std::endl;
+      std::cout << "Average page size (Bytes)): "
+                << it->second.getAveragePageSize() << std::endl;
+    }
+  }
+
   delete this->pageScheduler;
+  delete siteAttributesMap;
+  delete lastCrawlEndTimeMap;
 }
 
 } // namespace search_engine

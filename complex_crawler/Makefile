@@ -46,7 +46,11 @@ clean:
 clean_storage:
 	rm -rf storage/*.html
 	rm -rf storage/*.txt
+	
+clean_storage_extra:
+	rm -rf storage_extra/*.html
+	rm -rf storage_extra/*.txt
 
 .PHONY: all build build_crawler buid_crawler_action \
 				build_crawler_scheduler_sync build_crawler_scheduler 
-				build_utils link clean clean_storage
+				build_utils link clean clean_storage clean_storage_extra
