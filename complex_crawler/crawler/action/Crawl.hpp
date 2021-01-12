@@ -24,7 +24,8 @@ public:
                        std::vector<std::string> &mustMatchPatterns,
                        std::vector<std::string> &avoidPatterns,
                        double &totalTime, Crawl::timePoint &lastCrawlEndTime,
-                       bool useLastCrawlEndTime = false);
+                       bool useLastCrawlEndTime = false,
+                       pthread_mutex_t *memoryMutex = NULL, bool debug = false);
 };
 
 } // namespace search_engine

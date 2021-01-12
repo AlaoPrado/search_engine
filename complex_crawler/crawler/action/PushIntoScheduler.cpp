@@ -16,7 +16,12 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler, std::string url,
       viewedUrls,
       "Error(PushIntoScheduler): viewedUrls has not been initialized");
 
+  std::cout << "PushIntoScheduler push inside begin" << std::endl;
+
   std::string canonicalUrl = utils::canonicalizeUrl(url);
+
+  std::cout << "PushIntoScheduler" + canonicalUrl << std::endl;
+
   std::string urlWithouProtocol = utils::removeUrlProtocol(canonicalUrl);
 
   auto it = viewedUrls->find(urlWithouProtocol);
@@ -42,7 +47,7 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler,
                              std::map<std::string, bool> *viewedUrls,
                              std::size_t numPagesToCrawl,
                              pthread_mutex_t *memoryMutex) {
-  for (auto &url : urls) {
+  for (auto url : urls) {
     if (viewedUrls->size() >= numPagesToCrawl) {
       break;
     }
@@ -55,13 +60,26 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler, CkSpider &spider,
                              std::map<std::string, bool> *viewedUrls,
                              std::size_t numPagesToCrawl,
                              pthread_mutex_t *memoryMutex) {
+
+  std::cout << "PushIntoScheduler push " +
+                   std::to_string(spider.get_NumUnspidered())
+            << std::endl;
   for (int i = 0; i < spider.get_NumUnspidered(); i++) {
+    std::cout << "PushIntoScheduler push loop begin" << std::endl;
+
     if (viewedUrls->size() >= numPagesToCrawl) {
       break;
     }
 
-    PushIntoScheduler::push(pageScheduler, spider.getUnspideredUrl(i),
-                            viewedUrls, memoryMutex);
+    std::cout << "PushIntoScheduler break pass" << std::endl;
+
+    std::string url("");
+    url.append(spider.getUnspideredUrl(i));
+
+    std::cout << url << std::endl;
+    // std::cout << spider.getUnspideredUrl(i) << std::endl;
+
+    PushIntoScheduler::push(pageScheduler, url, viewedUrls, memoryMutex);
   }
 }
 

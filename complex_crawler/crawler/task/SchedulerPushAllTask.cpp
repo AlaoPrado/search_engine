@@ -1,0 +1,60 @@
+#include "SchedulerPushAllTask.hpp"
+#include "../../../threadpool/CounterFlag.hpp"
+#include "../../../utils/SynchronizedQueue.hpp"
+#include "../action/PageStorage.hpp"
+#include "../action/PushIntoScheduler.hpp"
+#include "../scheduler/sync/SynchonizedPageGroupScheduler.hpp"
+#include <CkSpider.h>
+#include <iostream>
+#include <map>
+#include <pthread.h>
+#include <string>
+
+namespace search_engine {
+
+SchedulerPushAllTask::SchedulerPushAllTask(
+    CounterFlag *counterFlag, std::size_t numPagesToCrawl,
+    pthread_mutex_t *memoryMutex,
+    utils::SynchronizedQueue<CkSpider> *spiderQueue,
+    SynchonizedPageGroupScheduler *pageGroupScheduler,
+    std::map<std::string, bool> *viewedUrls, std::string storageDirectory,
+    bool verbose)
+    : counterFlag(counterFlag), numPagesToCrawl(numPagesToCrawl),
+      memoryMutex(memoryMutex), spiderQueue(spiderQueue),
+      pageGroupScheduler(pageGroupScheduler), viewedUrls(viewedUrls),
+      storageDirectory(storageDirectory), verbose(verbose) {}
+
+SchedulerPushAllTask::~SchedulerPushAllTask() {}
+
+void SchedulerPushAllTask::run() {
+  for (size_t i = 0; i < numPagesToCrawl; i++) {
+    CkSpider *spider = spiderQueue->pop();
+
+    pageGroupScheduler->finishWork(spider->lastUrl());
+
+    // if (verbose) {
+    //   std::cout << spider->lastUrl() << std::endl;
+    //   std::cout << spider->get_NumUnspidered() << std::endl;
+    // }
+
+    // PageStorage::storePage(storageDirectory, *spider, i);
+
+    // std::cout << (spider) << std::endl;
+
+    std::cout << "SchedulerPushAllTask push" << std::endl;
+
+    PushIntoScheduler::push(pageGroupScheduler, *spider, viewedUrls,
+                            numPagesToCrawl, memoryMutex);
+
+    pthread_mutex_lock(memoryMutex);
+    std::cout << "SchedulerPushAllTask delete begin " << std::endl;
+    delete spider;
+    // spiderToDelete->push_back(spider);
+    std::cout << "SchedulerPushAllTask delete end" << std::endl;
+    pthread_mutex_unlock(memoryMutex);
+    std::cout << "SchedulerPushAllTask finish" << std::endl;
+  }
+  counterFlag->signal();
+}
+
+} // namespace search_engine
