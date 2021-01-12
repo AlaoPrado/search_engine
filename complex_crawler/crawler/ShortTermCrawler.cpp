@@ -3,6 +3,7 @@
 #include "../../threadpool/ThreadPool.hpp"
 #include "../../utils/SynchronizedQueue.hpp"
 #include "../../utils/Url.hpp"
+#include "SiteAttributes.hpp"
 #include "action/Crawl.hpp"
 #include "action/PageStorage.hpp"
 #include "action/PushIntoScheduler.hpp"
@@ -39,7 +40,7 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
       new SynchonizedPageGroupScheduler(numPagesToCrawl, memoryMutex);
 
   this->pageScheduler = (PageScheduler *)pageGroupScheduler;
-  auto *totalTimeMap = new std::map<std::string, double>();
+  auto *siteAttributesMap = new std::map<std::string, SiteAttributes>();
   auto *lastCrawlEndTimeMap = new std::map<std::string, Crawl::timePoint>();
   auto *spiderQueue = new utils::SynchronizedQueue<CkSpider>(memoryMutex);
   auto *schedulerPushAllPool = new ThreadPool(1, memoryMutex);
@@ -63,19 +64,31 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
 
   SchedulerPopAllTask schedulerPopAllTask(
       numPagesToCrawl, memoryMutex, pageGroupScheduler, crawlPool, spiderQueue,
-      &mustMatchPatterns, &avoidPatterns, totalTimeMap, lastCrawlEndTimeMap,
-      crawlMutex);
+      &mustMatchPatterns, &avoidPatterns, siteAttributesMap, lastCrawlEndTimeMap, crawlMutex);
 
   schedulerPopAllTask.run();
 
   counterFlag->wait();
+
+  if (verbose) {
+    for (auto it = siteAttributesMap->begin(); it != siteAttributesMap->end();
+         it++) {
+      std::cout << "Web site " << it->first << std::endl;
+      std::cout << "Number of URLs at level 1 crawled: "
+                << it->second.getNumPagesLeve1() << std::endl;
+      std::cout << "Average crawl time for (milliseconds): "
+                << it->second.getAverageTime() << std::endl;
+      std::cout << "Average page size (Bytes): "
+                << it->second.getAveragePageSize() << std::endl;
+    }
+  }
 
   //   std::cout << "delete all begin " << std::endl;
   delete counterFlag;
   //   std::cout << "delete counterFlag " << std::endl;
   delete this->pageScheduler;
   //   std::cout << "delete pageScheduler " << std::endl;
-  delete totalTimeMap;
+  delete siteAttributesMap;
   //   std::cout << "delete totalTimeMap " << std::endl;
   delete lastCrawlEndTimeMap;
   //   std::cout << "delete lastCrawlEndTimeMap " << std::endl;

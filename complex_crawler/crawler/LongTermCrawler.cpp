@@ -66,7 +66,7 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
                 << it->second.getNumPagesLeve1() << std::endl;
       std::cout << "Average crawl time for (milliseconds): "
                 << it->second.getAverageTime() << std::endl;
-      std::cout << "Average page size (Bytes)): "
+      std::cout << "Average page size (Bytes): "
                 << it->second.getAveragePageSize() << std::endl;
     }
   }

@@ -36,11 +36,6 @@ void SchedulerPushAllTask::run() {
 
     pageGroupScheduler->finishWork(spider->lastUrl());
 
-    if (verbose) {
-      std::cout << spider->lastUrl() << std::endl;
-      std::cout << spider->get_NumUnspidered() << std::endl;
-    }
-
     storeCounterFlag.reset(1);
 
     // PageStorage::storePage(storageDirectory, *spider, i);
@@ -65,6 +60,7 @@ void SchedulerPushAllTask::run() {
     // std::cout << "SchedulerPushAllTask memory unlock" << std::endl;
     pthread_mutex_unlock(memoryMutex);
   }
+
   counterFlag->signal();
 }
 

@@ -1,4 +1,5 @@
 #include "CrawlTask.hpp"
+#include "../SiteAttributes.hpp"
 #include "../action/Crawl.hpp"
 #include <iostream>
 #include <pthread.h>
@@ -8,12 +9,13 @@ CrawlTask::CrawlTask(pthread_mutex_t *memoryMutex,
                      utils::SynchronizedQueue<CkSpider> *queue,
                      CkSpider *spider, std::string url,
                      std::vector<std::string> *mustMatchPatterns,
-                     std::vector<std::string> *avoidPatterns, double *totalTime,
+                     std::vector<std::string> *avoidPatterns,
+                     SiteAttributes *siteAttribute,
                      Crawl::timePoint *lastCrawlEndTime,
                      bool useLastCrawlEndTime, pthread_mutex_t *crawlMutex)
     : memoryMutex(memoryMutex), queue(queue), spider(spider), url(url),
       mustMatchPatterns(mustMatchPatterns), avoidPatterns(avoidPatterns),
-      totalTime(totalTime), lastCrawlEndTime(lastCrawlEndTime),
+      siteAttribute(siteAttribute), lastCrawlEndTime(lastCrawlEndTime),
       useLastCrawlEndTime(useLastCrawlEndTime), crawlMutex(crawlMutex) {}
 
 CrawlTask::~CrawlTask() {}
@@ -21,8 +23,9 @@ CrawlTask::~CrawlTask() {}
 void CrawlTask::run() {
   // std::cout << "CrawlTask " + url << std::endl;
   // pthread_mutex_lock(crawlMutex);
-  Crawl::crawlUrl(*spider, url, *mustMatchPatterns, *avoidPatterns, *totalTime,
-                  *lastCrawlEndTime, useLastCrawlEndTime, memoryMutex);
+  Crawl::crawlUrl(*spider, url, *mustMatchPatterns, *avoidPatterns,
+                  *siteAttribute, *lastCrawlEndTime, useLastCrawlEndTime,
+                  memoryMutex);
   // pthread_mutex_unlock(crawlMutex);
   // std::cout << "CrawlTask push spider " + url  << std::endl;
   queue->push(spider);

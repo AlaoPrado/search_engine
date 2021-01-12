@@ -1,6 +1,7 @@
 #include "SchedulerPopAllTask.hpp"
 #include "../../../utils/SynchronizedQueue.hpp"
 #include "../../../utils/Url.hpp"
+#include "../SiteAttributes.hpp"
 #include "../action/Crawl.hpp"
 #include "../action/PageStorage.hpp"
 #include "CrawlTask.hpp"
@@ -18,13 +19,13 @@ SchedulerPopAllTask::SchedulerPopAllTask(
     utils::SynchronizedQueue<CkSpider> *spiderQueue,
     std::vector<std::string> *mustMatchPatterns,
     std::vector<std::string> *avoidPatterns,
-    std::map<std::string, double> *totalTimeMap,
+    std::map<std::string, SiteAttributes> *siteAttributesMap,
     std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
     pthread_mutex_t *crawlMutex)
     : numExpectedPops(numExpectedPops), memoryMutex(memoryMutex),
       pageGroupScheduler(pageGroupScheduler), crawlPool(crawlPool),
       spiderQueue(spiderQueue), mustMatchPatterns(mustMatchPatterns),
-      avoidPatterns(avoidPatterns), totalTimeMap(totalTimeMap),
+      avoidPatterns(avoidPatterns), siteAttributesMap(siteAttributesMap),
       lastCrawlEndTimeMap(lastCrawlEndTimeMap), crawlMutex(crawlMutex) {}
 
 SchedulerPopAllTask::~SchedulerPopAllTask() {}
@@ -33,7 +34,7 @@ void SchedulerPopAllTask::run() {
   for (size_t i = 0; i < numExpectedPops; i++) {
 
     // std::cout << "SchedulerPopAllTask pop await " + std::to_string(i)
-              // << std::endl;
+    // << std::endl;
 
     std::string url = pageGroupScheduler->pop();
 
@@ -47,7 +48,7 @@ void SchedulerPopAllTask::run() {
     auto it = lastCrawlEndTimeMap->find(baseUrl);
     if (it == lastCrawlEndTimeMap->end()) {
       pthread_mutex_lock(memoryMutex);
-      totalTimeMap->operator[](baseUrl) = 0;
+      siteAttributesMap->operator[](baseUrl) = SiteAttributes();
       lastCrawlEndTimeMap->operator[](baseUrl) =
           std::chrono::steady_clock::now();
       pthread_mutex_unlock(memoryMutex);
@@ -62,14 +63,14 @@ void SchedulerPopAllTask::run() {
 
     // std::cout << "SchedulerPopAllTask time " + url << std::endl;
 
-    double *totalTime = &(totalTimeMap->operator[](baseUrl));
+    SiteAttributes *siteAttributes = &(siteAttributesMap->operator[](baseUrl));
     Crawl::timePoint *lastCrawlEndTime =
         &(lastCrawlEndTimeMap->operator[](baseUrl));
 
     pthread_mutex_lock(memoryMutex);
     CrawlTask *crawlTask = new CrawlTask(
         memoryMutex, spiderQueue, spider, url, mustMatchPatterns, avoidPatterns,
-        totalTime, lastCrawlEndTime, useLastCrawlEndTime, crawlMutex);
+        siteAttributes, lastCrawlEndTime, useLastCrawlEndTime, crawlMutex);
     pthread_mutex_unlock(memoryMutex);
 
     // std::cout << "SchedulerPopAllTask add CrawlTask " + url << std::endl;

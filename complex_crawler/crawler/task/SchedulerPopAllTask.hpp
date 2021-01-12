@@ -19,7 +19,7 @@ private:
   ThreadPool *crawlPool;
   utils::SynchronizedQueue<CkSpider> *spiderQueue;
   std::vector<std::string> *mustMatchPatterns, *avoidPatterns;
-  std::map<std::string, double> *totalTimeMap;
+  std::map<std::string, SiteAttributes> *siteAttributesMap;
   std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap;
   pthread_mutex_t *crawlMutex;
 
@@ -30,7 +30,7 @@ public:
       utils::SynchronizedQueue<CkSpider> *spiderQueue,
       std::vector<std::string> *mustMatchPatterns,
       std::vector<std::string> *avoidPatterns,
-      std::map<std::string, double> *totalTimeMap,
+      std::map<std::string, SiteAttributes> *siteAttributesMap,
       std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
       pthread_mutex_t *crawlMutex);
   ~SchedulerPopAllTask();
