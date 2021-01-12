@@ -42,7 +42,9 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
 
   if (memoryMutex != NULL) {
     pthread_mutex_lock(memoryMutex);
-    std::cout << "Crawl lock memory " + urlCopy << std::endl;
+    if (debug) {
+      std::cout << "Crawl lock memory " + urlCopy << std::endl;
+    }
   }
 
   spider.Initialize(urlCopy.c_str());
@@ -60,13 +62,16 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
     spider.AddAvoidOutboundLinkPattern(avoidPattern.c_str());
   }
 
-  search_engine::utils::assertTrue(spider.get_NumUnspidered() > 0,
-                                   "Error(Crawl): invalid url: " + urlCopy);
+  search_engine::utils::assertTrue(
+      spider.get_NumUnspidered() > 0,
+      "Error(Crawl): invalid url get_NumUnspidered : " + urlCopy);
 
   spider.put_Utf8(true);
 
   if (memoryMutex != NULL) {
-    std::cout << "Crawl unlock memory " + urlCopy << std::endl;
+    if (debug) {
+      std::cout << "Crawl unlock memory " + urlCopy << std::endl;
+    }
     pthread_mutex_unlock(memoryMutex);
   }
 
@@ -82,7 +87,9 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
 
   if (memoryMutex != NULL) {
     pthread_mutex_lock(memoryMutex);
-    std::cout << "Crawl lock memory " + urlCopy << std::endl;
+    if (debug) {
+      std::cout << "Crawl lock memory " + urlCopy << std::endl;
+    }
   }
 
   if (debug) {
@@ -92,7 +99,9 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
   crawlSuccess = spider.CrawlNext();
 
   if (memoryMutex != NULL) {
-    std::cout << "Crawl unlock memory " + urlCopy << std::endl;
+    if (debug) {
+      std::cout << "Crawl unlock memory " + urlCopy << std::endl;
+    }
     pthread_mutex_unlock(memoryMutex);
   }
 

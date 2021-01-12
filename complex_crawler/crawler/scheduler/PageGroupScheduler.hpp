@@ -19,6 +19,7 @@ public:
   virtual std::size_t size() override;
   virtual bool empty() override;
   virtual void finishWork(std::string url);
+  virtual bool blocked();
 };
 
 } // namespace search_engine

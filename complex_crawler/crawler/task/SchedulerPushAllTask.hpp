@@ -2,6 +2,7 @@
 
 #include "../../../threadpool/CounterFlag.hpp"
 #include "../../../threadpool/Task.hpp"
+#include "../../../threadpool/ThreadPool.hpp"
 #include "../../../utils/SynchronizedQueue.hpp"
 #include "../scheduler/sync/SynchonizedPageGroupScheduler.hpp"
 #include <CkSpider.h>
@@ -20,6 +21,7 @@ private:
   SynchonizedPageGroupScheduler *pageGroupScheduler;
   std::map<std::string, bool> *viewedUrls;
   std::string storageDirectory;
+  ThreadPool *storePool;
   bool verbose;
 
 public:
@@ -28,7 +30,8 @@ public:
                        utils::SynchronizedQueue<CkSpider> *spiderQueue,
                        SynchonizedPageGroupScheduler *pageGroupScheduler,
                        std::map<std::string, bool> *viewedUrls,
-                       std::string storageDirectory, bool verbose);
+                       std::string storageDirectory, ThreadPool *storePool,
+                       bool verbose);
   ~SchedulerPushAllTask();
   void run() override;
 };

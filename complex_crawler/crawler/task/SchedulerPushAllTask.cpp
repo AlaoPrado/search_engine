@@ -1,9 +1,11 @@
 #include "SchedulerPushAllTask.hpp"
 #include "../../../threadpool/CounterFlag.hpp"
+#include "../../../threadpool/ThreadPool.hpp"
 #include "../../../utils/SynchronizedQueue.hpp"
 #include "../action/PageStorage.hpp"
 #include "../action/PushIntoScheduler.hpp"
 #include "../scheduler/sync/SynchonizedPageGroupScheduler.hpp"
+#include "StorePageTask.hpp"
 #include <CkSpider.h>
 #include <iostream>
 #include <map>
@@ -18,41 +20,50 @@ SchedulerPushAllTask::SchedulerPushAllTask(
     utils::SynchronizedQueue<CkSpider> *spiderQueue,
     SynchonizedPageGroupScheduler *pageGroupScheduler,
     std::map<std::string, bool> *viewedUrls, std::string storageDirectory,
-    bool verbose)
+    ThreadPool *storePool, bool verbose)
     : counterFlag(counterFlag), numPagesToCrawl(numPagesToCrawl),
       memoryMutex(memoryMutex), spiderQueue(spiderQueue),
       pageGroupScheduler(pageGroupScheduler), viewedUrls(viewedUrls),
-      storageDirectory(storageDirectory), verbose(verbose) {}
+      storageDirectory(storageDirectory), storePool(storePool),
+      verbose(verbose) {}
 
 SchedulerPushAllTask::~SchedulerPushAllTask() {}
 
 void SchedulerPushAllTask::run() {
+  CounterFlag storeCounterFlag(0);
   for (size_t i = 0; i < numPagesToCrawl; i++) {
     CkSpider *spider = spiderQueue->pop();
 
     pageGroupScheduler->finishWork(spider->lastUrl());
 
-    // if (verbose) {
-    //   std::cout << spider->lastUrl() << std::endl;
-    //   std::cout << spider->get_NumUnspidered() << std::endl;
-    // }
+    if (verbose) {
+      std::cout << spider->lastUrl() << std::endl;
+      std::cout << spider->get_NumUnspidered() << std::endl;
+    }
+
+    storeCounterFlag.reset(1);
 
     // PageStorage::storePage(storageDirectory, *spider, i);
 
-    // std::cout << (spider) << std::endl;
+    StorePageTask *storePageTask =
+        new StorePageTask(&storeCounterFlag, storageDirectory, spider, i);
 
-    std::cout << "SchedulerPushAllTask push" << std::endl;
+    storePool->addTask(storePageTask);
+
+    // std::cout << "SchedulerPushAllTask push" << std::endl;
 
     PushIntoScheduler::push(pageGroupScheduler, *spider, viewedUrls,
                             numPagesToCrawl, memoryMutex);
 
+    storeCounterFlag.wait();
+
     pthread_mutex_lock(memoryMutex);
-    std::cout << "SchedulerPushAllTask delete begin " << std::endl;
+    // std::cout << "SchedulerPushAllTask delete begin " << std::endl;
     delete spider;
     // spiderToDelete->push_back(spider);
-    std::cout << "SchedulerPushAllTask delete end" << std::endl;
+    // std::cout << "SchedulerPushAllTask delete end" << std::endl;
     pthread_mutex_unlock(memoryMutex);
-    std::cout << "SchedulerPushAllTask finish" << std::endl;
+    // std::cout << "SchedulerPushAllTask finish" << std::endl;
   }
   counterFlag->signal();
 }

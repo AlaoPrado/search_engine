@@ -26,38 +26,25 @@ SynchonizedPageGroupScheduler::~SynchonizedPageGroupScheduler() {
 std::string SynchonizedPageGroupScheduler::pop() {
   pthread_mutex_lock(&mutex);
 
-  std::string url("");
+  std::string url;
   while (this->numPops < this->numExpectedPops &&
-         this->pageGroupScheduler->empty() && url.length() == 0) {
+         (this->pageGroupScheduler->empty() ||
+          this->pageGroupScheduler->blocked())) {
     pthread_cond_wait(&cond, &mutex);
-
-    if (this->memoryMutex != NULL) {
-      pthread_mutex_lock(this->memoryMutex);
-      std::cout << "SynchonizedPageGroupScheduler lock memory pop" << std::endl;
-    }
-
-    url = this->pageGroupScheduler->pop();
-
-    if (this->memoryMutex != NULL) {
-      std::cout << "SynchonizedPageGroupScheduler unlock memory pop"
-                << std::endl;
-      pthread_mutex_unlock(this->memoryMutex);
-    }
   }
 
-  if (url.length() == 0) {
-    if (this->memoryMutex != NULL) {
-      pthread_mutex_lock(this->memoryMutex);
-      std::cout << "SynchonizedPageGroupScheduler lock memory pop" << std::endl;
-    }
+  if (this->memoryMutex != NULL) {
+    pthread_mutex_lock(this->memoryMutex);
+    // std::cout << "SynchonizedPageGroupScheduler lock memory pop" <<
+    // std::endl;
+  }
 
-    url = this->pageGroupScheduler->pop();
+  url = this->pageGroupScheduler->pop();
 
-    if (this->memoryMutex != NULL) {
-      std::cout << "SynchonizedPageGroupScheduler unlock memory pop"
-                << std::endl;
-      pthread_mutex_unlock(this->memoryMutex);
-    }
+  if (this->memoryMutex != NULL) {
+    // std::cout << "SynchonizedPageGroupScheduler unlock memory pop" <<
+    // std::endl;
+    pthread_mutex_unlock(this->memoryMutex);
   }
 
   this->numPops++;
@@ -71,13 +58,17 @@ void SynchonizedPageGroupScheduler::push(std::string url) {
 
   if (this->memoryMutex != NULL) {
     pthread_mutex_lock(this->memoryMutex);
-    std::cout << "SynchonizedPageGroupScheduler lock memory push" << std::endl;
-    this->pageGroupScheduler->push(url);
-    std::cout << "SynchonizedPageGroupScheduler unlock memory push"
-              << std::endl;
+
+    // std::cout << "SynchonizedPageGroupScheduler lock memory push" <<
+    // std::endl;
+  }
+
+  this->pageGroupScheduler->push(url);
+
+  if (this->memoryMutex != NULL) {
+    // std::cout << "SynchonizedPageGroupScheduler unlock memory push"
+    //           << std::endl;
     pthread_mutex_unlock(this->memoryMutex);
-  } else {
-    this->pageGroupScheduler->push(url);
   }
 
   pthread_cond_signal(&cond);
@@ -103,6 +94,14 @@ void SynchonizedPageGroupScheduler::finishWork(std::string url) {
   this->pageGroupScheduler->finishWork(url);
   pthread_cond_signal(&cond);
   pthread_mutex_unlock(&mutex);
+}
+
+bool SynchonizedPageGroupScheduler::blocked() {
+  bool condition;
+  pthread_mutex_lock(&mutex);
+  condition = this->pageGroupScheduler->blocked();
+  pthread_mutex_unlock(&mutex);
+  return condition;
 }
 
 } // namespace search_engine

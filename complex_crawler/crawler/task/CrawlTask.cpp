@@ -19,12 +19,12 @@ CrawlTask::CrawlTask(pthread_mutex_t *memoryMutex,
 CrawlTask::~CrawlTask() {}
 
 void CrawlTask::run() {
-  std::cout << "CrawlTask " + url << std::endl;
-  pthread_mutex_lock(crawlMutex);
+  // std::cout << "CrawlTask " + url << std::endl;
+  // pthread_mutex_lock(crawlMutex);
   Crawl::crawlUrl(*spider, url, *mustMatchPatterns, *avoidPatterns, *totalTime,
-                  *lastCrawlEndTime, useLastCrawlEndTime, memoryMutex, true);
-  pthread_mutex_unlock(crawlMutex);
-  std::cout << "CrawlTask push spider " + url  << std::endl;
+                  *lastCrawlEndTime, useLastCrawlEndTime, memoryMutex);
+  // pthread_mutex_unlock(crawlMutex);
+  // std::cout << "CrawlTask push spider " + url  << std::endl;
   queue->push(spider);
 }
 
