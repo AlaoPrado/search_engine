@@ -3,6 +3,7 @@
 #include "../../utils/SynchronizedQueue.hpp"
 #include "../../utils/Url.hpp"
 #include "action/Crawl.hpp"
+#include "action/PushIntoScheduler.hpp"
 #include "scheduler/sync/SynchonizedPageGroupScheduler.hpp"
 #include "task/CrawlTask.hpp"
 #include "task/SchedulerPopAllTask.hpp"
@@ -44,7 +45,8 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
       numPagesToCrawl, &memoryMutex, pageGroupScheduler, crawlPool, spiderQueue,
       &mustMatchPatterns, &avoidPatterns, totalTimeMap, lastCrawlEndTimeMap));
 
-  this->pushUrlsIntoScheduler(seedUrls, numPagesToCrawl);
+  PushIntoScheduler::push(this->pageScheduler, seedUrls, this->viewedUrls,
+                          numPagesToCrawl, &memoryMutex);
 
   for (std::size_t i = 0; i < numPagesToCrawl; i++) {
     CkSpider *spider = spiderQueue->pop();
@@ -55,8 +57,9 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
       std::cout << spider->lastUrl() << std::endl;
       std::cout << spider->get_NumUnspidered() << std::endl;
     }
-    
-    this->pushUrlsIntoScheduler(*spider, numPagesToCrawl);
+
+    PushIntoScheduler::push(this->pageScheduler, *spider, this->viewedUrls,
+                            numPagesToCrawl, &memoryMutex);
     std::cout << "ShortTerm push" << std::endl;
 
     pthread_mutex_lock(&memoryMutex);

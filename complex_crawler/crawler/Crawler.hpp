@@ -9,19 +9,12 @@
 namespace search_engine {
 
 class Crawler {
-private:
-  void pushUrlIntoScheduler(std::string url);
-
 protected:
   std::string storageDirectory;
   bool verbose;
   std::vector<std::string> mustMatchPatterns, avoidPatterns;
   PageScheduler *pageScheduler;
   std::map<std::string, bool> *viewedUrls;
-
-  void pushUrlsIntoScheduler(std::vector<std::string> urls,
-                             std::size_t numPagesToCrawl);
-  void pushUrlsIntoScheduler(CkSpider &spider, std::size_t numPagesToCrawl);
 
 public:
   Crawler(std::string storageDirectory, bool verbose = true);
