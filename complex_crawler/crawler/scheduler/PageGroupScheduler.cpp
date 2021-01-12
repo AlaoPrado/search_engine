@@ -4,6 +4,7 @@
 #include "PageScheduler.hpp"
 #include "SimplePageScheduler.hpp"
 #include <map>
+#include <iostream>
 
 namespace search_engine {
 
@@ -29,13 +30,12 @@ std::string PageGroupScheduler::pop() {
     if (!it->second &&
         this->pageGroupScheduler->operator[](it->first)->size() > 0) {
       this->numPages--;
-      it->second = true;
+      this->pageGroupInWork->operator[](it->first) = true;
+      std::cout << "PageGroupScheduler pop " + it->first << std::endl;
       return this->pageGroupScheduler->operator[](it->first)->pop();
     }
   }
-
-  utils::assertTrue(false, "Error(PageGroupScheduler): no urls to pop");
-  return nullptr;
+  return "";
 }
 
 void PageGroupScheduler::push(std::string url) {
@@ -44,6 +44,7 @@ void PageGroupScheduler::push(std::string url) {
   if (it == this->pageGroupScheduler->end()) {
     this->pageGroupScheduler->operator[](baseUrl) = new SimplePageScheduler();
     this->pageGroupInWork->operator[](baseUrl) = false;
+    std::cout << "PageGroupScheduler push " + baseUrl << std::endl;
   }
   this->pageGroupScheduler->operator[](baseUrl)->push(url);
   this->numPages++;
@@ -51,15 +52,18 @@ void PageGroupScheduler::push(std::string url) {
 
 std::size_t PageGroupScheduler::size() { return this->numPages; }
 
+bool PageGroupScheduler::empty() { return this->numPages == 0; }
+
 void PageGroupScheduler::finishWork(std::string url) {
   std::string baseUrl = utils::baseUrl(url);
+  std::cout << "PageGroupScheduler finishWork " + baseUrl << std::endl;
   auto it = this->pageGroupInWork->find(baseUrl);
 
   utils::assertTrue(
       it != this->pageGroupInWork->end(),
       "Error(PageGroupScheduler): the input URL does not belong to any groups");
 
-  it->second = false;
+  this->pageGroupInWork->operator[](url) = false;
 }
 
 } // namespace search_engine

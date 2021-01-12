@@ -25,6 +25,7 @@ public:
   virtual std::string pop() override;
   virtual void push(std::string url) override;
   virtual std::size_t size() override;
+  virtual bool empty() override;
 };
 
 } // namespace search_engine

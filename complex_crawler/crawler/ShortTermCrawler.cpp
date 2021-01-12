@@ -3,71 +3,77 @@
 #include "../../utils/SynchronizedQueue.hpp"
 #include "../../utils/Url.hpp"
 #include "action/Crawl.hpp"
-#include "scheduler/PageGroupScheduler.hpp"
+#include "scheduler/sync/SynchonizedPageGroupScheduler.hpp"
 #include "task/CrawlTask.hpp"
+#include "task/SchedulerPopAllTask.hpp"
+#include "task/StorePageTask.hpp"
 #include <CkSpider.h>
 #include <chrono>
 #include <iostream>
 #include <map>
+#include <pthread.h>
 #include <string>
 
 namespace search_engine {
 
 ShortTermCrawler::ShortTermCrawler(std::string storageDirectory, bool verbose,
                                    int numThreads)
-    : Crawler(storageDirectory, verbose), numThreads(numThreads) {
-  this->pageScheduler = new PageGroupScheduler();
-}
+    : Crawler(storageDirectory, verbose), numThreads(numThreads) {}
 
-ShortTermCrawler::~ShortTermCrawler() { delete this->pageScheduler; }
+ShortTermCrawler::~ShortTermCrawler() {}
 
 void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
                              std::size_t numPagesToCrawl) {
-  this->pushUrlsIntoScheduler(seedUrls, numPagesToCrawl);
 
-  auto pageGroupScheduler =
-      dynamic_cast<PageGroupScheduler *>(this->pageScheduler);
-  std::string url;
+  pthread_mutex_t memoryMutex;
+
+  pthread_mutex_init(&memoryMutex, 0);
+
+  SynchonizedPageGroupScheduler *pageGroupScheduler =
+      new SynchonizedPageGroupScheduler(numPagesToCrawl, &memoryMutex);
+
+  this->pageScheduler = (PageScheduler *)pageGroupScheduler;
   auto *totalTimeMap = new std::map<std::string, double>();
   auto *lastCrawlEndTimeMap = new std::map<std::string, Crawl::timePoint>();
-  // auto *spiderQueue = new utils::SynchronizedQueue<CkSpider>();
-  // auto *crawlPool = new ThreadPool(this->numThreads);
+  auto *spiderQueue = new utils::SynchronizedQueue<CkSpider>(&memoryMutex);
+  auto *pageGroupSchedulerPoperPool = new ThreadPool(1, &memoryMutex);
+  auto *storePagePool = new ThreadPool(1, &memoryMutex);
+  auto *crawlPool = new ThreadPool(this->numThreads, &memoryMutex);
+
+  pageGroupSchedulerPoperPool->addTask(new SchedulerPopAllTask(
+      numPagesToCrawl, &memoryMutex, pageGroupScheduler, crawlPool, spiderQueue,
+      &mustMatchPatterns, &avoidPatterns, totalTimeMap, lastCrawlEndTimeMap));
+
+  this->pushUrlsIntoScheduler(seedUrls, numPagesToCrawl);
 
   for (std::size_t i = 0; i < numPagesToCrawl; i++) {
-    url = pageGroupScheduler->pop();
+    CkSpider *spider = spiderQueue->pop();
 
-    bool useLastCrawlEndTime = true;
-
-    std::string baseUrl = utils::baseUrl(url);
-    auto it = lastCrawlEndTimeMap->find(baseUrl);
-    if (it == lastCrawlEndTimeMap->end()) {
-      totalTimeMap->operator[](baseUrl) = 0;
-      lastCrawlEndTimeMap->operator[](baseUrl) =
-          std::chrono::steady_clock::now();
-      useLastCrawlEndTime = false;
-    }
-
-    CkSpider spider;
-    double totalTime = totalTimeMap->operator[](baseUrl);
-    Crawl::timePoint *lastCrawlEndTime =
-        &(lastCrawlEndTimeMap->operator[](baseUrl));
-    Crawl::crawlUrl(spider, url, this->mustMatchPatterns, this->avoidPatterns,
-                    totalTime, *lastCrawlEndTime, useLastCrawlEndTime);
-
-    pageGroupScheduler->finishWork(url);
+    pageGroupScheduler->finishWork(spider->lastUrl());
 
     if (verbose) {
-      std::cout << spider.lastUrl() << std::endl;
-      std::cout << spider.get_NumUnspidered() << std::endl;
+      std::cout << spider->lastUrl() << std::endl;
+      std::cout << spider->get_NumUnspidered() << std::endl;
     }
+    
+    this->pushUrlsIntoScheduler(*spider, numPagesToCrawl);
+    std::cout << "ShortTerm push" << std::endl;
 
-    this->pushUrlsIntoScheduler(spider, numPagesToCrawl);
+    pthread_mutex_lock(&memoryMutex);
+    delete spider;
+    pthread_mutex_unlock(&memoryMutex);
+    std::cout << "ShortTerm delete" << std::endl;
   }
 
+  delete this->pageScheduler;
   delete totalTimeMap;
   delete lastCrawlEndTimeMap;
-  // delete spiderQueue;
-  // delete crawlPool;
+  delete spiderQueue;
+  delete pageGroupSchedulerPoperPool;
+  delete storePagePool;
+  delete crawlPool;
+
+  pthread_mutex_destroy(&memoryMutex);
 }
 
 } // namespace search_engine

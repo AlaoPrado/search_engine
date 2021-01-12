@@ -13,7 +13,7 @@ class CrawlTask : public Task {
 private:
   utils::SynchronizedQueue<CkSpider> *queue;
   CkSpider *spider;
-  std::string *url;
+  std::string url;
   std::vector<std::string> *mustMatchPatterns;
   std::vector<std::string> *avoidPatterns;
   double *totalTime;
@@ -22,12 +22,11 @@ private:
 
 public:
   CrawlTask(utils::SynchronizedQueue<CkSpider> *queue, CkSpider *spider,
-            std::string *url, std::vector<std::string> *mustMatchPatterns,
+            std::string url, std::vector<std::string> *mustMatchPatterns,
             std::vector<std::string> *avoidPatterns, double *totalTime,
             Crawl::timePoint *lastCrawlEndTime, bool useLastCrawlEndTime);
   ~CrawlTask();
   void run() override;
-  CkSpider *getSpider();
 };
 
 } // namespace search_engine

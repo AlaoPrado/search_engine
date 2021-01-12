@@ -40,7 +40,7 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
   }
 
   search_engine::utils::assertTrue(spider.get_NumUnspidered() > 0,
-                                   "Error: invalid url");
+                                   "Error(Crawl): invalid url: " + url);
 
   spider.put_Utf8(true);
 

@@ -27,4 +27,6 @@ void SimplePageScheduler::push(std::string url) {
 
 std::size_t SimplePageScheduler::size() { return this->urlQueue->size(); }
 
+bool SimplePageScheduler::empty() { return this->urlQueue->empty(); }
+
 } // namespace search_engine
