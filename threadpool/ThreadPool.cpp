@@ -2,6 +2,7 @@
 #include "../utils/SynchronizedQueue.hpp"
 #include <pthread.h>
 #include <stdexcept>
+#include <string>
 #include <utility>
 
 namespace search_engine {
@@ -43,9 +44,12 @@ ThreadPool::ThreadPool(int size, pthread_mutex_t *memoryMutex) {
   this->workQueue = new utils::SynchronizedQueue<Task>(this->memoryMutex);
   this->threadParam = new ThreadParam(this->workQueue, this->memoryMutex);
   for (int i = 0; i < this->size; i++) {
-    if (!pthread_create(&(this->pool[i]), NULL, this->threadRun,
-                        (void *)this->threadParam)) {
-      throw std::logic_error("Error: failed to create thread " + i);
+    int error = pthread_create(&(this->pool[i]), NULL, this->threadRun,
+                               (void *)this->threadParam);
+    if (error != 0) {
+      throw std::logic_error("Error: failed to create thread " +
+                             std::to_string(i) + " with code " +
+                             std::to_string(error));
     }
   }
 }
