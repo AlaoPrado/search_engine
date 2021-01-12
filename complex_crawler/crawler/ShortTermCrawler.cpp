@@ -13,8 +13,8 @@
 
 namespace search_engine {
 
-ShortTermCrawler::ShortTermCrawler(int numThreads, std::string storageDirectory,
-                                   bool verbose)
+ShortTermCrawler::ShortTermCrawler(std::string storageDirectory, bool verbose,
+                                   int numThreads)
     : Crawler(storageDirectory, verbose), numThreads(numThreads) {
   this->pageScheduler = new PageGroupScheduler();
 }
@@ -56,7 +56,7 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
 
     pageGroupScheduler->finishWork(url);
 
-        if (verbose) {
+    if (verbose) {
       std::cout << spider.lastUrl() << std::endl;
       std::cout << spider.get_NumUnspidered() << std::endl;
     }

@@ -2,7 +2,6 @@
 #include "../../../utils/Assert.hpp"
 #include <CkSpider.h>
 #include <chrono>
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -14,7 +13,6 @@ void Crawl::crawlSleepUntilMs(CkSpider &spider,
   Crawl::millis duration =
       std::chrono::duration_cast<Crawl::millis>(currentTime - lastCrawlEndTime);
   int sleepTimeMs = Crawl::CRAWL_AWAIT_TIME_MS - duration.count();
-  std::cout << sleepTimeMs << std::endl;
   if (sleepTimeMs > 0) {
     spider.SleepMs(sleepTimeMs);
   }

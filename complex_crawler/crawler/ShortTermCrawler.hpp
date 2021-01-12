@@ -13,8 +13,8 @@ private:
   int numThreads;
 
 public:
-  ShortTermCrawler(int numThreads, std::string storageDirectory,
-                   bool verbose = true);
+  ShortTermCrawler(std::string storageDirectory, bool verbose = true,
+                   int numThreads = 1);
   ~ShortTermCrawler();
   virtual void crawl(std::vector<std::string> &seedUrls,
                      std::size_t numPagesToCrawl) override;

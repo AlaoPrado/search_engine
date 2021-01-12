@@ -1,5 +1,7 @@
 #include "../utils/Assert.hpp"
+#include "crawler/Crawler.hpp"
 #include "crawler/LongTermCrawler.hpp"
+#include "crawler/ShortTermCrawler.hpp"
 #include <exception>
 #include <fstream>
 #include <iostream>
@@ -7,6 +9,8 @@
 #include <vector>
 
 int main(const int argc, const char **argv) {
+  search_engine::Crawler *crawler = NULL;
+
   try {
     const int LONG_TERM_CRAWLER = 0;
     const int SHORT_TERM_CRAWLER = 1;
@@ -39,10 +43,20 @@ int main(const int argc, const char **argv) {
     }
     seedFile.close();
 
-    search_engine::LongTermCrawler crawler(storageFolderDirectory);
-    crawler.crawl(seedUrls, numPagesToCrawl);
+    crawler =
+        crawlerType == LONG_TERM_CRAWLER
+            ? (search_engine::Crawler *)new search_engine::LongTermCrawler(
+                  storageFolderDirectory)
+            : (search_engine::Crawler *)new search_engine::ShortTermCrawler(
+                  storageFolderDirectory);
 
+    crawler->crawl(seedUrls, numPagesToCrawl);
+    delete crawler;
   } catch (std::exception &e) {
+    if (crawler != NULL) {
+      delete crawler;
+    }
+
     std::cout << e.what() << std::endl;
     return 1;
   }

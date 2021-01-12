@@ -42,7 +42,7 @@ void PageGroupScheduler::push(std::string url) {
   std::string baseUrl = utils::baseUrl(url);
   auto it = this->pageGroupScheduler->find(baseUrl);
   if (it == this->pageGroupScheduler->end()) {
-    it->second = new SimplePageScheduler();
+    this->pageGroupScheduler->operator[](baseUrl) = new SimplePageScheduler();
     this->pageGroupInWork->operator[](baseUrl) = false;
   }
   this->pageGroupScheduler->operator[](baseUrl)->push(url);
@@ -56,7 +56,7 @@ void PageGroupScheduler::finishWork(std::string url) {
   auto it = this->pageGroupInWork->find(baseUrl);
 
   utils::assertTrue(
-      it == this->pageGroupInWork->end(),
+      it != this->pageGroupInWork->end(),
       "Error(PageGroupScheduler): the input URL does not belong to any groups");
 
   it->second = false;
