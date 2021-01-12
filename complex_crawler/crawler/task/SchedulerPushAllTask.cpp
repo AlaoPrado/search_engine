@@ -45,8 +45,10 @@ void SchedulerPushAllTask::run() {
 
     // PageStorage::storePage(storageDirectory, *spider, i);
 
+    pthread_mutex_lock(memoryMutex);
     StorePageTask *storePageTask =
         new StorePageTask(&storeCounterFlag, storageDirectory, spider, i);
+    pthread_mutex_unlock(memoryMutex);
 
     storePool->addTask(storePageTask);
 
@@ -58,12 +60,10 @@ void SchedulerPushAllTask::run() {
     storeCounterFlag.wait();
 
     pthread_mutex_lock(memoryMutex);
-    // std::cout << "SchedulerPushAllTask delete begin " << std::endl;
+    // std::cout << "SchedulerPushAllTask memory lock " << std::endl;
     delete spider;
-    // spiderToDelete->push_back(spider);
-    // std::cout << "SchedulerPushAllTask delete end" << std::endl;
+    // std::cout << "SchedulerPushAllTask memory unlock" << std::endl;
     pthread_mutex_unlock(memoryMutex);
-    // std::cout << "SchedulerPushAllTask finish" << std::endl;
   }
   counterFlag->signal();
 }
