@@ -64,7 +64,8 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
 
   SchedulerPopAllTask schedulerPopAllTask(
       numPagesToCrawl, memoryMutex, pageGroupScheduler, crawlPool, spiderQueue,
-      &mustMatchPatterns, &avoidPatterns, siteAttributesMap, lastCrawlEndTimeMap, crawlMutex);
+      &mustMatchPatterns, &avoidPatterns, siteAttributesMap,
+      lastCrawlEndTimeMap, crawlMutex);
 
   schedulerPopAllTask.run();
 
@@ -73,13 +74,14 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
   if (verbose) {
     for (auto it = siteAttributesMap->begin(); it != siteAttributesMap->end();
          it++) {
-      std::cout << "Web site " << it->first << std::endl;
+      std::cout << "Web site: " << it->first << std::endl;
       std::cout << "Number of URLs at level 1 crawled: "
                 << it->second.getNumPagesLeve1() << std::endl;
       std::cout << "Average crawl time for (milliseconds): "
                 << it->second.getAverageTime() << std::endl;
       std::cout << "Average page size (Bytes): "
                 << it->second.getAveragePageSize() << std::endl;
+      std::cout << std::endl;
     }
   }
 
