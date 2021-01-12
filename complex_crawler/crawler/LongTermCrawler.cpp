@@ -11,17 +11,17 @@
 namespace search_engine {
 
 LongTermCrawler::LongTermCrawler(std::string storageDirectory, bool verbose)
-    : Crawler(storageDirectory, verbose) {
-  this->pageScheduler = new PriorityPageScheduler();
-}
+    : Crawler(storageDirectory, verbose) {}
 
-LongTermCrawler::~LongTermCrawler() { delete this->pageScheduler; }
+LongTermCrawler::~LongTermCrawler() {}
 
 void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
                             std::size_t numPagesToCrawl) {
+  this->pageScheduler = new PriorityPageScheduler();
+  
   PushIntoScheduler::push(this->pageScheduler, seedUrls, this->viewedUrls,
                           numPagesToCrawl);
-
+  
   std::string url;
   Crawl::timePoint lastCrawlTime;
   double totalTime = 0;
@@ -40,6 +40,8 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
     PushIntoScheduler::push(this->pageScheduler, spider, this->viewedUrls,
                             numPagesToCrawl);
   }
+
+  delete this->pageScheduler;
 }
 
 } // namespace search_engine
