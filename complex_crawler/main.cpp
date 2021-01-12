@@ -8,14 +8,24 @@
 
 int main(const int argc, const char **argv) {
   try {
+    const int LONG_TERM_CRAWLER = 0;
+    const int SHORT_TERM_CRAWLER = 1;
+
     search_engine::utils::assertTrue(
         argc > 1,
         "Error: a file name and a storage folder must be passed by parameter");
 
     const std::string fileName = argv[1];
     const std::string storageFolderDirectory = argc > 2 ? argv[2] : "storage/";
+
+    const int crawlerType = argc > 3 ? std::stoi(argv[3]) : LONG_TERM_CRAWLER;
+
+    search_engine::utils::assertTrue(
+        crawlerType == LONG_TERM_CRAWLER || crawlerType == SHORT_TERM_CRAWLER,
+        "Error: the third paramete must be 0 or 1");
+
     const std::size_t numPagesToCrawl =
-        (std::size_t)(argc > 3 ? std::stoi(argv[3]) : 10);
+        (std::size_t)(argc > 4 ? std::stoi(argv[4]) : 10);
 
     std::ifstream seedFile(fileName);
 

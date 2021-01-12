@@ -9,8 +9,12 @@
 namespace search_engine {
 
 class ShortTermCrawler : public Crawler {
+private:
+  int numThreads;
+
 public:
-  ShortTermCrawler(std::string storageDirectory, bool verbose = true);
+  ShortTermCrawler(int numThreads, std::string storageDirectory,
+                   bool verbose = true);
   ~ShortTermCrawler();
   virtual void crawl(std::vector<std::string> &seedUrls,
                      std::size_t numPagesToCrawl) override;
