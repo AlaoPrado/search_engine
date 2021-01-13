@@ -22,11 +22,15 @@ CrawlTask::~CrawlTask() {}
 
 void CrawlTask::run() {
   // std::cout << "CrawlTask " + url << std::endl;
-  // pthread_mutex_lock(crawlMutex);
-  Crawl::crawlUrl(*spider, url, *mustMatchPatterns, *avoidPatterns,
-                  *siteAttribute, *lastCrawlEndTime, useLastCrawlEndTime,
-                  memoryMutex);
-  // pthread_mutex_unlock(crawlMutex);
+  try {
+    Crawl::crawlUrl(*spider, url, *mustMatchPatterns, *avoidPatterns,
+                    *siteAttribute, *lastCrawlEndTime, useLastCrawlEndTime,
+                    memoryMutex);
+  } catch (std::exception &e) {
+    std::cout << "Error when crawling page " + url << std::endl;
+    std::cout << e.what() << std::endl;
+  }
+
   // std::cout << "CrawlTask push spider " + url  << std::endl;
   queue->push(spider);
 }

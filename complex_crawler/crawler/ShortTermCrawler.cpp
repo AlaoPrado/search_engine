@@ -48,8 +48,6 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
   auto *storePool = new ThreadPool(1, memoryMutex);
   auto *crawlPool = new ThreadPool(this->numThreads, memoryMutex);
 
-  // auto spiderToDelete = new std::vector<CkSpider *>();
-
   PushIntoScheduler::push(this->pageScheduler, seedUrls, this->viewedUrls,
                           numPagesToCrawl, memoryMutex);
 
@@ -85,31 +83,21 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
     }
   }
 
-  //   std::cout << "delete all begin " << std::endl;
   delete counterFlag;
-  //   std::cout << "delete counterFlag " << std::endl;
   delete this->pageScheduler;
-  //   std::cout << "delete pageScheduler " << std::endl;
   delete siteAttributesMap;
-  //   std::cout << "delete totalTimeMap " << std::endl;
   delete lastCrawlEndTimeMap;
-  //   std::cout << "delete lastCrawlEndTimeMap " << std::endl;
   delete spiderQueue;
-  //   std::cout << "delete spiderQueue " << std::endl;
   delete schedulerPushAllPool;
   delete schedulerPopAllPool;
   delete storePool;
-  //   std::cout << "delete schedulerPopAllPool " << std::endl;
   delete crawlPool;
-  //   std::cout << "delete crawlPool " << std::endl;
 
   pthread_mutex_destroy(memoryMutex);
   pthread_mutex_destroy(crawlMutex);
 
   delete memoryMutex;
-  //   std::cout << "delete memoryMutex " << std::endl;
   delete crawlMutex;
-  //   std::cout << "delete crawlMutex " << std::endl;
 }
 
 } // namespace search_engine

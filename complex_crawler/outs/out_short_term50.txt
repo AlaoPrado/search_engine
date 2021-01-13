@@ -1,0 +1,1140 @@
+Error when crawling page http://cinemark.com.br//www.youtube.com/embed/xYv139rQkxc
+ChilkatLog:
+  CrawlNext:
+    DllDate: Sep 28 2020
+    ChilkatVersion: 9.5.0.84
+    UnlockPrefix: NONE
+    Architecture: Little Endian; 64-bit
+    Language: Linux C/C++
+    VerboseLogging: 0
+    _crawl:
+      robotsUrl: http://cinemark.com.br/robots.txt
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: cinemark.com.br
+              httpPort: 80
+              tls: False
+              HTTP connection succeeded.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443/robots.txt
+            newLocation:
+              url: http://cinemark.com.br/robots.txt
+              location: https://www.cinemark.com.br:443/robots.txt
+              newUrlFinal: https://www.cinemark.com.br:443/robots.txt
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 200
+            statusText: OK
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          No charset specified, assuming Windows-1252
+          Converting to utf-8 charset.
+          fromCodePage: 1252
+        --convertResponseBodyToUtf8
+      --httpRequestStr
+      Fetched robots.txt
+      url: http://cinemark.com.br//www.youtube.com/embed/xYv139rQkxc
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br//www.youtube.com/embed/xYv139rQkxc
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Using existing connection.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/xYv139rQkxc HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443//www.youtube.com/embed/xYv139rQkxc
+            newLocation:
+              url: http://cinemark.com.br//www.youtube.com/embed/xYv139rQkxc
+              location: https://www.cinemark.com.br:443//www.youtube.com/embed/xYv139rQkxc
+              newUrlFinal: https://www.cinemark.com.br:443//www.youtube.com/embed/xYv139rQkxc
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443//www.youtube.com/embed/xYv139rQkxc
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/xYv139rQkxc HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 404
+            statusText: Not Found
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          HTTP response body was binary (not text)
+        --convertResponseBodyToUtf8
+        Returning failed status because of HTTP response code.
+      --httpRequestStr
+      No unspidered URLs remaining.
+    --_crawl
+    Failed.
+  --CrawlNext
+--ChilkatLog
+
+Error when crawling page http://cinemark.com.br//www.youtube.com/embed/ma7HsEy8a0M
+ChilkatLog:
+  CrawlNext:
+    DllDate: Sep 28 2020
+    ChilkatVersion: 9.5.0.84
+    UnlockPrefix: NONE
+    Architecture: Little Endian; 64-bit
+    Language: Linux C/C++
+    VerboseLogging: 0
+    _crawl:
+      robotsUrl: http://cinemark.com.br/robots.txt
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: cinemark.com.br
+              httpPort: 80
+              tls: False
+              HTTP connection succeeded.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443/robots.txt
+            newLocation:
+              url: http://cinemark.com.br/robots.txt
+              location: https://www.cinemark.com.br:443/robots.txt
+              newUrlFinal: https://www.cinemark.com.br:443/robots.txt
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 200
+            statusText: OK
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          No charset specified, assuming Windows-1252
+          Converting to utf-8 charset.
+          fromCodePage: 1252
+        --convertResponseBodyToUtf8
+      --httpRequestStr
+      Fetched robots.txt
+      url: http://cinemark.com.br//www.youtube.com/embed/ma7HsEy8a0M
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br//www.youtube.com/embed/ma7HsEy8a0M
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Using existing connection.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/ma7HsEy8a0M HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443//www.youtube.com/embed/ma7HsEy8a0M
+            newLocation:
+              url: http://cinemark.com.br//www.youtube.com/embed/ma7HsEy8a0M
+              location: https://www.cinemark.com.br:443//www.youtube.com/embed/ma7HsEy8a0M
+              newUrlFinal: https://www.cinemark.com.br:443//www.youtube.com/embed/ma7HsEy8a0M
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443//www.youtube.com/embed/ma7HsEy8a0M
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/ma7HsEy8a0M HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 1
+            --sendRequestHeader
+            statusCode: 404
+            statusText: Not Found
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          HTTP response body was binary (not text)
+        --convertResponseBodyToUtf8
+        Returning failed status because of HTTP response code.
+      --httpRequestStr
+      No unspidered URLs remaining.
+    --_crawl
+    Failed.
+  --CrawlNext
+--ChilkatLog
+
+Error when crawling page http://cinemark.com.br//www.youtube.com/embed/pD5YtPQHwWk
+ChilkatLog:
+  CrawlNext:
+    DllDate: Sep 28 2020
+    ChilkatVersion: 9.5.0.84
+    UnlockPrefix: NONE
+    Architecture: Little Endian; 64-bit
+    Language: Linux C/C++
+    VerboseLogging: 0
+    _crawl:
+      robotsUrl: http://cinemark.com.br/robots.txt
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: cinemark.com.br
+              httpPort: 80
+              tls: False
+              HTTP connection succeeded.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443/robots.txt
+            newLocation:
+              url: http://cinemark.com.br/robots.txt
+              location: https://www.cinemark.com.br:443/robots.txt
+              newUrlFinal: https://www.cinemark.com.br:443/robots.txt
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 200
+            statusText: OK
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          No charset specified, assuming Windows-1252
+          Converting to utf-8 charset.
+          fromCodePage: 1252
+        --convertResponseBodyToUtf8
+      --httpRequestStr
+      Fetched robots.txt
+      url: http://cinemark.com.br//www.youtube.com/embed/pD5YtPQHwWk
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br//www.youtube.com/embed/pD5YtPQHwWk
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Using existing connection.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/pD5YtPQHwWk HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443//www.youtube.com/embed/pD5YtPQHwWk
+            newLocation:
+              url: http://cinemark.com.br//www.youtube.com/embed/pD5YtPQHwWk
+              location: https://www.cinemark.com.br:443//www.youtube.com/embed/pD5YtPQHwWk
+              newUrlFinal: https://www.cinemark.com.br:443//www.youtube.com/embed/pD5YtPQHwWk
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443//www.youtube.com/embed/pD5YtPQHwWk
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/pD5YtPQHwWk HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 404
+            statusText: Not Found
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          HTTP response body was binary (not text)
+        --convertResponseBodyToUtf8
+        Returning failed status because of HTTP response code.
+      --httpRequestStr
+      No unspidered URLs remaining.
+    --_crawl
+    Failed.
+  --CrawlNext
+--ChilkatLog
+
+Error when crawling page http://cinemark.com.br//www.youtube.com/embed/E-VeqjrBNks
+ChilkatLog:
+  CrawlNext:
+    DllDate: Sep 28 2020
+    ChilkatVersion: 9.5.0.84
+    UnlockPrefix: NONE
+    Architecture: Little Endian; 64-bit
+    Language: Linux C/C++
+    VerboseLogging: 0
+    _crawl:
+      robotsUrl: http://cinemark.com.br/robots.txt
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: cinemark.com.br
+              httpPort: 80
+              tls: False
+              HTTP connection succeeded.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443/robots.txt
+            newLocation:
+              url: http://cinemark.com.br/robots.txt
+              location: https://www.cinemark.com.br:443/robots.txt
+              newUrlFinal: https://www.cinemark.com.br:443/robots.txt
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 200
+            statusText: OK
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          No charset specified, assuming Windows-1252
+          Converting to utf-8 charset.
+          fromCodePage: 1252
+        --convertResponseBodyToUtf8
+      --httpRequestStr
+      Fetched robots.txt
+      url: http://cinemark.com.br//www.youtube.com/embed/E-VeqjrBNks
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br//www.youtube.com/embed/E-VeqjrBNks
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Using existing connection.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/E-VeqjrBNks HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443//www.youtube.com/embed/E-VeqjrBNks
+            newLocation:
+              url: http://cinemark.com.br//www.youtube.com/embed/E-VeqjrBNks
+              location: https://www.cinemark.com.br:443//www.youtube.com/embed/E-VeqjrBNks
+              newUrlFinal: https://www.cinemark.com.br:443//www.youtube.com/embed/E-VeqjrBNks
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443//www.youtube.com/embed/E-VeqjrBNks
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/E-VeqjrBNks HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 404
+            statusText: Not Found
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          HTTP response body was binary (not text)
+        --convertResponseBodyToUtf8
+        Returning failed status because of HTTP response code.
+      --httpRequestStr
+      No unspidered URLs remaining.
+    --_crawl
+    Failed.
+  --CrawlNext
+--ChilkatLog
+
+Error when crawling page http://cinemark.com.br//www.youtube.com/embed/Q8frABX5v8k
+ChilkatLog:
+  CrawlNext:
+    DllDate: Sep 28 2020
+    ChilkatVersion: 9.5.0.84
+    UnlockPrefix: NONE
+    Architecture: Little Endian; 64-bit
+    Language: Linux C/C++
+    VerboseLogging: 0
+    _crawl:
+      robotsUrl: http://cinemark.com.br/robots.txt
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: cinemark.com.br
+              httpPort: 80
+              tls: False
+              HTTP connection succeeded.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443/robots.txt
+            newLocation:
+              url: http://cinemark.com.br/robots.txt
+              location: https://www.cinemark.com.br:443/robots.txt
+              newUrlFinal: https://www.cinemark.com.br:443/robots.txt
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 200
+            statusText: OK
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          No charset specified, assuming Windows-1252
+          Converting to utf-8 charset.
+          fromCodePage: 1252
+        --convertResponseBodyToUtf8
+      --httpRequestStr
+      Fetched robots.txt
+      url: http://cinemark.com.br//www.youtube.com/embed/Q8frABX5v8k
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br//www.youtube.com/embed/Q8frABX5v8k
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Using existing connection.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/Q8frABX5v8k HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443//www.youtube.com/embed/Q8frABX5v8k
+            newLocation:
+              url: http://cinemark.com.br//www.youtube.com/embed/Q8frABX5v8k
+              location: https://www.cinemark.com.br:443//www.youtube.com/embed/Q8frABX5v8k
+              newUrlFinal: https://www.cinemark.com.br:443//www.youtube.com/embed/Q8frABX5v8k
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443//www.youtube.com/embed/Q8frABX5v8k
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/Q8frABX5v8k HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 404
+            statusText: Not Found
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          HTTP response body was binary (not text)
+        --convertResponseBodyToUtf8
+        Returning failed status because of HTTP response code.
+      --httpRequestStr
+      No unspidered URLs remaining.
+    --_crawl
+    Failed.
+  --CrawlNext
+--ChilkatLog
+
+Error when crawling page http://cinemark.com.br//www.youtube.com/embed/a-hdncHDFQ0
+ChilkatLog:
+  CrawlNext:
+    DllDate: Sep 28 2020
+    ChilkatVersion: 9.5.0.84
+    UnlockPrefix: NONE
+    Architecture: Little Endian; 64-bit
+    Language: Linux C/C++
+    VerboseLogging: 0
+    _crawl:
+      robotsUrl: http://cinemark.com.br/robots.txt
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: cinemark.com.br
+              httpPort: 80
+              tls: False
+              HTTP connection succeeded.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443/robots.txt
+            newLocation:
+              url: http://cinemark.com.br/robots.txt
+              location: https://www.cinemark.com.br:443/robots.txt
+              newUrlFinal: https://www.cinemark.com.br:443/robots.txt
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 200
+            statusText: OK
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          No charset specified, assuming Windows-1252
+          Converting to utf-8 charset.
+          fromCodePage: 1252
+        --convertResponseBodyToUtf8
+      --httpRequestStr
+      Fetched robots.txt
+      url: http://cinemark.com.br//www.youtube.com/embed/a-hdncHDFQ0
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br//www.youtube.com/embed/a-hdncHDFQ0
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Using existing connection.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/a-hdncHDFQ0 HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443//www.youtube.com/embed/a-hdncHDFQ0
+            newLocation:
+              url: http://cinemark.com.br//www.youtube.com/embed/a-hdncHDFQ0
+              location: https://www.cinemark.com.br:443//www.youtube.com/embed/a-hdncHDFQ0
+              newUrlFinal: https://www.cinemark.com.br:443//www.youtube.com/embed/a-hdncHDFQ0
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443//www.youtube.com/embed/a-hdncHDFQ0
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/a-hdncHDFQ0 HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 404
+            statusText: Not Found
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          HTTP response body was binary (not text)
+        --convertResponseBodyToUtf8
+        Returning failed status because of HTTP response code.
+      --httpRequestStr
+      No unspidered URLs remaining.
+    --_crawl
+    Failed.
+  --CrawlNext
+--ChilkatLog
+
+Error when crawling page http://cinemark.com.br//www.youtube.com/embed/5ITa57EKQu0
+ChilkatLog:
+  CrawlNext:
+    DllDate: Sep 28 2020
+    ChilkatVersion: 9.5.0.84
+    UnlockPrefix: NONE
+    Architecture: Little Endian; 64-bit
+    Language: Linux C/C++
+    VerboseLogging: 0
+    _crawl:
+      robotsUrl: http://cinemark.com.br/robots.txt
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: cinemark.com.br
+              httpPort: 80
+              tls: False
+              HTTP connection succeeded.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443/robots.txt
+            newLocation:
+              url: http://cinemark.com.br/robots.txt
+              location: https://www.cinemark.com.br:443/robots.txt
+              newUrlFinal: https://www.cinemark.com.br:443/robots.txt
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443/robots.txt
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET /robots.txt HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 200
+            statusText: OK
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          No charset specified, assuming Windows-1252
+          Converting to utf-8 charset.
+          fromCodePage: 1252
+        --convertResponseBodyToUtf8
+      --httpRequestStr
+      Fetched robots.txt
+      url: http://cinemark.com.br//www.youtube.com/embed/5ITa57EKQu0
+      httpRequestStr:
+        a_quickReq:
+          quickHttpRequest:
+            httpVerb: GET
+            url: http://cinemark.com.br//www.youtube.com/embed/5ITa57EKQu0
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Using existing connection.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/5ITa57EKQu0 HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 301
+            statusText: Moved Permanently
+          --quickHttpRequest
+          getRedirectUrl:
+            Location: https://www.cinemark.com.br:443//www.youtube.com/embed/5ITa57EKQu0
+            newLocation:
+              url: http://cinemark.com.br//www.youtube.com/embed/5ITa57EKQu0
+              location: https://www.cinemark.com.br:443//www.youtube.com/embed/5ITa57EKQu0
+              newUrlFinal: https://www.cinemark.com.br:443//www.youtube.com/embed/5ITa57EKQu0
+            --newLocation
+          --getRedirectUrl
+          Redirecting to a different host...
+          quickHttpRequest:
+            httpVerb: GET
+            url: https://www.cinemark.com.br:443//www.youtube.com/embed/5ITa57EKQu0
+            checkHttpCache:
+              No cache roots have been set.  Need to call AddRoot at least once.
+            --checkHttpCache
+            openHttpConnection:
+              Opening connection directly to HTTP server.
+              httpHostname: www.cinemark.com.br
+              httpPort: 443
+              tls: True
+              HTTPS secure channel established.
+            --openHttpConnection
+            buildQuickRequest:
+              genStartLine:
+                startLine: GET //www.youtube.com/embed/5ITa57EKQu0 HTTP/1.1
+              --genStartLine
+              addCookies:
+                Not auto-adding cookies.
+                sendCookies: 1
+                cookieDir: 
+              --addCookies
+            --buildQuickRequest
+            sendRequestHeader:
+              sendHeaderElapsedMs: 0
+            --sendRequestHeader
+            statusCode: 404
+            statusText: Not Found
+          --quickHttpRequest
+        --a_quickReq
+        convertResponseBodyToUtf8:
+          HTTP response body was binary (not text)
+        --convertResponseBodyToUtf8
+        Returning failed status because of HTTP response code.
+      --httpRequestStr
+      No unspidered URLs remaining.
+    --_crawl
+    Failed.
+  --CrawlNext
+--ChilkatLog
+
+Web site: cinemark.com.br
+Number of URLs at level 1 crawled: 0
+Average crawl time for (milliseconds): 882.667
+Average page size (Bytes): 356337
+
+Web site: www.cinemark.com.br
+Number of URLs at level 1 crawled: 0
+Average crawl time for (milliseconds): 311
+Average page size (Bytes): 280287
+
+Web site: www.ojogos.com.br
+Number of URLs at level 1 crawled: 0
+Average crawl time for (milliseconds): 1278
+Average page size (Bytes): 271730
+
+Web site: www.vivareal.com.br
+Number of URLs at level 1 crawled: 0
+Average crawl time for (milliseconds): 722
+Average page size (Bytes): 213025
+

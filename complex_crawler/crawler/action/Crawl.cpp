@@ -14,6 +14,7 @@ void Crawl::crawlSleepUntilMs(CkSpider &spider,
   Crawl::millis duration =
       std::chrono::duration_cast<Crawl::millis>(currentTime - lastCrawlEndTime);
   int sleepTimeMs = Crawl::CRAWL_AWAIT_TIME_MS - duration.count();
+  // std::cout << "SleepTimems" + std::to_string(sleepTimeMs) << std::endl;
   if (sleepTimeMs > 0) {
     spider.SleepMs(sleepTimeMs);
   }
@@ -101,12 +102,11 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
 }
 
 void Crawl::crawlUrl(CkSpider &spider, std::string &url,
-                            std::vector<std::string> &mustMatchPatterns,
-                            std::vector<std::string> &avoidPatterns,
-                            SiteAttributes &siteAttributes,
-                            Crawl::timePoint &lastCrawlEndTime,
-                            bool useLastCrawlEndTime,
-                            pthread_mutex_t *memoryMutex) {
+                     std::vector<std::string> &mustMatchPatterns,
+                     std::vector<std::string> &avoidPatterns,
+                     SiteAttributes &siteAttributes,
+                     Crawl::timePoint &lastCrawlEndTime,
+                     bool useLastCrawlEndTime, pthread_mutex_t *memoryMutex) {
   bool crawlSuccess;
   Crawl::timePoint currentTime;
   Crawl::millis duration;

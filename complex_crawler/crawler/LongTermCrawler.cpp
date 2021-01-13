@@ -46,8 +46,14 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
         &(lastCrawlEndTimeMap->operator[](baseUrl));
 
     CkSpider spider;
-    Crawl::crawlUrl(spider, url, this->mustMatchPatterns, this->avoidPatterns,
-                    *siteAttribute, *lastCrawlEndTime, useLastCrawlEndTime);
+
+    try {
+      Crawl::crawlUrl(spider, url, this->mustMatchPatterns, this->avoidPatterns,
+                      *siteAttribute, *lastCrawlEndTime, useLastCrawlEndTime);
+    } catch (std::exception &e) {
+      std::cout << "Error when crawling page " + url << std::endl;
+      std::cout << e.what() << std::endl;
+    }
 
     if (!useLastCrawlEndTime) { // firt time crawling web site
       siteAttribute->addNumPagesLeve1(spider.get_NumUnspidered());
@@ -61,13 +67,14 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
   if (verbose) {
     for (auto it = siteAttributesMap->begin(); it != siteAttributesMap->end();
          it++) {
-      std::cout << "Web site " << it->first << std::endl;
+      std::cout << "Web site: " << it->first << std::endl;
       std::cout << "Number of URLs at level 1 crawled: "
                 << it->second.getNumPagesLeve1() << std::endl;
       std::cout << "Average crawl time for (milliseconds): "
                 << it->second.getAverageTime() << std::endl;
       std::cout << "Average page size (Bytes): "
                 << it->second.getAveragePageSize() << std::endl;
+      std::cout << std::endl;
     }
   }
 
