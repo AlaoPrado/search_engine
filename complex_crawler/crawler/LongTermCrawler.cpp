@@ -33,17 +33,13 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
                           *siteAttributesMap, *lastCrawlEndTimeMap);
 
     CkSpider spider;
-    SiteAttributes *siteAttribute = &(siteAttributesMap->operator[](baseUrl));
+    SiteAttributes *siteAttributes = &(siteAttributesMap->operator[](baseUrl));
     Crawl::timePoint *lastCrawlEndTime =
         &(lastCrawlEndTimeMap->operator[](baseUrl));
 
     try {
       Crawl::crawlUrl(spider, url, this->mustMatchPatterns, this->avoidPatterns,
-                      *siteAttribute, *lastCrawlEndTime, useLastCrawlEndTime);
-
-      if (!useLastCrawlEndTime) { // first time crawling web site
-        siteAttribute->addNumPagesLevel1(spider.get_NumUnspidered());
-      }
+                      *siteAttributes, *lastCrawlEndTime, useLastCrawlEndTime);
 
       PageStorage::storePage(this->storageDirectory, spider, numCrawledPages);
       numCrawledPages++;

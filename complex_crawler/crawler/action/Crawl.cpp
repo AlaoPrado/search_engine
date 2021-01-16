@@ -73,23 +73,23 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
     Crawl::crawlSleepUntilMs(spider, lastCrawlEndTime);
   }
 
+  currentTime = std::chrono::steady_clock::now();
+
   if (memoryMutex != NULL) {
     pthread_mutex_lock(memoryMutex);
     // std::cout << "Crawl lock memory " + urlCopy << std::endl;
   }
-
-  // std::cout << "Crawl craw begin " + urlCopy << std::endl;
-
-  currentTime = std::chrono::steady_clock::now();
+ 
   crawlSuccess = spider.CrawlNext();
-  lastCrawlEndTime = std::chrono::steady_clock::now();
-
-  // std::cout << "Crawl craw finish " + urlCopy << std::endl;
 
   if (memoryMutex != NULL) {
     // std::cout << "Crawl unlock memory " + urlCopy << std::endl;
     pthread_mutex_unlock(memoryMutex);
   }
+
+  lastCrawlEndTime = std::chrono::steady_clock::now();
+
+  search_engine::utils::assertTrue(crawlSuccess, spider.lastErrorText());
 
   duration =
       std::chrono::duration_cast<Crawl::millis>(lastCrawlEndTime - currentTime);
@@ -99,7 +99,9 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
   std::string html(spider.lastHtml());
   siteAttributes.addToTotalPageSize(html.size());
 
-  search_engine::utils::assertTrue(crawlSuccess, spider.lastErrorText());
+  if (!useLastCrawlEndTime) { // first time crawling web site
+    siteAttributes.addNumPagesLevel1(spider.get_NumUnspidered());
+  }
 }
 
 } // namespace search_engine
