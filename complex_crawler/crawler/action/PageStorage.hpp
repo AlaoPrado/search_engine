@@ -13,9 +13,6 @@ private:
 public:
   static void storePage(std::string directory, CkSpider &spider,
                         std::size_t pageId);
-
-  static void storePage(std::string directory, std::string url,
-                        std::string html, std::size_t pageId);
 };
 
 } // namespace search_engine

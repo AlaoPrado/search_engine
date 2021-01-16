@@ -24,13 +24,6 @@ public:
   static void crawlUrl(CkSpider &spider, std::string &url,
                        std::vector<std::string> &mustMatchPatterns,
                        std::vector<std::string> &avoidPatterns,
-                       double &totalTime, Crawl::timePoint &lastCrawlEndTime,
-                       bool useLastCrawlEndTime = false,
-                       pthread_mutex_t *memoryMutex = NULL);
-
-  static void crawlUrl(CkSpider &spider, std::string &url,
-                       std::vector<std::string> &mustMatchPatterns,
-                       std::vector<std::string> &avoidPatterns,
                        SiteAttributes &siteAttributes,
                        Crawl::timePoint &lastCrawlEndTime,
                        bool useLastCrawlEndTime = false,
