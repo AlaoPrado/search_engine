@@ -21,7 +21,6 @@ int main(const int argc, const char **argv) {
 
     const std::string fileName = argv[1];
     const std::string storageFolderDirectory = argc > 2 ? argv[2] : "storage/";
-
     const int crawlerType = argc > 3 ? std::stoi(argv[3]) : LONG_TERM_CRAWLER;
 
     search_engine::utils::assertTrue(
@@ -31,7 +30,6 @@ int main(const int argc, const char **argv) {
 
     const std::size_t numPagesToCrawl =
         (std::size_t)(argc > 4 ? std::stoi(argv[4]) : 10);
-
     const int numThreads = argc > 5 ? std::stoi(argv[5]) : 1;
 
     search_engine::utils::assertTrue(
@@ -56,8 +54,8 @@ int main(const int argc, const char **argv) {
                   storageFolderDirectory)
             : (search_engine::Crawler *)new search_engine::ShortTermCrawler(
                   storageFolderDirectory, true, numThreads);
-
     crawler->crawl(seedUrls, numPagesToCrawl);
+
     delete crawler;
   } catch (std::exception &e) {
     if (crawler != NULL) {
