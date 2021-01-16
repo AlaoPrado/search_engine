@@ -1,6 +1,5 @@
 #pragma once
 
-#include "scheduler/PageScheduler.hpp"
 #include <CkSpider.h>
 #include <map>
 #include <string>
@@ -13,7 +12,6 @@ protected:
   std::string storageDirectory;
   bool verbose;
   std::vector<std::string> mustMatchPatterns, avoidPatterns;
-  PageScheduler *pageScheduler;
   std::map<std::string, bool> *viewedUrls;
 
 public:

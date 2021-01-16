@@ -18,9 +18,9 @@ LongTermCrawler::~LongTermCrawler() {}
 
 void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
                             std::size_t numPagesToCrawl) {
-  this->pageScheduler = new PriorityPageScheduler();
+  auto *pageScheduler = new PriorityPageScheduler();
 
-  PushIntoScheduler::push(this->pageScheduler, seedUrls, this->viewedUrls,
+  PushIntoScheduler::push(pageScheduler, seedUrls, this->viewedUrls,
                           numPagesToCrawl);
 
   std::string url;
@@ -28,7 +28,7 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
   auto *lastCrawlEndTimeMap = new std::map<std::string, Crawl::timePoint>();
 
   for (std::size_t i = 0; i < numPagesToCrawl; i++) {
-    url = this->pageScheduler->pop();
+    url = pageScheduler->pop();
 
     bool useLastCrawlEndTime = true;
     std::string baseUrl = utils::baseUrl(url);
@@ -55,12 +55,12 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
       std::cout << e.what() << std::endl;
     }
 
-    if (!useLastCrawlEndTime) { // firt time crawling web site
+    if (!useLastCrawlEndTime) { // first time crawling web site
       siteAttribute->addNumPagesLeve1(spider.get_NumUnspidered());
     }
 
     PageStorage::storePage(this->storageDirectory, spider, i);
-    PushIntoScheduler::push(this->pageScheduler, spider, this->viewedUrls,
+    PushIntoScheduler::push(pageScheduler, spider, this->viewedUrls,
                             numPagesToCrawl);
   }
 
@@ -78,7 +78,7 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
     }
   }
 
-  delete this->pageScheduler;
+  delete pageScheduler;
   delete siteAttributesMap;
   delete lastCrawlEndTimeMap;
 }
