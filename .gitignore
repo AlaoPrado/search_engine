@@ -2,5 +2,6 @@
 *.out
 .vscode
 *.html
+complex_crawler/outs/
 complex_crawler/storage/*.txt
 complex_crawler/storage_extra/*.txt

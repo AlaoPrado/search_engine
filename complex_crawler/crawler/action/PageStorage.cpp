@@ -19,11 +19,16 @@ void PageStorage::storePage(std::string directory, CkSpider &spider,
   indexFile << spider.lastUrl() << " " << pageId << std::endl;
   indexFile.close();
 
+  std::string html(spider.lastHtml());
+
+  utils::assertTrue(html.size() > 0,
+                    "Error(PageStorage): page is empty");
+
   const std::string fileExtension = ".html";
   std::ofstream htmlFile(directory + std::to_string(pageId) + fileExtension,
                          std::ofstream::out | std::ofstream::trunc);
 
-  htmlFile << spider.lastHtml();
+  htmlFile << html;
   htmlFile.close();
 }
 

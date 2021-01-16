@@ -1,5 +1,6 @@
 #include "Url.hpp"
 #include "Assert.hpp"
+#include <CkSpider.h>
 #include <string>
 #include <vector>
 
@@ -8,16 +9,20 @@ namespace utils {
 
 std::string baseUrl(std::string url) {
   if (url.length() > 0) {
-    url = removeUrlProtocol(url);
-    url = removeUrlWorldWideWeb(url);
+    CkSpider spider;
+    std::string baseUrl(spider.getBaseDomain(url.c_str()));
+
+    baseUrl = removeUrlProtocol(baseUrl);
+    baseUrl = removeUrlWorldWideWeb(baseUrl);
 
     const std::string countryCode = ".br";
-    std::size_t position = url.find(countryCode);
+    std::size_t position = baseUrl.find(countryCode);
 
     utils::assertTrue(position != std::string::npos,
                       "Error(utils/baseUrl): invalid url country code");
 
-    url.erase(position, url.length());
+    baseUrl.erase(position, baseUrl.length());
+    return baseUrl;
   }
   return url;
 }

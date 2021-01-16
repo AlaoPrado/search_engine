@@ -16,12 +16,7 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler, std::string url,
       viewedUrls,
       "Error(PushIntoScheduler): viewedUrls has not been initialized");
 
-  // std::cout << "PushIntoScheduler push inside begin" << std::endl;
-
   std::string canonicalUrl = utils::canonicalizeUrl(url);
-
-  // std::cout << "PushIntoScheduler" + canonicalUrl << std::endl;
-
   std::string urlWithoutProtocol = utils::removeUrlProtocol(canonicalUrl);
   std::string urlWithoutStartingPart =
       utils::removeUrlWorldWideWeb(urlWithoutProtocol);
@@ -30,6 +25,7 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler, std::string url,
   if (it == viewedUrls->end()) {
     try {
       pageScheduler->push(canonicalUrl);
+
       if (memoryMutex != NULL) {
         pthread_mutex_lock(memoryMutex);
       }
@@ -63,25 +59,23 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler, CkSpider &spider,
                              std::map<std::string, bool> *viewedUrls,
                              std::size_t numPagesToCrawl,
                              pthread_mutex_t *memoryMutex) {
-
-  // std::cout << "PushIntoScheduler push " +
-  //        std::to_string(spider.get_NumUnspidered())
-  // << std::endl;
-  for (int i = 0; i < spider.get_NumUnspidered(); i++) {
-    // std::cout << "PushIntoScheduler push loop begin" << std::endl;
-
+  for (int i = 0; i < spider.get_NumOutboundLinks(); i++) {
     if (viewedUrls->size() >= numPagesToCrawl) {
       break;
     }
 
-    // std::cout << "PushIntoScheduler break pass" << std::endl;
+    std::string url("");
+    url.append(spider.getOutboundLink(i));
+    PushIntoScheduler::push(pageScheduler, url, viewedUrls, memoryMutex);
+  }
+
+  for (int i = 0; i < spider.get_NumUnspidered(); i++) {
+    if (viewedUrls->size() >= numPagesToCrawl) {
+      break;
+    }
 
     std::string url("");
     url.append(spider.getUnspideredUrl(i));
-
-    // std::cout << url << std::endl;
-    // std::cout << spider.getUnspideredUrl(i) << std::endl;
-
     PushIntoScheduler::push(pageScheduler, url, viewedUrls, memoryMutex);
   }
 }

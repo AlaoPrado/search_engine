@@ -79,7 +79,7 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
     pthread_mutex_lock(memoryMutex);
     // std::cout << "Crawl lock memory " + urlCopy << std::endl;
   }
- 
+
   crawlSuccess = spider.CrawlNext();
 
   if (memoryMutex != NULL) {
@@ -100,7 +100,8 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
   siteAttributes.addToTotalPageSize(html.size());
 
   if (!useLastCrawlEndTime) { // first time crawling web site
-    siteAttributes.addNumPagesLevel1(spider.get_NumUnspidered());
+    siteAttributes.addNumPagesLevel1(spider.get_NumUnspidered() +
+                                     spider.get_NumOutboundLinks());
   }
 }
 
