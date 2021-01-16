@@ -2,19 +2,12 @@
 #include "../../threadpool/CounterFlag.hpp"
 #include "../../threadpool/ThreadPool.hpp"
 #include "../../utils/SynchronizedQueue.hpp"
-#include "../../utils/Url.hpp"
-#include "SiteAttributes.hpp"
-#include "action/Crawl.hpp"
-#include "action/PageStorage.hpp"
 #include "action/PushIntoScheduler.hpp"
 #include "scheduler/sync/SynchonizedPageGroupScheduler.hpp"
 #include "task/CrawlTask.hpp"
 #include "task/SchedulerPopAllTask.hpp"
 #include "task/SchedulerPushAllTask.hpp"
 #include <CkSpider.h>
-#include <chrono>
-#include <iostream>
-#include <map>
 #include <pthread.h>
 #include <string>
 #include <vector>
@@ -38,8 +31,6 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
 
   auto *pageScheduler =
       new SynchonizedPageGroupScheduler(numPagesToCrawl, memoryMutex);
-  auto *siteAttributesMap = new std::map<std::string, SiteAttributes>();
-  auto *lastCrawlEndTimeMap = new std::map<std::string, Crawl::timePoint>();
   auto *spiderQueue = new utils::SynchronizedQueue<CkSpider>(memoryMutex);
   auto *schedulerPushAllPool = new ThreadPool(1, memoryMutex);
   auto *schedulerPopAllPool = new ThreadPool(1, memoryMutex);
@@ -66,24 +57,10 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
 
   counterFlag->wait();
 
-  if (verbose) {
-    for (auto it = siteAttributesMap->begin(); it != siteAttributesMap->end();
-         it++) {
-      std::cout << "Web site: " << it->first << std::endl;
-      std::cout << "Number of URLs at level 1 crawled: "
-                << it->second.getNumPagesLeve1() << std::endl;
-      std::cout << "Average crawl time for (milliseconds): "
-                << it->second.getAverageTime() << std::endl;
-      std::cout << "Average page size (Bytes): "
-                << it->second.getAveragePageSize() << std::endl;
-      std::cout << std::endl;
-    }
-  }
+  this->printCrawlStatus();
 
   delete counterFlag;
   delete pageScheduler;
-  delete siteAttributesMap;
-  delete lastCrawlEndTimeMap;
   delete spiderQueue;
   delete schedulerPushAllPool;
   delete schedulerPopAllPool;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SiteAttributes.hpp"
+#include "action/Crawl.hpp"
 #include <CkSpider.h>
 #include <map>
 #include <string>
@@ -13,6 +15,10 @@ protected:
   bool verbose;
   std::vector<std::string> mustMatchPatterns, avoidPatterns;
   std::map<std::string, bool> *viewedUrls;
+  std::map<std::string, SiteAttributes> *siteAttributesMap;
+  std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap;
+
+  void printCrawlStatus();
 
 public:
   Crawler(std::string storageDirectory, bool verbose = true);

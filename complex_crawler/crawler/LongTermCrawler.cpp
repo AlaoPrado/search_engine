@@ -24,8 +24,6 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
                           numPagesToCrawl);
 
   std::string url;
-  auto *siteAttributesMap = new std::map<std::string, SiteAttributes>();
-  auto *lastCrawlEndTimeMap = new std::map<std::string, Crawl::timePoint>();
 
   for (std::size_t i = 0; i < numPagesToCrawl; i++) {
     url = pageScheduler->pop();
@@ -64,23 +62,9 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
                             numPagesToCrawl);
   }
 
-  if (verbose) {
-    for (auto it = siteAttributesMap->begin(); it != siteAttributesMap->end();
-         it++) {
-      std::cout << "Web site: " << it->first << std::endl;
-      std::cout << "Number of URLs at level 1 crawled: "
-                << it->second.getNumPagesLeve1() << std::endl;
-      std::cout << "Average crawl time for (milliseconds): "
-                << it->second.getAverageTime() << std::endl;
-      std::cout << "Average page size (Bytes): "
-                << it->second.getAveragePageSize() << std::endl;
-      std::cout << std::endl;
-    }
-  }
+  this->printCrawlStatus();
 
   delete pageScheduler;
-  delete siteAttributesMap;
-  delete lastCrawlEndTimeMap;
 }
 
 } // namespace search_engine
