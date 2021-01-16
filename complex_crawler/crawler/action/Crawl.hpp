@@ -3,9 +3,9 @@
 #include "../SiteAttributes.hpp"
 #include <CkSpider.h>
 #include <chrono>
+#include <pthread.h>
 #include <string>
 #include <vector>
-
 namespace search_engine {
 
 class Crawl {
