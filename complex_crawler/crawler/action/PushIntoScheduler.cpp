@@ -22,20 +22,23 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler, std::string url,
 
   // std::cout << "PushIntoScheduler" + canonicalUrl << std::endl;
 
-  std::string urlWithouProtocol = utils::removeUrlProtocol(canonicalUrl);
+  std::string urlWithoutProtocol = utils::removeUrlProtocol(canonicalUrl);
+  std::string urlWithoutStartingPart =
+      utils::removeUrlWorldWideWeb(urlWithoutProtocol);
 
-  auto it = viewedUrls->find(urlWithouProtocol);
+  auto it = viewedUrls->find(urlWithoutStartingPart);
   if (it == viewedUrls->end()) {
     try {
       pageScheduler->push(canonicalUrl);
       if (memoryMutex != NULL) {
         pthread_mutex_lock(memoryMutex);
-        viewedUrls->operator[](urlWithouProtocol) = true;
-        pthread_mutex_unlock(memoryMutex);
-      } else {
-        viewedUrls->operator[](urlWithouProtocol) = true;
       }
 
+      viewedUrls->operator[](urlWithoutStartingPart) = true;
+
+      if (memoryMutex != NULL) {
+        pthread_mutex_unlock(memoryMutex);
+      }
     } catch (std::exception &e) {
       std::cout << e.what() << std::endl;
     }
@@ -62,8 +65,8 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler, CkSpider &spider,
                              pthread_mutex_t *memoryMutex) {
 
   // std::cout << "PushIntoScheduler push " +
-            //        std::to_string(spider.get_NumUnspidered())
-            // << std::endl;
+  //        std::to_string(spider.get_NumUnspidered())
+  // << std::endl;
   for (int i = 0; i < spider.get_NumUnspidered(); i++) {
     // std::cout << "PushIntoScheduler push loop begin" << std::endl;
 
