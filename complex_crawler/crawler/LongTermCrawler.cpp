@@ -24,7 +24,8 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
   PushIntoScheduler::push(pageScheduler, seedUrls, this->viewedUrls,
                           numPagesToCrawl);
 
-  for (std::size_t i = 0; i < numPagesToCrawl; i++) {
+  std::size_t numCrawledPages = 0;
+  while (numCrawledPages < numPagesToCrawl) {
     std::string url, baseUrl;
     bool useLastCrawlEndTime;
 
@@ -39,18 +40,19 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
     try {
       Crawl::crawlUrl(spider, url, this->mustMatchPatterns, this->avoidPatterns,
                       *siteAttribute, *lastCrawlEndTime, useLastCrawlEndTime);
+
+      if (!useLastCrawlEndTime) { // first time crawling web site
+        siteAttribute->addNumPagesLeve1(spider.get_NumUnspidered());
+      }
+
+      PageStorage::storePage(this->storageDirectory, spider, numCrawledPages);
+      numCrawledPages++;
+      PushIntoScheduler::push(pageScheduler, spider, this->viewedUrls,
+                              numPagesToCrawl);
     } catch (std::exception &e) {
       std::cout << "Error when crawling page " + url << std::endl;
       std::cout << e.what() << std::endl;
     }
-
-    if (!useLastCrawlEndTime) { // first time crawling web site
-      siteAttribute->addNumPagesLeve1(spider.get_NumUnspidered());
-    }
-
-    PageStorage::storePage(this->storageDirectory, spider, i);
-    PushIntoScheduler::push(pageScheduler, spider, this->viewedUrls,
-                            numPagesToCrawl);
   }
 
   this->printCrawlStatus();
