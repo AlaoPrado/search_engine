@@ -42,7 +42,7 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
                       *siteAttribute, *lastCrawlEndTime, useLastCrawlEndTime);
 
       if (!useLastCrawlEndTime) { // first time crawling web site
-        siteAttribute->addNumPagesLeve1(spider.get_NumUnspidered());
+        siteAttribute->addNumPagesLevel1(spider.get_NumUnspidered());
       }
 
       PageStorage::storePage(this->storageDirectory, spider, numCrawledPages);

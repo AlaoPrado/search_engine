@@ -10,9 +10,9 @@ void SiteAttributes::addToTotalTime(double timeMs) {
 }
 
 double SiteAttributes::getAverageTime() {
-  if (this->numPages != 0)
+  if (this->numPages != 0){
     return this->totalTime / this->numPages;
-
+  }
   return -1;
 }
 
@@ -20,9 +20,9 @@ int SiteAttributes::getNumPages() { return this->numPages; }
 
 void SiteAttributes::addNumPages(int numPages) { this->numPages += numPages; }
 
-int SiteAttributes::getNumPagesLeve1() { return this->numPagesLevel1; }
+int SiteAttributes::getNumPagesLevel1() { return this->numPagesLevel1; }
 
-void SiteAttributes::addNumPagesLeve1(int numPagesLevel1) {
+void SiteAttributes::addNumPagesLevel1(int numPagesLevel1) {
   this->numPagesLevel1 += numPagesLevel1;
 }
 
@@ -31,7 +31,10 @@ void SiteAttributes::addToTotalPageSize(std::size_t pageSizeInBytes) {
 }
 
 std::size_t SiteAttributes::getAveragePageSize() {
-  return this->totalPageSize / this->numPages;
+  if (this->numPages != 0){
+    return this->totalPageSize / this->numPages;
+  }
+  return -1;
 }
 
 } // namespace search_engine

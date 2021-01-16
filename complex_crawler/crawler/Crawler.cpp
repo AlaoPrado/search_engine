@@ -30,7 +30,7 @@ void Crawler::printCrawlStatus() {
          it != this->siteAttributesMap->end(); it++) {
       std::cout << "Web site: " << it->first << std::endl;
       std::cout << "Number of URLs at level 1 crawled: "
-                << it->second.getNumPagesLeve1() << std::endl;
+                << it->second.getNumPagesLevel1() << std::endl;
       std::cout << "Average crawl time for (milliseconds): "
                 << it->second.getAverageTime() << std::endl;
       std::cout << "Average page size (Bytes): "

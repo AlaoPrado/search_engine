@@ -16,8 +16,8 @@ public:
   double getAverageTime();
   int getNumPages();
   void addNumPages(int numPages);
-  int getNumPagesLeve1();
-  void addNumPagesLeve1(int numPagesLevel1);
+  int getNumPagesLevel1();
+  void addNumPagesLevel1(int numPagesLevel1);
   void addToTotalPageSize(std::size_t pageSizeInBytes);
   std::size_t getAveragePageSize();
 };
