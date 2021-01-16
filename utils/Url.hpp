@@ -13,5 +13,7 @@ std::size_t countUrlSize(std::string url);
 
 std::string removeUrlProtocol(std::string url);
 
+std::string removeUrlWorldWideWeb(std::string url);
+
 } // namespace utils
 } // namespace search_engine

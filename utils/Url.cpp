@@ -9,12 +9,15 @@ namespace utils {
 std::string baseUrl(std::string url) {
   if (url.length() > 0) {
     url = removeUrlProtocol(url);
+    url = removeUrlWorldWideWeb(url);
 
-    const std::string domainEnd = ".br";
-    std::size_t position = url.find(domainEnd);
+    const std::string countryCode = ".br";
+    std::size_t position = url.find(countryCode);
+
     utils::assertTrue(position != std::string::npos,
-                      "Error(utils/baseUrl): invalid url domain");
-    url.erase(position + domainEnd.length(), url.length());
+                      "Error(utils/baseUrl): invalid url country code");
+
+    url.erase(position, url.length());
   }
   return url;
 }
@@ -64,6 +67,15 @@ std::string removeUrlProtocol(std::string url) {
   std::size_t position = url.find(protocolSeparator);
   if (position != std::string::npos) {
     url.erase(url.begin(), url.begin() + position + protocolSeparator.length());
+  }
+  return url;
+}
+
+std::string removeUrlWorldWideWeb(std::string url) {
+  const std::string worldWideWeb = "www.";
+  std::size_t position = url.find(worldWideWeb);
+  if (position != std::string::npos) {
+    url.erase(position, worldWideWeb.length());
   }
   return url;
 }
