@@ -22,7 +22,7 @@ private:
   SynchonizedPageGroupScheduler *pageGroupScheduler;
   std::map<std::string, bool> *viewedUrls;
   std::string storageDirectory;
-  ThreadPool *storePool;
+  ThreadPool *schedulerPopPool, *storePool;
   bool verbose;
 
 public:
@@ -32,7 +32,7 @@ public:
       utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue,
       SynchonizedPageGroupScheduler *pageGroupScheduler,
       std::map<std::string, bool> *viewedUrls, std::string storageDirectory,
-      ThreadPool *storePool, bool verbose);
+      ThreadPool *schedulerPopPool, ThreadPool *storePool, bool verbose);
   ~SchedulerPushAllTask();
   void run() override;
 };

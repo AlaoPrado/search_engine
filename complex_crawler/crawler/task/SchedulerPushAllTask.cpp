@@ -21,12 +21,12 @@ SchedulerPushAllTask::SchedulerPushAllTask(
     utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue,
     SynchonizedPageGroupScheduler *pageGroupScheduler,
     std::map<std::string, bool> *viewedUrls, std::string storageDirectory,
-    ThreadPool *storePool, bool verbose)
+    ThreadPool *schedulerPopPool, ThreadPool *storePool, bool verbose)
     : counterFlag(counterFlag), numPagesToCrawl(numPagesToCrawl),
       memoryMutex(memoryMutex), crawlTaskResultQueue(crawlTaskResultQueue),
       pageGroupScheduler(pageGroupScheduler), viewedUrls(viewedUrls),
-      storageDirectory(storageDirectory), storePool(storePool),
-      verbose(verbose) {}
+      storageDirectory(storageDirectory), schedulerPopPool(schedulerPopPool),
+      storePool(storePool), verbose(verbose) {}
 
 SchedulerPushAllTask::~SchedulerPushAllTask() {}
 

@@ -32,8 +32,8 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
       new SynchonizedPageGroupScheduler(numPagesToCrawl, memoryMutex);
   auto *crawlTaskResultQueue =
       new utils::SynchronizedQueue<CrawlTaskResult>(memoryMutex);
-  auto *schedulerPushAllPool = new ThreadPool(1, memoryMutex);
-  auto *schedulerPopAllPool = new ThreadPool(1, memoryMutex);
+  auto *schedulerPushPool = new ThreadPool(1, memoryMutex);
+  auto *schedulerPopPool = new ThreadPool(1, memoryMutex);
   auto *storePool = new ThreadPool(1, memoryMutex);
   auto *crawlPool = new ThreadPool(this->numThreads, memoryMutex);
 
@@ -42,19 +42,18 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
 
   CounterFlag *counterFlag = new CounterFlag(1);
 
-  SchedulerPushAllTask *schedulerPushAllTask = new SchedulerPushAllTask(
-      counterFlag, numPagesToCrawl, memoryMutex, crawlTaskResultQueue,
-      pageScheduler, this->viewedUrls, this->storageDirectory, storePool,
-      this->verbose);
-
-  schedulerPushAllPool->addTask(schedulerPushAllTask);
-
-  SchedulerPopAllTask schedulerPopAllTask(
+  SchedulerPopAllTask *schedulerPopAllTask = new SchedulerPopAllTask(
       numPagesToCrawl, memoryMutex, pageScheduler, crawlPool,
       crawlTaskResultQueue, &mustMatchPatterns, &avoidPatterns,
       siteAttributesMap, lastCrawlEndTimeMap);
 
-  schedulerPopAllTask.run();
+  SchedulerPushAllTask *schedulerPushAllTask = new SchedulerPushAllTask(
+      counterFlag, numPagesToCrawl, memoryMutex, crawlTaskResultQueue,
+      pageScheduler, this->viewedUrls, this->storageDirectory,
+      schedulerPushPool, storePool, this->verbose);
+
+  schedulerPopPool->addTask(schedulerPopAllTask);
+  schedulerPushPool->addTask(schedulerPushAllTask);
 
   counterFlag->wait();
 
@@ -63,8 +62,8 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
   delete counterFlag;
   delete pageScheduler;
   delete crawlTaskResultQueue;
-  delete schedulerPushAllPool;
-  delete schedulerPopAllPool;
+  delete schedulerPushPool;
+  delete schedulerPopPool;
   delete storePool;
   delete crawlPool;
 
