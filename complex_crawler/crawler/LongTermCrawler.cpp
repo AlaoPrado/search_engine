@@ -39,13 +39,14 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
         &(lastCrawlEndTimeMap->operator[](baseUrl));
 
     try {
-      Crawl::crawlUrl(spider, page, this->mustMatchPatterns, this->avoidPatterns,
-                      *siteAttributes, *lastCrawlEndTime, useLastCrawlEndTime);
+      Crawl::crawlUrl(spider, page, this->mustMatchPatterns,
+                      this->avoidPatterns, *siteAttributes, *lastCrawlEndTime,
+                      useLastCrawlEndTime);
 
       PageStorage::storePage(this->storageDirectory, spider, numCrawledPages);
       numCrawledPages++;
       PushIntoScheduler::push(pageScheduler, spider, this->viewedUrls,
-                              numPagesToCrawl);
+                              numPagesToCrawl, page.getLevel());
     } catch (std::exception &e) {
       std::cout << "Error while crawling page " + page.getUrl() << std::endl;
       std::cout << e.what() << std::endl;

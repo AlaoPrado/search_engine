@@ -12,10 +12,11 @@ private:
   std::string directory;
   CkSpider *spider;
   std::size_t pageId;
+  bool *success;
 
 public:
   StorePageTask(CounterFlag *counterFlag, std::string directory,
-                CkSpider *spider, std::size_t pageId);
+                CkSpider *spider, std::size_t pageId, bool *success);
   ~StorePageTask();
   void run() override;
 };

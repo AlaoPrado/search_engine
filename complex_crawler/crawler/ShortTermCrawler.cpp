@@ -48,9 +48,10 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
       siteAttributesMap, lastCrawlEndTimeMap);
 
   SchedulerPushAllTask *schedulerPushAllTask = new SchedulerPushAllTask(
-      counterFlag, numPagesToCrawl, memoryMutex, crawlTaskResultQueue,
-      pageScheduler, this->viewedUrls, this->storageDirectory,
-      schedulerPushPool, storePool, this->verbose);
+      counterFlag, numPagesToCrawl, memoryMutex, pageScheduler, crawlPool,
+      crawlTaskResultQueue, &mustMatchPatterns, &avoidPatterns,
+      siteAttributesMap, lastCrawlEndTimeMap, schedulerPopPool,
+      this->viewedUrls, this->storageDirectory, storePool, this->verbose);
 
   schedulerPopPool->addTask(schedulerPopAllTask);
   schedulerPushPool->addTask(schedulerPushAllTask);

@@ -26,7 +26,7 @@ public:
 
   static void push(PageScheduler *pageScheduler, CkSpider &spider,
                    std::map<std::string, bool> *viewedUrls,
-                   std::size_t numPagesToCrawl,
+                   std::size_t numPagesToCrawl, int pageLevel,
                    pthread_mutex_t *memoryMutex = NULL);
 };
 

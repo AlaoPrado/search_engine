@@ -3,6 +3,7 @@
 #include "../SiteAttributes.hpp"
 #include "../action/Crawl.hpp"
 #include "CrawlTaskResult.hpp"
+#include <exception>
 #include <iostream>
 #include <pthread.h>
 namespace search_engine {
