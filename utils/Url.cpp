@@ -1,6 +1,7 @@
 #include "Url.hpp"
 #include "Assert.hpp"
 #include <CkSpider.h>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -9,9 +10,7 @@ namespace utils {
 
 std::string baseUrl(std::string url) {
   if (url.length() > 0) {
-    CkSpider spider;
-    std::string baseUrl(spider.getBaseDomain(url.c_str()));
-
+    std::string baseUrl = domainUrl(url);
     baseUrl = removeUrlProtocol(baseUrl);
     baseUrl = removeUrlWorldWideWeb(baseUrl);
 
@@ -19,7 +18,7 @@ std::string baseUrl(std::string url) {
     std::size_t position = baseUrl.find(countryCode);
 
     utils::assertTrue(position != std::string::npos,
-                      "Error(utils/baseUrl): invalid url country code");
+                      "Error(utils/baseUrl): invalid country code in " + url);
 
     baseUrl.erase(position, baseUrl.length());
     return baseUrl;
@@ -27,7 +26,7 @@ std::string baseUrl(std::string url) {
   return url;
 }
 
-std::size_t countUrlSize(std::string url) {
+std::size_t countUrlSize(const std::string &url) {
   const std::vector<std::string> validProtocols = {"http://", "https://"};
 
   std::size_t position = std::string::npos;
@@ -52,6 +51,24 @@ std::size_t countUrlSize(std::string url) {
   return urltSize;
 }
 
+std::string domainUrl(std::string url) {
+  if (url.length() > 0) {
+    const std::string protocolSeparator = "://";
+    std::size_t position = url.find(protocolSeparator);
+    if (position != std::string::npos) {
+      url.erase(url.begin(),
+                url.begin() + position + protocolSeparator.length());
+
+      const std::string linkSeparator = "//";
+      position = url.find(linkSeparator);
+      if (position != std::string::npos) {
+        url.erase(url.begin(), url.begin() + position + linkSeparator.length());
+      }
+    }
+  }
+  return url;
+}
+
 std::string removeUrlProtocol(std::string url) {
   const std::string protocolSeparator = "://";
   std::size_t position = url.find(protocolSeparator);
@@ -72,6 +89,8 @@ std::string removeUrlWorldWideWeb(std::string url) {
 
 std::string standardUrl(std::string url) {
   if (url.length() > 0) {
+    std::string resultUrl = domainUrl(url);
+
     if (url[url.length() - 1] == '/') {
       url.erase(url.end() - 1);
     }
@@ -83,6 +102,24 @@ std::string standardUrl(std::string url) {
     }
   }
   return url;
+}
+
+bool urlHasCountryCode(const std::string &url, std::string countryCode) {
+  if (url.length() > 0) {
+    std::string resultUrl = domainUrl(url);
+    std::size_t position = resultUrl.find(countryCode);
+    return position != std::string::npos;
+  }
+  return false;
+}
+
+bool urlHasInjection(const std::string &url) {
+  if (url.length() > 0) {
+    const std::string key = "{";
+    std::size_t position = url.find(key);
+    return position != std::string::npos;
+  }
+  return false;
 }
 
 } // namespace utils

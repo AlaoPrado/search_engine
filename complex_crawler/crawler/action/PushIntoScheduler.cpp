@@ -6,49 +6,46 @@
 
 namespace search_engine {
 
-void PushIntoScheduler::push(PageScheduler *pageScheduler, Page &page,
-                             std::map<std::string, bool> *viewedUrls,
+void PushIntoScheduler::push(PageScheduler &pageScheduler, Page &page,
+                             std::map<std::string, bool> &viewedUrls,
                              pthread_mutex_t *memoryMutex) {
-  utils::assertTrue(
-      pageScheduler,
-      "Error(PushIntoScheduler): pageScheduler has not been initialized");
 
-  utils::assertTrue(
-      viewedUrls,
-      "Error(PushIntoScheduler): viewedUrls has not been initialized");
+  std::string url = page.getUrl();
 
-  page.setUrl(utils::standardUrl(page.getUrl()));
-  std::string urlWithoutProtocol = utils::removeUrlProtocol(page.getUrl());
-  std::string urlWithoutStartingPart =
-      utils::removeUrlWorldWideWeb(urlWithoutProtocol);
+  if (utils::urlHasCountryCode(url, ".br") && !utils::urlHasInjection(url)) {
+    page.setUrl(utils::standardUrl(url));
+    std::string urlWithoutProtocol = utils::removeUrlProtocol(url);
+    std::string urlWithoutStartingPart =
+        utils::removeUrlWorldWideWeb(urlWithoutProtocol);
 
-  auto it = viewedUrls->find(urlWithoutStartingPart);
-  if (it == viewedUrls->end()) {
-    try {
-      pageScheduler->push(page);
+    auto it = viewedUrls.find(urlWithoutStartingPart);
+    if (it == viewedUrls.end()) {
+      try {
+        pageScheduler.push(page);
 
-      if (memoryMutex != NULL) {
-        pthread_mutex_lock(memoryMutex);
+        if (memoryMutex != NULL) {
+          pthread_mutex_lock(memoryMutex);
+        }
+
+        viewedUrls.operator[](urlWithoutStartingPart) = true;
+
+        if (memoryMutex != NULL) {
+          pthread_mutex_unlock(memoryMutex);
+        }
+      } catch (std::exception &e) {
+        std::cout << "Error while Pushing " << e.what() << std::endl;
       }
-
-      viewedUrls->operator[](urlWithoutStartingPart) = true;
-
-      if (memoryMutex != NULL) {
-        pthread_mutex_unlock(memoryMutex);
-      }
-    } catch (std::exception &e) {
-      std::cout << e.what() << std::endl;
     }
   }
 }
 
-void PushIntoScheduler::push(PageScheduler *pageScheduler,
+void PushIntoScheduler::push(PageScheduler &pageScheduler,
                              std::vector<std::string> &urls,
-                             std::map<std::string, bool> *viewedUrls,
+                             std::map<std::string, bool> &viewedUrls,
                              std::size_t numPagesToCrawl,
                              pthread_mutex_t *memoryMutex) {
   for (auto url : urls) {
-    if (viewedUrls->size() >= numPagesToCrawl) {
+    if (viewedUrls.size() >= numPagesToCrawl) {
       break;
     }
 
@@ -57,12 +54,12 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler,
   }
 }
 
-void PushIntoScheduler::push(PageScheduler *pageScheduler, CkSpider &spider,
-                             std::map<std::string, bool> *viewedUrls,
+void PushIntoScheduler::push(PageScheduler &pageScheduler, CkSpider &spider,
+                             std::map<std::string, bool> &viewedUrls,
                              std::size_t numPagesToCrawl, int pageLevel,
                              pthread_mutex_t *memoryMutex) {
   for (int i = 0; i < spider.get_NumOutboundLinks(); i++) {
-    if (viewedUrls->size() >= numPagesToCrawl) {
+    if (viewedUrls.size() >= numPagesToCrawl) {
       break;
     }
 
@@ -72,7 +69,7 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler, CkSpider &spider,
 
   if (pageLevel == 0) {
     for (int i = 0; i < spider.get_NumUnspidered(); i++) {
-      if (viewedUrls->size() >= numPagesToCrawl) {
+      if (viewedUrls.size() >= numPagesToCrawl) {
         break;
       }
 

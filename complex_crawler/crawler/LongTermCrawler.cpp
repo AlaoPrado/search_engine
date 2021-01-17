@@ -21,7 +21,7 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
                             std::size_t numPagesToCrawl) {
   auto *pageScheduler = new PriorityPageScheduler();
 
-  PushIntoScheduler::push(pageScheduler, seedUrls, this->viewedUrls,
+  PushIntoScheduler::push(*pageScheduler, seedUrls, *(this->viewedUrls),
                           numPagesToCrawl);
 
   std::size_t numCrawledPages = 0;
@@ -45,7 +45,7 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
 
       PageStorage::storePage(this->storageDirectory, spider, numCrawledPages);
       numCrawledPages++;
-      PushIntoScheduler::push(pageScheduler, spider, this->viewedUrls,
+      PushIntoScheduler::push(*pageScheduler, spider, *(this->viewedUrls),
                               numPagesToCrawl, page.getLevel());
     } catch (std::exception &e) {
       std::cout << "Error while crawling page " + page.getUrl() << std::endl;

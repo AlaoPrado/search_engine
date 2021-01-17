@@ -37,7 +37,7 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
   auto *storePool = new ThreadPool(1, memoryMutex);
   auto *crawlPool = new ThreadPool(this->numThreads, memoryMutex);
 
-  PushIntoScheduler::push(pageScheduler, seedUrls, this->viewedUrls,
+  PushIntoScheduler::push(*pageScheduler, seedUrls, *(this->viewedUrls),
                           numPagesToCrawl, memoryMutex);
 
   CounterFlag *counterFlag = new CounterFlag(1);

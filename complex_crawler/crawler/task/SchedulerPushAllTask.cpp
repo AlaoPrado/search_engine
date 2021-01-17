@@ -55,7 +55,7 @@ void SchedulerPushAllTask::run() {
                         "Error: failed to crawl page" + url +
                             "trying another page");
 
-      pageGroupScheduler->finishWork(crawlTaskResult->getPage().getUrl());
+      pageGroupScheduler->finishWork(url);
       storeCounterFlag.reset(1);
 
       bool storeSuccess;
@@ -68,7 +68,7 @@ void SchedulerPushAllTask::run() {
 
       storePool->addTask(storePageTask);
       PushIntoScheduler::push(
-          pageGroupScheduler, *spider, viewedUrls, numPagesToCrawl,
+          *pageGroupScheduler, *spider, *viewedUrls, numPagesToCrawl,
           crawlTaskResult->getPage().getLevel(), memoryMutex);
 
       storeCounterFlag.wait();
@@ -78,13 +78,20 @@ void SchedulerPushAllTask::run() {
 
       numCrawledPages++;
     } catch (std::exception &e) {
+      std::cout << "Error when crawling page " +
+                       crawlTaskResult->getPage().getUrl()
+                << std::endl;
+      std::cout << e.what() << std::endl;
+
       const int numExtraPops = 1;
+
       pthread_mutex_lock(memoryMutex);
       SchedulerPopAllTask *schedulerPopAllTask = new SchedulerPopAllTask(
           numExtraPops, memoryMutex, pageGroupScheduler, crawlPool,
           crawlTaskResultQueue, mustMatchPatterns, avoidPatterns,
           siteAttributesMap, lastCrawlEndTimeMap);
       pthread_mutex_unlock(memoryMutex);
+
       schedulerPopPool->addTask(schedulerPopAllTask);
     }
 
