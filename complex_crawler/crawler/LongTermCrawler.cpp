@@ -47,7 +47,7 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
       PushIntoScheduler::push(pageScheduler, spider, this->viewedUrls,
                               numPagesToCrawl);
     } catch (std::exception &e) {
-      std::cout << "Error when crawling page " + page.getUrl() << std::endl;
+      std::cout << "Error while crawling page " + page.getUrl() << std::endl;
       std::cout << e.what() << std::endl;
     }
   }

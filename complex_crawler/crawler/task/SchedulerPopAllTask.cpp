@@ -6,6 +6,7 @@
 #include "../action/Crawl.hpp"
 #include "../action/PopFromScheduler.hpp"
 #include "CrawlTask.hpp"
+#include "CrawlTaskResult.hpp"
 #include <CkSpider.h>
 #include <chrono>
 #include <iostream>
@@ -17,17 +18,17 @@ namespace search_engine {
 SchedulerPopAllTask::SchedulerPopAllTask(
     std::size_t numExpectedPops, pthread_mutex_t *memoryMutex,
     SynchonizedPageGroupScheduler *pageGroupScheduler, ThreadPool *crawlPool,
-    utils::SynchronizedQueue<CkSpider> *spiderQueue,
+    utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue,
     std::vector<std::string> *mustMatchPatterns,
     std::vector<std::string> *avoidPatterns,
     std::map<std::string, SiteAttributes> *siteAttributesMap,
-    std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
-    pthread_mutex_t *crawlMutex)
+    std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap)
     : numExpectedPops(numExpectedPops), memoryMutex(memoryMutex),
       pageGroupScheduler(pageGroupScheduler), crawlPool(crawlPool),
-      spiderQueue(spiderQueue), mustMatchPatterns(mustMatchPatterns),
-      avoidPatterns(avoidPatterns), siteAttributesMap(siteAttributesMap),
-      lastCrawlEndTimeMap(lastCrawlEndTimeMap), crawlMutex(crawlMutex) {}
+      crawlTaskResultQueue(crawlTaskResultQueue),
+      mustMatchPatterns(mustMatchPatterns), avoidPatterns(avoidPatterns),
+      siteAttributesMap(siteAttributesMap),
+      lastCrawlEndTimeMap(lastCrawlEndTimeMap) {}
 
 SchedulerPopAllTask::~SchedulerPopAllTask() {}
 
@@ -54,8 +55,8 @@ void SchedulerPopAllTask::run() {
 
     pthread_mutex_lock(memoryMutex);
     CrawlTask *crawlTask = new CrawlTask(
-        memoryMutex, spiderQueue, spider, page, mustMatchPatterns, avoidPatterns,
-        siteAttributes, lastCrawlEndTime, useLastCrawlEndTime, crawlMutex);
+        memoryMutex, crawlTaskResultQueue, spider, page, mustMatchPatterns,
+        avoidPatterns, siteAttributes, lastCrawlEndTime, useLastCrawlEndTime);
     pthread_mutex_unlock(memoryMutex);
 
     // std::cout << "SchedulerPopAllTask add CrawlTask " + url << std::endl;

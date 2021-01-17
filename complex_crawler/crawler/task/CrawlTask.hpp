@@ -5,6 +5,7 @@
 #include "../Page.hpp"
 #include "../SiteAttributes.hpp"
 #include "../action/Crawl.hpp"
+#include "CrawlTaskResult.hpp"
 #include <CkSpider.h>
 #include <pthread.h>
 #include <string>
@@ -15,7 +16,7 @@ namespace search_engine {
 class CrawlTask : public Task {
 private:
   pthread_mutex_t *memoryMutex;
-  utils::SynchronizedQueue<CkSpider> *queue;
+  utils::SynchronizedQueue<CrawlTaskResult> *queue;
   CkSpider *spider;
   Page page;
   std::vector<std::string> *mustMatchPatterns;
@@ -23,15 +24,14 @@ private:
   SiteAttributes *siteAttribute;
   Crawl::timePoint *lastCrawlEndTime;
   bool useLastCrawlEndTime;
-  pthread_mutex_t *crawlMutex;
 
 public:
   CrawlTask(pthread_mutex_t *memoryMutex,
-            utils::SynchronizedQueue<CkSpider> *queue, CkSpider *spider,
+            utils::SynchronizedQueue<CrawlTaskResult> *queue, CkSpider *spider,
             Page page, std::vector<std::string> *mustMatchPatterns,
             std::vector<std::string> *avoidPatterns,
             SiteAttributes *siteAttribute, Crawl::timePoint *lastCrawlEndTime,
-            bool useLastCrawlEndTime, pthread_mutex_t *crawlMutex);
+            bool useLastCrawlEndTime);
   ~CrawlTask();
   void run() override;
 };

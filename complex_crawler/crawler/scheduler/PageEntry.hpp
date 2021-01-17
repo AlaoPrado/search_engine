@@ -8,12 +8,12 @@ namespace search_engine {
 class PageEntry {
 private:
   Page page;
-  int size;
+  int urlSize;
 
 public:
-  PageEntry(Page page, int size);
+  PageEntry(Page page, int urlSize);
   Page getPage();
-  int getSize();
+  int getUrlSize();
 };
 
 } // namespace search_engine

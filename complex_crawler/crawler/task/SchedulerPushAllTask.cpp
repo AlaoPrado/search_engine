@@ -5,6 +5,7 @@
 #include "../action/PageStorage.hpp"
 #include "../action/PushIntoScheduler.hpp"
 #include "../scheduler/sync/SynchonizedPageGroupScheduler.hpp"
+#include "CrawlTaskResult.hpp"
 #include "StorePageTask.hpp"
 #include <CkSpider.h>
 #include <iostream>
@@ -17,12 +18,12 @@ namespace search_engine {
 SchedulerPushAllTask::SchedulerPushAllTask(
     CounterFlag *counterFlag, std::size_t numPagesToCrawl,
     pthread_mutex_t *memoryMutex,
-    utils::SynchronizedQueue<CkSpider> *spiderQueue,
+    utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue,
     SynchonizedPageGroupScheduler *pageGroupScheduler,
     std::map<std::string, bool> *viewedUrls, std::string storageDirectory,
     ThreadPool *storePool, bool verbose)
     : counterFlag(counterFlag), numPagesToCrawl(numPagesToCrawl),
-      memoryMutex(memoryMutex), spiderQueue(spiderQueue),
+      memoryMutex(memoryMutex), crawlTaskResultQueue(crawlTaskResultQueue),
       pageGroupScheduler(pageGroupScheduler), viewedUrls(viewedUrls),
       storageDirectory(storageDirectory), storePool(storePool),
       verbose(verbose) {}
@@ -32,9 +33,10 @@ SchedulerPushAllTask::~SchedulerPushAllTask() {}
 void SchedulerPushAllTask::run() {
   CounterFlag storeCounterFlag(0);
   for (size_t i = 0; i < numPagesToCrawl; i++) {
-    CkSpider *spider = spiderQueue->pop();
+    CrawlTaskResult *crawlTaskResult = crawlTaskResultQueue->pop();
+    CkSpider *spider = crawlTaskResult->getSpider();
 
-    pageGroupScheduler->finishWork(spider->lastUrl());
+    pageGroupScheduler->finishWork(crawlTaskResult->getPage().getUrl());
 
     storeCounterFlag.reset(1);
 
@@ -57,6 +59,7 @@ void SchedulerPushAllTask::run() {
     pthread_mutex_lock(memoryMutex);
     // std::cout << "SchedulerPushAllTask memory lock " << std::endl;
     delete spider;
+    delete crawlTaskResult;
     // std::cout << "SchedulerPushAllTask memory unlock" << std::endl;
     pthread_mutex_unlock(memoryMutex);
   }

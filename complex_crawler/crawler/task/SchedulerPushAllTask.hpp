@@ -5,6 +5,7 @@
 #include "../../../threadpool/ThreadPool.hpp"
 #include "../../../utils/SynchronizedQueue.hpp"
 #include "../scheduler/sync/SynchonizedPageGroupScheduler.hpp"
+#include "CrawlTaskResult.hpp"
 #include <CkSpider.h>
 #include <map>
 #include <pthread.h>
@@ -17,7 +18,7 @@ private:
   CounterFlag *counterFlag;
   std::size_t numPagesToCrawl;
   pthread_mutex_t *memoryMutex;
-  utils::SynchronizedQueue<CkSpider> *spiderQueue;
+  utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue;
   SynchonizedPageGroupScheduler *pageGroupScheduler;
   std::map<std::string, bool> *viewedUrls;
   std::string storageDirectory;
@@ -25,13 +26,13 @@ private:
   bool verbose;
 
 public:
-  SchedulerPushAllTask(CounterFlag *counterFlag, std::size_t numPagesToCrawl,
-                       pthread_mutex_t *memoryMutex,
-                       utils::SynchronizedQueue<CkSpider> *spiderQueue,
-                       SynchonizedPageGroupScheduler *pageGroupScheduler,
-                       std::map<std::string, bool> *viewedUrls,
-                       std::string storageDirectory, ThreadPool *storePool,
-                       bool verbose);
+  SchedulerPushAllTask(
+      CounterFlag *counterFlag, std::size_t numPagesToCrawl,
+      pthread_mutex_t *memoryMutex,
+      utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue,
+      SynchonizedPageGroupScheduler *pageGroupScheduler,
+      std::map<std::string, bool> *viewedUrls, std::string storageDirectory,
+      ThreadPool *storePool, bool verbose);
   ~SchedulerPushAllTask();
   void run() override;
 };

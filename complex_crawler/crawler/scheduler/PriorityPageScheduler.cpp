@@ -8,7 +8,7 @@ namespace search_engine {
 PageCompare::PageCompare() {}
 
 bool PageCompare::operator()(PageEntry &x, PageEntry &y) const {
-  return x.getSize() > y.getSize();
+  return x.getUrlSize() > y.getUrlSize();
 }
 
 PriorityPageScheduler::PriorityPageScheduler() {

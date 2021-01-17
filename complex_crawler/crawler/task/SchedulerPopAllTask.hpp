@@ -5,6 +5,7 @@
 #include "../../../utils/SynchronizedQueue.hpp"
 #include "../action/Crawl.hpp"
 #include "../scheduler/sync/SynchonizedPageGroupScheduler.hpp"
+#include "CrawlTaskResult.hpp"
 #include <map>
 #include <pthread.h>
 #include <string>
@@ -17,22 +18,20 @@ private:
   pthread_mutex_t *memoryMutex;
   SynchonizedPageGroupScheduler *pageGroupScheduler;
   ThreadPool *crawlPool;
-  utils::SynchronizedQueue<CkSpider> *spiderQueue;
+  utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue;
   std::vector<std::string> *mustMatchPatterns, *avoidPatterns;
   std::map<std::string, SiteAttributes> *siteAttributesMap;
   std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap;
-  pthread_mutex_t *crawlMutex;
 
 public:
   SchedulerPopAllTask(
       std::size_t numExpectedPops, pthread_mutex_t *memoryMutex,
       SynchonizedPageGroupScheduler *pageGroupScheduler, ThreadPool *crawlPool,
-      utils::SynchronizedQueue<CkSpider> *spiderQueue,
+      utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue,
       std::vector<std::string> *mustMatchPatterns,
       std::vector<std::string> *avoidPatterns,
       std::map<std::string, SiteAttributes> *siteAttributesMap,
-      std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
-      pthread_mutex_t *crawlMutex);
+      std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap);
   ~SchedulerPopAllTask();
   void run() override;
 };
