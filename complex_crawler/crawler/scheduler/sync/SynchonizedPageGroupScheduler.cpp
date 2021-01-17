@@ -23,10 +23,9 @@ SynchonizedPageGroupScheduler::~SynchonizedPageGroupScheduler() {
   pthread_cond_destroy(&cond);
 }
 
-std::string SynchonizedPageGroupScheduler::pop() {
+Page SynchonizedPageGroupScheduler::pop() {
   pthread_mutex_lock(&mutex);
 
-  std::string url;
   while (this->numPops < this->numExpectedPops &&
          (this->pageGroupScheduler->empty() ||
           this->pageGroupScheduler->blocked())) {
@@ -39,7 +38,7 @@ std::string SynchonizedPageGroupScheduler::pop() {
     // std::endl;
   }
 
-  url = this->pageGroupScheduler->pop();
+  Page page = this->pageGroupScheduler->pop();
 
   if (this->memoryMutex != NULL) {
     // std::cout << "SynchonizedPageGroupScheduler unlock memory pop" <<
@@ -50,10 +49,10 @@ std::string SynchonizedPageGroupScheduler::pop() {
   this->numPops++;
 
   pthread_mutex_unlock(&mutex);
-  return url;
+  return page;
 }
 
-void SynchonizedPageGroupScheduler::push(std::string url) {
+void SynchonizedPageGroupScheduler::push(Page page) {
   pthread_mutex_lock(&mutex);
 
   if (this->memoryMutex != NULL) {
@@ -63,7 +62,7 @@ void SynchonizedPageGroupScheduler::push(std::string url) {
     // std::endl;
   }
 
-  this->pageGroupScheduler->push(url);
+  this->pageGroupScheduler->push(page);
 
   if (this->memoryMutex != NULL) {
     // std::cout << "SynchonizedPageGroupScheduler unlock memory push"

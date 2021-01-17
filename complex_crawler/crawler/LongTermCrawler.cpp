@@ -26,10 +26,11 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
 
   std::size_t numCrawledPages = 0;
   while (numCrawledPages < numPagesToCrawl) {
-    std::string url, baseUrl;
+    Page page("");
+    std::string baseUrl;
     bool useLastCrawlEndTime;
 
-    PopFromScheduler::pop(*pageScheduler, url, baseUrl, useLastCrawlEndTime,
+    PopFromScheduler::pop(*pageScheduler, page, baseUrl, useLastCrawlEndTime,
                           *siteAttributesMap, *lastCrawlEndTimeMap);
 
     CkSpider spider;
@@ -38,7 +39,7 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
         &(lastCrawlEndTimeMap->operator[](baseUrl));
 
     try {
-      Crawl::crawlUrl(spider, url, this->mustMatchPatterns, this->avoidPatterns,
+      Crawl::crawlUrl(spider, page, this->mustMatchPatterns, this->avoidPatterns,
                       *siteAttributes, *lastCrawlEndTime, useLastCrawlEndTime);
 
       PageStorage::storePage(this->storageDirectory, spider, numCrawledPages);
@@ -46,7 +47,7 @@ void LongTermCrawler::crawl(std::vector<std::string> &seedUrls,
       PushIntoScheduler::push(pageScheduler, spider, this->viewedUrls,
                               numPagesToCrawl);
     } catch (std::exception &e) {
-      std::cout << "Error when crawling page " + url << std::endl;
+      std::cout << "Error when crawling page " + page.getUrl() << std::endl;
       std::cout << e.what() << std::endl;
     }
   }

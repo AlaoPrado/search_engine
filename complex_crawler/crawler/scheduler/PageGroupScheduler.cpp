@@ -24,7 +24,7 @@ PageGroupScheduler::~PageGroupScheduler() {
   delete this->pageGroupInWork;
 }
 
-std::string PageGroupScheduler::pop() {
+Page PageGroupScheduler::pop() {
   for (auto it = this->pageGroupInWork->begin();
        it != this->pageGroupInWork->end(); it++) {
     // std::cout << "PageGroupScheduler pop loop " + it->first << std::endl;
@@ -36,11 +36,11 @@ std::string PageGroupScheduler::pop() {
       return this->pageGroupScheduler->operator[](it->first)->pop();
     }
   }
-  return "";
+  return Page("");
 }
 
-void PageGroupScheduler::push(std::string url) {
-  std::string baseUrl = utils::baseUrl(url);
+void PageGroupScheduler::push(Page page) {
+  std::string baseUrl = utils::baseUrl(page.getUrl());
   // std::cout << "PageGroupScheduler push " + baseUrl << std::endl;
   auto it = this->pageGroupScheduler->find(baseUrl);
   if (it == this->pageGroupScheduler->end()) {
@@ -48,7 +48,7 @@ void PageGroupScheduler::push(std::string url) {
     this->pageGroupInWork->operator[](baseUrl) = false;
     // std::cout << "PageGroupScheduler push " + baseUrl << std::endl;
   }
-  this->pageGroupScheduler->operator[](baseUrl)->push(url);
+  this->pageGroupScheduler->operator[](baseUrl)->push(page);
   this->numPages++;
   for (auto it = this->pageGroupInWork->begin();
        it != this->pageGroupInWork->end(); it++) {

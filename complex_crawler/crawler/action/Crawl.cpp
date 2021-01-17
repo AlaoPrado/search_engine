@@ -1,5 +1,6 @@
 #include "Crawl.hpp"
 #include "../../../utils/Assert.hpp"
+#include "../Page.hpp"
 #include <CkSpider.h>
 #include <chrono>
 #include <iostream>
@@ -20,7 +21,7 @@ void Crawl::crawlSleepUntilMs(CkSpider &spider,
   }
 }
 
-void Crawl::crawlUrl(CkSpider &spider, std::string &url,
+void Crawl::crawlUrl(CkSpider &spider, Page &page,
                      std::vector<std::string> &mustMatchPatterns,
                      std::vector<std::string> &avoidPatterns,
                      SiteAttributes &siteAttributes,
@@ -30,22 +31,22 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
   Crawl::timePoint currentTime;
   Crawl::millis duration;
 
-  std::string urlCopy("");
-  urlCopy.append(url);
+  std::string url("");
+  url.append(page.getUrl());
 
   search_engine::utils::assertTrue(spider.get_NumUnspidered() == 0,
                                    "Error(Crawl): invalid crawler");
 
-  // std::cout << "Crawl initialize with " + urlCopy << std::endl;
+  // std::cout << "Crawl initialize with " + url << std::endl;
 
   if (memoryMutex != NULL) {
     pthread_mutex_lock(memoryMutex);
-    // std::cout << "Crawl lock memory " + urlCopy << std::endl
+    // std::cout << "Crawl lock memory " + url << std::endl
   }
 
-  spider.Initialize(urlCopy.c_str());
+  spider.Initialize(url.c_str());
 
-  // std::cout << "Crawl initialize finish " + urlCopy << std::endl;
+  // std::cout << "Crawl initialize finish " + url << std::endl;
 
   for (auto mustMatchPattern : mustMatchPatterns) {
     spider.AddMustMatchPattern(mustMatchPattern.c_str());
@@ -58,16 +59,16 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
 
   search_engine::utils::assertTrue(
       spider.get_NumUnspidered() > 0,
-      "Error(Crawl): invalid url get_NumUnspidered : " + urlCopy);
+      "Error(Crawl): invalid url get_NumUnspidered : " + url);
 
   spider.put_Utf8(true);
 
   if (memoryMutex != NULL) {
-    // std::cout << "Crawl unlock memory " + urlCopy << std::endl;
+    // std::cout << "Crawl unlock memory " + url << std::endl;
     pthread_mutex_unlock(memoryMutex);
   }
 
-  // std::cout << "Crawl init finish " + urlCopy << std::endl;
+  // std::cout << "Crawl init finish " + url << std::endl;
 
   if (useLastCrawlEndTime) {
     Crawl::crawlSleepUntilMs(spider, lastCrawlEndTime);
@@ -77,13 +78,13 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
 
   if (memoryMutex != NULL) {
     pthread_mutex_lock(memoryMutex);
-    // std::cout << "Crawl lock memory " + urlCopy << std::endl;
+    // std::cout << "Crawl lock memory " + url << std::endl;
   }
 
   crawlSuccess = spider.CrawlNext();
 
   if (memoryMutex != NULL) {
-    // std::cout << "Crawl unlock memory " + urlCopy << std::endl;
+    // std::cout << "Crawl unlock memory " + url << std::endl;
     pthread_mutex_unlock(memoryMutex);
   }
 
@@ -99,7 +100,7 @@ void Crawl::crawlUrl(CkSpider &spider, std::string &url,
   std::string html(spider.lastHtml());
   siteAttributes.addToTotalPageSize(html.size());
 
-  if (!useLastCrawlEndTime) { // first time crawling web site
+  if (page.getLevel() == 0) {
     siteAttributes.addNumPagesLevel1(spider.get_NumUnspidered() +
                                      spider.get_NumOutboundLinks());
   }

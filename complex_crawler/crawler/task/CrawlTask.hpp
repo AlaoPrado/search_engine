@@ -2,6 +2,7 @@
 
 #include "../../../threadpool/Task.hpp"
 #include "../../../utils/SynchronizedQueue.hpp"
+#include "../Page.hpp"
 #include "../SiteAttributes.hpp"
 #include "../action/Crawl.hpp"
 #include <CkSpider.h>
@@ -16,7 +17,7 @@ private:
   pthread_mutex_t *memoryMutex;
   utils::SynchronizedQueue<CkSpider> *queue;
   CkSpider *spider;
-  std::string url;
+  Page page;
   std::vector<std::string> *mustMatchPatterns;
   std::vector<std::string> *avoidPatterns;
   SiteAttributes *siteAttribute;
@@ -27,7 +28,7 @@ private:
 public:
   CrawlTask(pthread_mutex_t *memoryMutex,
             utils::SynchronizedQueue<CkSpider> *queue, CkSpider *spider,
-            std::string url, std::vector<std::string> *mustMatchPatterns,
+            Page page, std::vector<std::string> *mustMatchPatterns,
             std::vector<std::string> *avoidPatterns,
             SiteAttributes *siteAttribute, Crawl::timePoint *lastCrawlEndTime,
             bool useLastCrawlEndTime, pthread_mutex_t *crawlMutex);

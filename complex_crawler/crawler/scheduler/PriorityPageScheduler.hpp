@@ -1,29 +1,30 @@
 #pragma once
 
+#include "../Page.hpp"
+#include "PageEntry.hpp"
 #include "PageScheduler.hpp"
-#include "UrlEntry.hpp"
 #include <queue>
 #include <string>
 #include <vector>
 
 namespace search_engine {
 
-class UrlCompare {
+class PageCompare {
 public:
-  UrlCompare();
-  bool operator()(UrlEntry &x, UrlEntry &y) const;
+  PageCompare();
+  bool operator()(PageEntry &x, PageEntry &y) const;
 };
 
 class PriorityPageScheduler : public PageScheduler {
 private:
-  std::priority_queue<UrlEntry, std::vector<UrlEntry>, UrlCompare>
+  std::priority_queue<PageEntry, std::vector<PageEntry>, PageCompare>
       *priorityQueue;
 
 public:
   PriorityPageScheduler();
   virtual ~PriorityPageScheduler() override;
-  virtual std::string pop() override;
-  virtual void push(std::string url) override;
+  virtual Page pop() override;
+  virtual void push(Page page) override;
   virtual std::size_t size() override;
   virtual bool empty() override;
 };

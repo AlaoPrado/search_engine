@@ -1,11 +1,12 @@
 #include "PushIntoScheduler.hpp"
 #include "../../../utils/Assert.hpp"
 #include "../../../utils/Url.hpp"
+#include "../Page.hpp"
 #include <iostream>
 
 namespace search_engine {
 
-void PushIntoScheduler::push(PageScheduler *pageScheduler, std::string url,
+void PushIntoScheduler::push(PageScheduler *pageScheduler, Page &page,
                              std::map<std::string, bool> *viewedUrls,
                              pthread_mutex_t *memoryMutex) {
   utils::assertTrue(
@@ -16,15 +17,15 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler, std::string url,
       viewedUrls,
       "Error(PushIntoScheduler): viewedUrls has not been initialized");
 
-  std::string canonicalUrl = utils::canonicalizeUrl(url);
-  std::string urlWithoutProtocol = utils::removeUrlProtocol(canonicalUrl);
+  page.setUrl(utils::standardUrl(page.getUrl()));
+  std::string urlWithoutProtocol = utils::removeUrlProtocol(page.getUrl());
   std::string urlWithoutStartingPart =
       utils::removeUrlWorldWideWeb(urlWithoutProtocol);
 
   auto it = viewedUrls->find(urlWithoutStartingPart);
   if (it == viewedUrls->end()) {
     try {
-      pageScheduler->push(canonicalUrl);
+      pageScheduler->push(page);
 
       if (memoryMutex != NULL) {
         pthread_mutex_lock(memoryMutex);
@@ -42,7 +43,7 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler, std::string url,
 }
 
 void PushIntoScheduler::push(PageScheduler *pageScheduler,
-                             std::vector<std::string> urls,
+                             std::vector<std::string> &urls,
                              std::map<std::string, bool> *viewedUrls,
                              std::size_t numPagesToCrawl,
                              pthread_mutex_t *memoryMutex) {
@@ -51,7 +52,8 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler,
       break;
     }
 
-    PushIntoScheduler::push(pageScheduler, url, viewedUrls, memoryMutex);
+    Page page(url, 0);
+    PushIntoScheduler::push(pageScheduler, page, viewedUrls, memoryMutex);
   }
 }
 
@@ -64,9 +66,8 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler, CkSpider &spider,
       break;
     }
 
-    std::string url("");
-    url.append(spider.getOutboundLink(i));
-    PushIntoScheduler::push(pageScheduler, url, viewedUrls, memoryMutex);
+    Page page(spider.getOutboundLink(i), 0);
+    PushIntoScheduler::push(pageScheduler, page, viewedUrls, memoryMutex);
   }
 
   for (int i = 0; i < spider.get_NumUnspidered(); i++) {
@@ -74,9 +75,8 @@ void PushIntoScheduler::push(PageScheduler *pageScheduler, CkSpider &spider,
       break;
     }
 
-    std::string url("");
-    url.append(spider.getUnspideredUrl(i));
-    PushIntoScheduler::push(pageScheduler, url, viewedUrls, memoryMutex);
+    Page page(spider.getUnspideredUrl(i), 1);
+    PushIntoScheduler::push(pageScheduler, page, viewedUrls, memoryMutex);
   }
 }
 

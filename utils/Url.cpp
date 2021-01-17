@@ -27,21 +27,6 @@ std::string baseUrl(std::string url) {
   return url;
 }
 
-std::string canonicalizeUrl(std::string url) {
-  if (url.length() > 0) {
-    if (url[url.length() - 1] == '/') {
-      url.erase(url.end() - 1);
-    }
-
-    const std::string protocolSeparator = "://";
-    std::size_t position = url.find(protocolSeparator);
-    if (position == std::string::npos) {
-      url = "https://" + url;
-    }
-  }
-  return url;
-}
-
 std::size_t countUrlSize(std::string url) {
   const std::vector<std::string> validProtocols = {"http://", "https://"};
 
@@ -81,6 +66,21 @@ std::string removeUrlWorldWideWeb(std::string url) {
   std::size_t position = url.find(worldWideWeb);
   if (position != std::string::npos) {
     url.erase(position, worldWideWeb.length());
+  }
+  return url;
+}
+
+std::string standardUrl(std::string url) {
+  if (url.length() > 0) {
+    if (url[url.length() - 1] == '/') {
+      url.erase(url.end() - 1);
+    }
+
+    const std::string protocolSeparator = "://";
+    std::size_t position = url.find(protocolSeparator);
+    if (position == std::string::npos) {
+      url = "https://" + url;
+    }
   }
   return url;
 }

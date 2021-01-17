@@ -1,21 +1,22 @@
 #pragma once
 
+#include "../Page.hpp"
+#include "PageEntry.hpp"
 #include "PriorityPageScheduler.hpp"
-#include "UrlEntry.hpp"
 #include <queue>
 #include <string>
 
 namespace search_engine {
 
-class SimplePageScheduler : public PriorityPageScheduler {
+class SimplePageScheduler : public PageScheduler {
 private:
-  std::queue<UrlEntry> *urlQueue;
+  std::queue<PageEntry> *urlQueue;
 
 public:
   SimplePageScheduler();
   virtual ~SimplePageScheduler() override;
-  virtual std::string pop() override;
-  virtual void push(std::string url) override;
+  virtual Page pop() override;
+  virtual void push(Page page) override;
   virtual std::size_t size() override;
   virtual bool empty() override;
 };

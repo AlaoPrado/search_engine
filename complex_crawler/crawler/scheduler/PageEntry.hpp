@@ -1,16 +1,18 @@
 #pragma once
 
+#include "../Page.hpp"
 #include <string>
 
 namespace search_engine {
 
-class UrlEntry {
+class PageEntry {
 private:
-  std::string url;
+  Page page;
   int size;
+
 public:
-  UrlEntry(std::string url, int size);
-  std::string getUrl();
+  PageEntry(Page page, int size);
+  Page getPage();
   int getSize();
 };
 

@@ -7,22 +7,22 @@
 namespace search_engine {
 
 SimplePageScheduler::SimplePageScheduler() {
-  this->urlQueue = new std::queue<UrlEntry>();
+  this->urlQueue = new std::queue<PageEntry>();
 }
 
 SimplePageScheduler::~SimplePageScheduler() { delete this->urlQueue; }
 
-std::string SimplePageScheduler::pop() {
+Page SimplePageScheduler::pop() {
   utils::assertTrue(this->size() > 0,
                     "Error(SimplePageScheduler): pop when scheduler is empty");
-  UrlEntry urlEntry = this->urlQueue->front();
+  PageEntry pageEntry = this->urlQueue->front();
   this->urlQueue->pop();
-  return urlEntry.getUrl();
+  return pageEntry.getPage();
 }
 
-void SimplePageScheduler::push(std::string url) {
-  std::size_t urlSize = utils::countUrlSize(url);
-  this->urlQueue->push(UrlEntry(url, urlSize));
+void SimplePageScheduler::push(Page page) {
+  std::size_t urlSize = utils::countUrlSize(page.getUrl());
+  this->urlQueue->push(PageEntry(page, urlSize));
 }
 
 std::size_t SimplePageScheduler::size() { return this->urlQueue->size(); }

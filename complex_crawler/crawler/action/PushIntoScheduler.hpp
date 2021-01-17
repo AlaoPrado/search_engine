@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Page.hpp"
 #include "../scheduler/PageScheduler.hpp"
 #include <CkSpider.h>
 #include <map>
@@ -14,11 +15,11 @@ private:
   PushIntoScheduler() {}
 
 public:
-  static void push(PageScheduler *pageScheduler, std::string url,
+  static void push(PageScheduler *pageScheduler, Page &page,
                    std::map<std::string, bool> *viewedUrls,
                    pthread_mutex_t *memoryMutex = NULL);
 
-  static void push(PageScheduler *pageScheduler, std::vector<std::string> urls,
+  static void push(PageScheduler *pageScheduler, std::vector<std::string> &urls,
                    std::map<std::string, bool> *viewedUrls,
                    std::size_t numPagesToCrawl,
                    pthread_mutex_t *memoryMutex = NULL);

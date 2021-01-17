@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Page.hpp"
 #include "../SiteAttributes.hpp"
 #include <CkSpider.h>
 #include <chrono>
@@ -21,7 +22,7 @@ private:
                                 Crawl::timePoint &lastCrawlEndTime);
 
 public:
-  static void crawlUrl(CkSpider &spider, std::string &url,
+  static void crawlUrl(CkSpider &spider, Page &page,
                        std::vector<std::string> &mustMatchPatterns,
                        std::vector<std::string> &avoidPatterns,
                        SiteAttributes &siteAttributes,

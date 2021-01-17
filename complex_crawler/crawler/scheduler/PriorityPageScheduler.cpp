@@ -5,31 +5,31 @@
 #include <vector>
 namespace search_engine {
 
-UrlCompare::UrlCompare() {}
+PageCompare::PageCompare() {}
 
-bool UrlCompare::operator()(UrlEntry &x, UrlEntry &y) const {
+bool PageCompare::operator()(PageEntry &x, PageEntry &y) const {
   return x.getSize() > y.getSize();
 }
 
 PriorityPageScheduler::PriorityPageScheduler() {
   this->priorityQueue =
-      new std::priority_queue<UrlEntry, std::vector<UrlEntry>, UrlCompare>();
+      new std::priority_queue<PageEntry, std::vector<PageEntry>, PageCompare>();
 }
 
 PriorityPageScheduler::~PriorityPageScheduler() { delete this->priorityQueue; }
 
-void PriorityPageScheduler::push(std::string url) {
-  std::size_t urlSize = utils::countUrlSize(url);
-  this->priorityQueue->push(UrlEntry(url, urlSize));
+void PriorityPageScheduler::push(Page page) {
+  std::size_t urlSize = utils::countUrlSize(page.getUrl());
+  this->priorityQueue->push(PageEntry(page, urlSize));
 }
 
-std::string PriorityPageScheduler::pop() {
+Page PriorityPageScheduler::pop() {
   utils::assertTrue(
       !this->empty(),
       "Error(PriorityPageScheduler): pop when scheduler is empty");
-  UrlEntry urlEntry = this->priorityQueue->top();
+  PageEntry pageEntry = this->priorityQueue->top();
   this->priorityQueue->pop();
-  return urlEntry.getUrl();
+  return pageEntry.getPage();
 }
 
 std::size_t PriorityPageScheduler::size() {

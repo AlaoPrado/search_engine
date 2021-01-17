@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Page.hpp"
 #include <string>
 
 namespace search_engine {
@@ -7,8 +8,8 @@ namespace search_engine {
 class PageScheduler {
 public:
   virtual ~PageScheduler(){};
-  virtual std::string pop() = 0;
-  virtual void push(std::string url) = 0;
+  virtual Page pop() = 0;
+  virtual void push(Page page) = 0;
   virtual std::size_t size() = 0;
   virtual bool empty() = 0;
 };

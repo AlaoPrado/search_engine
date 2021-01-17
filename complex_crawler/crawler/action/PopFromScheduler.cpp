@@ -1,5 +1,6 @@
 #include "PopFromScheduler.hpp"
 #include "../../../utils/Url.hpp"
+#include "../Page.hpp"
 #include "../SiteAttributes.hpp"
 #include "Crawl.hpp"
 #include <chrono>
@@ -10,13 +11,13 @@
 namespace search_engine {
 
 void PopFromScheduler::pop(
-    PageScheduler &pageScheduler, std::string &url, std::string &baseUrl,
+    PageScheduler &pageScheduler, Page &page, std::string &baseUrl,
     bool &useLastCrawlEndTime,
     std::map<std::string, SiteAttributes> &siteAttributesMap,
     std::map<std::string, Crawl::timePoint> &lastCrawlEndTimeMap,
     pthread_mutex_t *memoryMutex) {
-  url = pageScheduler.pop();
-  baseUrl = utils::baseUrl(url);
+  page = pageScheduler.pop();
+  baseUrl = utils::baseUrl(page.getUrl());
 
   auto it = lastCrawlEndTimeMap.find(baseUrl);
 

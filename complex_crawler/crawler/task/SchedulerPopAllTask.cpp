@@ -1,6 +1,7 @@
 #include "SchedulerPopAllTask.hpp"
 #include "../../../utils/SynchronizedQueue.hpp"
 #include "../../../utils/Url.hpp"
+#include "../Page.hpp"
 #include "../SiteAttributes.hpp"
 #include "../action/Crawl.hpp"
 #include "../action/PopFromScheduler.hpp"
@@ -32,10 +33,11 @@ SchedulerPopAllTask::~SchedulerPopAllTask() {}
 
 void SchedulerPopAllTask::run() {
   for (size_t i = 0; i < numExpectedPops; i++) {
-    std::string url, baseUrl;
+    Page page("");
+    std::string baseUrl;
     bool useLastCrawlEndTime;
 
-    PopFromScheduler::pop(*pageGroupScheduler, url, baseUrl,
+    PopFromScheduler::pop(*pageGroupScheduler, page, baseUrl,
                           useLastCrawlEndTime, *siteAttributesMap,
                           *lastCrawlEndTimeMap, memoryMutex);
 
@@ -52,7 +54,7 @@ void SchedulerPopAllTask::run() {
 
     pthread_mutex_lock(memoryMutex);
     CrawlTask *crawlTask = new CrawlTask(
-        memoryMutex, spiderQueue, spider, url, mustMatchPatterns, avoidPatterns,
+        memoryMutex, spiderQueue, spider, page, mustMatchPatterns, avoidPatterns,
         siteAttributes, lastCrawlEndTime, useLastCrawlEndTime, crawlMutex);
     pthread_mutex_unlock(memoryMutex);
 

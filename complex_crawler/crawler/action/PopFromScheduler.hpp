@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Page.hpp"
 #include "../SiteAttributes.hpp"
 #include "../scheduler/PageScheduler.hpp"
 #include "Crawl.hpp"
@@ -14,7 +15,7 @@ private:
   PopFromScheduler();
 
 public:
-  static void pop(PageScheduler &pageScheduler, std::string &url,
+  static void pop(PageScheduler &pageScheduler, Page &page,
                   std::string &baseUrl, bool &useLastCrawlEndTime,
                   std::map<std::string, SiteAttributes> &siteAttributesMap,
                   std::map<std::string, Crawl::timePoint> &lastCrawlEndTimeMap,
