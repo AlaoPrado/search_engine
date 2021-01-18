@@ -10,31 +10,17 @@ namespace utils {
 
 std::string baseUrl(std::string url) {
   if (url.length() > 0) {
-    std::string baseUrl = domainUrl(url);
-    baseUrl = removeUrlProtocol(baseUrl);
-    baseUrl = removeUrlWorldWideWeb(baseUrl);
+    std::string resultString = removeUrlProtocol(url);
+    resultString = removeUrlWorldWideWeb(resultString);
 
     const std::string countryCode = ".br";
-    std::size_t position = baseUrl.find(countryCode);
+    std::size_t position = resultString.find(countryCode);
 
     utils::assertTrue(position != std::string::npos,
                       "Error(utils/baseUrl): invalid country code in " + url);
 
-    baseUrl.erase(position, baseUrl.length());
-
-    std::size_t numPoints = countUrlNumPoints(baseUrl);
-    if (numPoints > 1) {
-      const std::string point = ".";
-      position = baseUrl.find(point);
-
-      utils::assertTrue(position != std::string::npos,
-                        "Error(utils/baseUrl): failed to find point in " + url);
-
-      baseUrl.erase(baseUrl.begin(),
-                    baseUrl.begin() + position + point.length());
-    }
-
-    return baseUrl;
+    resultString.erase(position, resultString.length());
+    return resultString;
   }
   return url;
 }
@@ -77,17 +63,12 @@ std::size_t countUrlSize(const std::string &url) {
 
 std::string domainUrl(std::string url) {
   if (url.length() > 0) {
-    const std::string protocolSeparator = "://";
-    std::size_t position = url.find(protocolSeparator);
-    if (position != std::string::npos) {
-      url.erase(url.begin(),
-                url.begin() + position + protocolSeparator.length());
+    url = removeUrlProtocol(url);
 
-      const std::string linkSeparator = "//";
-      position = url.find(linkSeparator);
-      if (position != std::string::npos) {
-        url.erase(url.begin(), url.begin() + position + linkSeparator.length());
-      }
+    const std::string linkSeparator = "//";
+    std::size_t position = url.find(linkSeparator);
+    if (position != std::string::npos) {
+      url.erase(url.begin(), url.begin() + position + linkSeparator.length());
     }
   }
   return url;
@@ -113,8 +94,6 @@ std::string removeUrlWorldWideWeb(std::string url) {
 
 std::string standardUrl(std::string url) {
   if (url.length() > 0) {
-    std::string resultUrl = domainUrl(url);
-
     if (url[url.length() - 1] == '/') {
       url.erase(url.end() - 1);
     }
@@ -128,10 +107,39 @@ std::string standardUrl(std::string url) {
   return url;
 }
 
+bool urlHasComposeDomain(const std::string &url) {
+  std::string tempUrl = baseUrl(url);
+  const std::string separator = "/";
+  std::size_t position = tempUrl.find(separator);
+
+  return position != std::string::npos || countUrlNumPoints(tempUrl) > 2;
+}
+
 bool urlHasCountryCode(const std::string &url, std::string countryCode) {
   if (url.length() > 0) {
-    std::string resultUrl = domainUrl(url);
-    std::size_t position = resultUrl.find(countryCode);
+    std::size_t position = url.find(countryCode);
+
+    if (position == std::string::npos) {
+      return false;
+    }
+
+    position += countryCode.length();
+
+    if (position == url.length()) {
+      return true;
+    }
+
+    return url[position] == '/';
+  }
+  return false;
+}
+
+bool urlHasExternalLink(const std::string &url) {
+  if (url.length() > 0) {
+    std::string tempUrl = removeUrlProtocol(url);
+
+    const std::string linkSeparator = "//";
+    std::size_t position = tempUrl.find(linkSeparator);
     return position != std::string::npos;
   }
   return false;

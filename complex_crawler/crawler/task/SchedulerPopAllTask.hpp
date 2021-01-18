@@ -14,8 +14,8 @@ namespace search_engine {
 
 class SchedulerPopAllTask : public Task {
 private:
-  std::size_t numExpectedPops;
   pthread_mutex_t *memoryMutex;
+  std::size_t numExpectedPops;
   SynchonizedPageGroupScheduler *pageGroupScheduler;
   ThreadPool *crawlPool;
   utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue;
@@ -25,7 +25,7 @@ private:
 
 public:
   SchedulerPopAllTask(
-      std::size_t numExpectedPops, pthread_mutex_t *memoryMutex,
+      pthread_mutex_t *memoryMutex, std::size_t numExpectedPops,
       SynchonizedPageGroupScheduler *pageGroupScheduler, ThreadPool *crawlPool,
       utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue,
       std::vector<std::string> *mustMatchPatterns,

@@ -19,7 +19,11 @@ std::string removeUrlWorldWideWeb(std::string url);
 
 std::string standardUrl(std::string url);
 
+bool urlHasComposeDomain(const std::string &url);
+
 bool urlHasCountryCode(const std::string &url, std::string countryCode);
+
+bool urlHasExternalLink(const std::string &url);
 
 bool urlHasInjection(const std::string &url);
 

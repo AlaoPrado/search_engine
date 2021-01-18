@@ -6,8 +6,8 @@
 #include "scheduler/sync/SynchonizedPageGroupScheduler.hpp"
 #include "task/CrawlTask.hpp"
 #include "task/CrawlTaskResult.hpp"
+#include "task/ProcessCrawlResultsTask.hpp"
 #include "task/SchedulerPopAllTask.hpp"
-#include "task/SchedulerPushAllTask.hpp"
 #include <CkSpider.h>
 #include <pthread.h>
 #include <string>
@@ -28,34 +28,34 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
 
   pthread_mutex_init(memoryMutex, 0);
 
-  auto *pageScheduler =
-      new SynchonizedPageGroupScheduler(numPagesToCrawl, memoryMutex);
+  auto *pageScheduler = new SynchonizedPageGroupScheduler(memoryMutex);
   auto *crawlTaskResultQueue =
       new utils::SynchronizedQueue<CrawlTaskResult>(memoryMutex);
   auto *schedulerPushPool = new ThreadPool(1, memoryMutex);
   auto *schedulerPopPool = new ThreadPool(1, memoryMutex);
   auto *storePool = new ThreadPool(1, memoryMutex);
   auto *crawlPool = new ThreadPool(this->numThreads, memoryMutex);
-
   int numPagesPushed;
+  
   PushIntoScheduler::push(*pageScheduler, seedUrls, *(this->viewedUrls),
                           numPagesToCrawl, numPagesPushed, memoryMutex);
 
   CounterFlag *counterFlag = new CounterFlag(1);
 
   SchedulerPopAllTask *schedulerPopAllTask = new SchedulerPopAllTask(
-      numPagesToCrawl, memoryMutex, pageScheduler, crawlPool,
+      memoryMutex, numPagesToCrawl, pageScheduler, crawlPool,
       crawlTaskResultQueue, &mustMatchPatterns, &avoidPatterns,
       siteAttributesMap, lastCrawlEndTimeMap);
 
-  SchedulerPushAllTask *schedulerPushAllTask = new SchedulerPushAllTask(
-      counterFlag, numPagesToCrawl, memoryMutex, pageScheduler, crawlPool,
-      crawlTaskResultQueue, &mustMatchPatterns, &avoidPatterns,
-      siteAttributesMap, lastCrawlEndTimeMap, schedulerPopPool,
-      this->viewedUrls, this->storageDirectory, storePool, this->verbose);
+  ProcessCrawlResultsTask *processCrawlResultsTask =
+      new ProcessCrawlResultsTask(
+          counterFlag, memoryMutex, numPagesToCrawl, pageScheduler, crawlPool,
+          crawlTaskResultQueue, &mustMatchPatterns, &avoidPatterns,
+          siteAttributesMap, lastCrawlEndTimeMap, schedulerPopPool,
+          this->viewedUrls, this->storageDirectory, storePool);
 
   schedulerPopPool->addTask(schedulerPopAllTask);
-  schedulerPushPool->addTask(schedulerPushAllTask);
+  schedulerPushPool->addTask(processCrawlResultsTask);
 
   counterFlag->wait();
 

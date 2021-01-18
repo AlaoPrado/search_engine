@@ -10,10 +10,11 @@ void PushIntoScheduler::push(PageScheduler &pageScheduler, Page &page,
                              std::map<std::string, bool> &viewedUrls,
                              int &numPagesPushed,
                              pthread_mutex_t *memoryMutex) {
-  std::string url = page.getUrl();
+  std::string url = utils::standardUrl(page.getUrl());
 
-  if (utils::urlHasCountryCode(url, ".br") && !utils::urlHasInjection(url)) {
-    page.setUrl(utils::standardUrl(url));
+  if (utils::urlHasCountryCode(url, ".br") && !utils::urlHasInjection(url) &&
+      !utils::urlHasExternalLink(url) && !utils::urlHasComposeDomain(url)) {
+    page.setUrl(url);
     std::string urlWithoutProtocol = utils::removeUrlProtocol(page.getUrl());
     std::string urlWithoutStartingPart =
         utils::removeUrlWorldWideWeb(urlWithoutProtocol);

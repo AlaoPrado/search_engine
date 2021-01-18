@@ -24,12 +24,13 @@ CrawlTask::CrawlTask(pthread_mutex_t *memoryMutex,
 CrawlTask::~CrawlTask() {}
 
 void CrawlTask::run() {
-  // std::cout << "CrawlTask " + url << std::endl;
+  std::cout << "CrawlTask " + page.getUrl() << std::endl;
   bool success;
   try {
     Crawl::crawlUrl(*spider, page, *mustMatchPatterns, *avoidPatterns,
                     *siteAttribute, *lastCrawlEndTime, useLastCrawlEndTime,
                     memoryMutex);
+    std::cout << "CrawlTask success: " + page.getUrl() << std::endl;
     success = true;
   } catch (std::exception &e) {
     std::cout << "Error when crawling page " + page.getUrl() << std::endl;
@@ -44,6 +45,7 @@ void CrawlTask::run() {
   pthread_mutex_unlock(memoryMutex);
 
   queue->push(crawlTaskResult);
+  std::cout << "CrawlTask finish: " + page.getUrl() << std::endl;
 }
 
 } // namespace search_engine

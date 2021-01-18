@@ -1,4 +1,4 @@
-#include "SchedulerPushAllTask.hpp"
+#include "ProcessCrawlResultsTask.hpp"
 #include "../../../threadpool/CounterFlag.hpp"
 #include "../../../threadpool/ThreadPool.hpp"
 #include "../../../utils/Assert.hpp"
@@ -19,9 +19,9 @@
 
 namespace search_engine {
 
-SchedulerPushAllTask::SchedulerPushAllTask(
-    CounterFlag *counterFlag, std::size_t numPagesToCrawl,
-    pthread_mutex_t *memoryMutex,
+ProcessCrawlResultsTask::ProcessCrawlResultsTask(
+    CounterFlag *counterFlag, pthread_mutex_t *memoryMutex,
+    std::size_t numPagesToCrawl,
     SynchonizedPageGroupScheduler *pageGroupScheduler, ThreadPool *crawlPool,
     utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue,
     std::vector<std::string> *mustMatchPatterns,
@@ -29,20 +29,19 @@ SchedulerPushAllTask::SchedulerPushAllTask(
     std::map<std::string, SiteAttributes> *siteAttributesMap,
     std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
     ThreadPool *schedulerPopPool, std::map<std::string, bool> *viewedUrls,
-    std::string storageDirectory, ThreadPool *storePool, bool verbose)
-    : counterFlag(counterFlag), numPagesToCrawl(numPagesToCrawl),
-      memoryMutex(memoryMutex), pageGroupScheduler(pageGroupScheduler),
+    std::string storageDirectory, ThreadPool *storePool)
+    : counterFlag(counterFlag), memoryMutex(memoryMutex),
+      numPagesToCrawl(numPagesToCrawl), pageGroupScheduler(pageGroupScheduler),
       crawlPool(crawlPool), crawlTaskResultQueue(crawlTaskResultQueue),
       mustMatchPatterns(mustMatchPatterns), avoidPatterns(avoidPatterns),
       siteAttributesMap(siteAttributesMap),
       lastCrawlEndTimeMap(lastCrawlEndTimeMap),
       schedulerPopPool(schedulerPopPool), viewedUrls(viewedUrls),
-      storageDirectory(storageDirectory), storePool(storePool),
-      verbose(verbose) {}
+      storageDirectory(storageDirectory), storePool(storePool) {}
 
-SchedulerPushAllTask::~SchedulerPushAllTask() {}
+ProcessCrawlResultsTask::~ProcessCrawlResultsTask() {}
 
-void SchedulerPushAllTask::run() {
+void ProcessCrawlResultsTask::run() {
   CounterFlag storeCounterFlag(0);
   size_t numCrawledPages = 0;
   while (numCrawledPages < numPagesToCrawl) {
@@ -84,7 +83,7 @@ void SchedulerPushAllTask::run() {
       utils::assertTrue(storeSuccess, "Error: failed to store page " + url +
                                           ", trying another page");
 
-      std::cout << "Crawl success: " + url << std::endl;
+      std::cout << "Success: " + url << std::endl;
 
       numCrawledPages++;
     } catch (std::exception &e) {
@@ -97,7 +96,7 @@ void SchedulerPushAllTask::run() {
 
       pthread_mutex_lock(memoryMutex);
       SchedulerPopAllTask *schedulerPopAllTask = new SchedulerPopAllTask(
-          numExtraPops, memoryMutex, pageGroupScheduler, crawlPool,
+          memoryMutex, numExtraPops, pageGroupScheduler, crawlPool,
           crawlTaskResultQueue, mustMatchPatterns, avoidPatterns,
           siteAttributesMap, lastCrawlEndTimeMap);
       pthread_mutex_unlock(memoryMutex);
@@ -106,10 +105,10 @@ void SchedulerPushAllTask::run() {
     }
 
     pthread_mutex_lock(memoryMutex);
-    // std::cout << "SchedulerPushAllTask memory lock " << std::endl;
+    // std::cout << "ProcessCrawlResultsTask memory lock " << std::endl;
     delete spider;
     delete crawlTaskResult;
-    // std::cout << "SchedulerPushAllTask memory unlock" << std::endl;
+    // std::cout << "ProcessCrawlResultsTask memory unlock" << std::endl;
     pthread_mutex_unlock(memoryMutex);
   }
 

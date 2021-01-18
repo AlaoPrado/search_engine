@@ -13,11 +13,9 @@ private:
   pthread_mutex_t mutex;
   pthread_cond_t cond;
   pthread_mutex_t *memoryMutex;
-  std::size_t numPops, numExpectedPops;
 
 public:
-  SynchonizedPageGroupScheduler(std::size_t numExpectedPops,
-                                pthread_mutex_t *memoryMutex = NULL);
+  SynchonizedPageGroupScheduler(pthread_mutex_t *memoryMutex = NULL);
   ~SynchonizedPageGroupScheduler();
   virtual Page pop() override;
   virtual void push(Page url) override;

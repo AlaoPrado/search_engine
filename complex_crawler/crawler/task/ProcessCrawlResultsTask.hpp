@@ -8,18 +8,17 @@
 #include "../action/Crawl.hpp"
 #include "../scheduler/sync/SynchonizedPageGroupScheduler.hpp"
 #include "CrawlTaskResult.hpp"
-#include <CkSpider.h>
 #include <map>
 #include <pthread.h>
 #include <string>
 
 namespace search_engine {
 
-class SchedulerPushAllTask : public Task {
+class ProcessCrawlResultsTask : public Task {
 private:
   CounterFlag *counterFlag;
-  std::size_t numPagesToCrawl;
   pthread_mutex_t *memoryMutex;
+  std::size_t numPagesToCrawl;
   SynchonizedPageGroupScheduler *pageGroupScheduler;
   ThreadPool *crawlPool;
   utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue;
@@ -31,12 +30,11 @@ private:
   std::map<std::string, bool> *viewedUrls;
   std::string storageDirectory;
   ThreadPool *storePool;
-  bool verbose;
 
 public:
-  SchedulerPushAllTask(
-      CounterFlag *counterFlag, std::size_t numPagesToCrawl,
-      pthread_mutex_t *memoryMutex,
+  ProcessCrawlResultsTask(
+      CounterFlag *counterFlag, pthread_mutex_t *memoryMutex,
+      std::size_t numPagesToCrawl,
       SynchonizedPageGroupScheduler *pageGroupScheduler, ThreadPool *crawlPool,
       utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue,
       std::vector<std::string> *mustMatchPatterns,
@@ -44,8 +42,8 @@ public:
       std::map<std::string, SiteAttributes> *siteAttributesMap,
       std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
       ThreadPool *schedulerPopPool, std::map<std::string, bool> *viewedUrls,
-      std::string storageDirectory, ThreadPool *storePool, bool verbose);
-  ~SchedulerPushAllTask();
+      std::string storageDirectory, ThreadPool *storePool);
+  ~ProcessCrawlResultsTask();
   void run() override;
 };
 

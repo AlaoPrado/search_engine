@@ -16,14 +16,14 @@
 namespace search_engine {
 
 SchedulerPopAllTask::SchedulerPopAllTask(
-    std::size_t numExpectedPops, pthread_mutex_t *memoryMutex,
+    pthread_mutex_t *memoryMutex, std::size_t numExpectedPops,
     SynchonizedPageGroupScheduler *pageGroupScheduler, ThreadPool *crawlPool,
     utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue,
     std::vector<std::string> *mustMatchPatterns,
     std::vector<std::string> *avoidPatterns,
     std::map<std::string, SiteAttributes> *siteAttributesMap,
     std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap)
-    : numExpectedPops(numExpectedPops), memoryMutex(memoryMutex),
+    : memoryMutex(memoryMutex), numExpectedPops(numExpectedPops),
       pageGroupScheduler(pageGroupScheduler), crawlPool(crawlPool),
       crawlTaskResultQueue(crawlTaskResultQueue),
       mustMatchPatterns(mustMatchPatterns), avoidPatterns(avoidPatterns),
