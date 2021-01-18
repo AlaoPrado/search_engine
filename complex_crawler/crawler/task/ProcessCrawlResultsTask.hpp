@@ -18,7 +18,7 @@ class ProcessCrawlResultsTask : public Task {
 private:
   CounterFlag *counterFlag;
   pthread_mutex_t *memoryMutex;
-  std::size_t numPagesToCrawl;
+  std::size_t numPagesToCrawlNext, numPagesToCrawl, numCrawledPagesUntilNow;
   SynchonizedPageGroupScheduler *pageGroupScheduler;
   ThreadPool *crawlPool;
   utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue;
@@ -34,7 +34,8 @@ private:
 public:
   ProcessCrawlResultsTask(
       CounterFlag *counterFlag, pthread_mutex_t *memoryMutex,
-      std::size_t numPagesToCrawl,
+      std::size_t numPagesToCrawlNext, std::size_t numPagesToCrawl,
+      std::size_t numCrawledPagesUntilNow,
       SynchonizedPageGroupScheduler *pageGroupScheduler, ThreadPool *crawlPool,
       utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue,
       std::vector<std::string> *mustMatchPatterns,

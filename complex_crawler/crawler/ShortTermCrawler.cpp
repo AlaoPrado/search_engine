@@ -9,6 +9,7 @@
 #include "task/ProcessCrawlResultsTask.hpp"
 #include "task/SchedulerPopAllTask.hpp"
 #include <CkSpider.h>
+#include <iostream>
 #include <pthread.h>
 #include <string>
 #include <vector>
@@ -36,28 +37,44 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
   auto *storePool = new ThreadPool(1, memoryMutex);
   auto *crawlPool = new ThreadPool(this->numThreads, memoryMutex);
   int numPagesPushed;
-  
+
   PushIntoScheduler::push(*pageScheduler, seedUrls, *(this->viewedUrls),
                           numPagesToCrawl, numPagesPushed, memoryMutex);
 
   CounterFlag *counterFlag = new CounterFlag(1);
 
-  SchedulerPopAllTask *schedulerPopAllTask = new SchedulerPopAllTask(
-      memoryMutex, numPagesToCrawl, pageScheduler, crawlPool,
-      crawlTaskResultQueue, &mustMatchPatterns, &avoidPatterns,
-      siteAttributesMap, lastCrawlEndTimeMap);
+  int numPagesToCrawlMaxBatch = 1000;
+  int numPagesToCrawlNext;
+  int numPagesToCrawlInt = (int)numPagesToCrawl;
 
-  ProcessCrawlResultsTask *processCrawlResultsTask =
-      new ProcessCrawlResultsTask(
-          counterFlag, memoryMutex, numPagesToCrawl, pageScheduler, crawlPool,
-          crawlTaskResultQueue, &mustMatchPatterns, &avoidPatterns,
-          siteAttributesMap, lastCrawlEndTimeMap, schedulerPopPool,
-          this->viewedUrls, this->storageDirectory, storePool);
+  for (int numPagesCrawled = 0; numPagesCrawled < numPagesToCrawlInt;
+       numPagesCrawled += numPagesToCrawlMaxBatch) {
+    if (numPagesCrawled > numPagesToCrawlInt - numPagesToCrawlMaxBatch) {
+      numPagesToCrawlNext = numPagesToCrawlInt - numPagesCrawled;
+    } else {
+      numPagesToCrawlNext = numPagesToCrawlMaxBatch;
+    }
 
-  schedulerPopPool->addTask(schedulerPopAllTask);
-  schedulerPushPool->addTask(processCrawlResultsTask);
+    counterFlag->reset(1);
 
-  counterFlag->wait();
+    SchedulerPopAllTask *schedulerPopAllTask = new SchedulerPopAllTask(
+        memoryMutex, (std::size_t)numPagesToCrawlNext, pageScheduler, crawlPool,
+        crawlTaskResultQueue, &mustMatchPatterns, &avoidPatterns,
+        siteAttributesMap, lastCrawlEndTimeMap);
+
+    ProcessCrawlResultsTask *processCrawlResultsTask =
+        new ProcessCrawlResultsTask(
+            counterFlag, memoryMutex, (std::size_t)numPagesToCrawlNext,
+            numPagesToCrawl, (std::size_t)numPagesCrawled, pageScheduler,
+            crawlPool, crawlTaskResultQueue, &mustMatchPatterns, &avoidPatterns,
+            siteAttributesMap, lastCrawlEndTimeMap, schedulerPopPool,
+            this->viewedUrls, this->storageDirectory, storePool);
+
+    schedulerPopPool->addTask(schedulerPopAllTask);
+    schedulerPushPool->addTask(processCrawlResultsTask);
+
+    counterFlag->wait();
+  }
 
   this->printCrawlStatus();
 

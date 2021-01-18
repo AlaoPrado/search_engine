@@ -35,9 +35,9 @@ PageGroupScheduler::~PageGroupScheduler() {
 }
 
 Page PageGroupScheduler::pop() {
-  std::cout << "PageGroupScheduler pop pageGroupQueue size: " +
-                   std::to_string(this->pageGroupQueue->size())
-            << std::endl;
+  // std::cout << "PageGroupScheduler pop pageGroupQueue size: " +
+  //                  std::to_string(this->pageGroupQueue->size())
+  //           << std::endl;
   utils::assertTrue(!this->pageGroupQueue->empty(),
                     "Error(PageGroupScheulder/pop): blocked");
 
@@ -73,15 +73,11 @@ void PageGroupScheduler::push(Page page) {
         PageGroupEntry(baseUrl, this->pageGroupScheduler->operator[](baseUrl)));
     this->pageGroupInWork->operator[](baseUrl) = true;
   }
-  std::cout << "PageGroupScheduler push " + baseUrl + " pageGroupQueue size: " +
-                   std::to_string(this->pageGroupQueue->size())
-            << std::endl;
+  // std::cout << "PageGroupScheduler push " + baseUrl + " pageGroupQueue size:
+  // " +
+  //                  std::to_string(this->pageGroupQueue->size())
+  //           << std::endl;
   this->numPages++;
-  // for (auto it = this->pageGroupInWork->begin();
-  //      it != this->pageGroupInWork->end(); it++) {
-  // std::cout << "PageGroupScheduler keys " + it->first << std::endl;
-  // }
-  // std::cout << "PageGroupScheduler keys end" << std::endl;
 }
 
 std::size_t PageGroupScheduler::size() { return this->numPages; }
@@ -106,9 +102,9 @@ void PageGroupScheduler::finishWork(std::string url) {
     }
   }
 
-  std::cout << "PageGroupScheduler finishWork pageGroupQueue size: " +
-                   std::to_string(this->pageGroupQueue->size())
-            << std::endl;
+  // std::cout << "PageGroupScheduler finishWork pageGroupQueue size: " +
+  //                  std::to_string(this->pageGroupQueue->size())
+  //           << std::endl;
 }
 
 bool PageGroupScheduler::blocked() { return this->pageGroupQueue->empty(); }

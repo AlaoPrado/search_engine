@@ -21,7 +21,8 @@ namespace search_engine {
 
 ProcessCrawlResultsTask::ProcessCrawlResultsTask(
     CounterFlag *counterFlag, pthread_mutex_t *memoryMutex,
-    std::size_t numPagesToCrawl,
+    std::size_t numPagesToCrawlNext, std::size_t numPagesToCrawl,
+    std::size_t numCrawledPagesUntilNow,
     SynchonizedPageGroupScheduler *pageGroupScheduler, ThreadPool *crawlPool,
     utils::SynchronizedQueue<CrawlTaskResult> *crawlTaskResultQueue,
     std::vector<std::string> *mustMatchPatterns,
@@ -31,8 +32,11 @@ ProcessCrawlResultsTask::ProcessCrawlResultsTask(
     ThreadPool *schedulerPopPool, std::map<std::string, bool> *viewedUrls,
     std::string storageDirectory, ThreadPool *storePool)
     : counterFlag(counterFlag), memoryMutex(memoryMutex),
-      numPagesToCrawl(numPagesToCrawl), pageGroupScheduler(pageGroupScheduler),
-      crawlPool(crawlPool), crawlTaskResultQueue(crawlTaskResultQueue),
+      numPagesToCrawlNext(numPagesToCrawlNext),
+      numPagesToCrawl(numPagesToCrawl),
+      numCrawledPagesUntilNow(numCrawledPagesUntilNow),
+      pageGroupScheduler(pageGroupScheduler), crawlPool(crawlPool),
+      crawlTaskResultQueue(crawlTaskResultQueue),
       mustMatchPatterns(mustMatchPatterns), avoidPatterns(avoidPatterns),
       siteAttributesMap(siteAttributesMap),
       lastCrawlEndTimeMap(lastCrawlEndTimeMap),
@@ -44,7 +48,7 @@ ProcessCrawlResultsTask::~ProcessCrawlResultsTask() {}
 void ProcessCrawlResultsTask::run() {
   CounterFlag storeCounterFlag(0);
   size_t numCrawledPages = 0;
-  while (numCrawledPages < numPagesToCrawl) {
+  while (numCrawledPages < numPagesToCrawlNext) {
     std::cout << "Scheduler await spider" << std::endl;
     CrawlTaskResult *crawlTaskResult = crawlTaskResultQueue->pop();
     CkSpider *spider = crawlTaskResult->getSpider();
@@ -62,9 +66,9 @@ void ProcessCrawlResultsTask::run() {
       bool storeSuccess;
 
       pthread_mutex_lock(memoryMutex);
-      StorePageTask *storePageTask =
-          new StorePageTask(&storeCounterFlag, storageDirectory, spider,
-                            numCrawledPages, &storeSuccess);
+      StorePageTask *storePageTask = new StorePageTask(
+          &storeCounterFlag, storageDirectory, spider,
+          numCrawledPagesUntilNow + numCrawledPages, &storeSuccess);
       pthread_mutex_unlock(memoryMutex);
 
       storePool->addTask(storePageTask);
