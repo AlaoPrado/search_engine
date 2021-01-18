@@ -7,6 +7,8 @@ namespace utils {
 
 std::string baseUrl(std::string url);
 
+std::size_t countUrlNumPoints(const std::string &url);
+
 std::size_t countUrlSize(const std::string &url);
 
 std::string domainUrl(std::string url);

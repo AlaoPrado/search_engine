@@ -21,9 +21,33 @@ std::string baseUrl(std::string url) {
                       "Error(utils/baseUrl): invalid country code in " + url);
 
     baseUrl.erase(position, baseUrl.length());
+
+    std::size_t numPoints = countUrlNumPoints(baseUrl);
+    if (numPoints > 1) {
+      const std::string point = ".";
+      position = baseUrl.find(point);
+
+      utils::assertTrue(position != std::string::npos,
+                        "Error(utils/baseUrl): failed to find point in " + url);
+
+      baseUrl.erase(baseUrl.begin(),
+                    baseUrl.begin() + position + point.length());
+    }
+
     return baseUrl;
   }
   return url;
+}
+
+std::size_t countUrlNumPoints(const std::string &url) {
+  const std::string point = ".";
+  std::size_t urlNumPoints = 0;
+  std::size_t position = url.find(point);
+  while (position != std::string::npos) {
+    urlNumPoints++;
+    position = url.find(point, position + point.length());
+  }
+  return urlNumPoints;
 }
 
 std::size_t countUrlSize(const std::string &url) {
@@ -42,13 +66,13 @@ std::size_t countUrlSize(const std::string &url) {
                     "Error(utils/countUrlSize): invalid url protocol");
 
   const std::string separator = "/";
-  std::size_t urltSize = 0;
+  std::size_t urlSize = 0;
   position = url.find(separator, protocol.length());
   while (position != std::string::npos) {
-    urltSize++;
+    urlSize++;
     position = url.find(separator, position + separator.length());
   }
-  return urltSize;
+  return urlSize;
 }
 
 std::string domainUrl(std::string url) {

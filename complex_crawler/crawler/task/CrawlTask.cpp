@@ -39,7 +39,8 @@ void CrawlTask::run() {
 
   // std::cout << "CrawlTask push spider " + url  << std::endl;
   pthread_mutex_lock(memoryMutex);
-  CrawlTaskResult *crawlTaskResult = new CrawlTaskResult(spider, page, success);
+  CrawlTaskResult *crawlTaskResult =
+      new CrawlTaskResult(spider, page, siteAttribute, success);
   pthread_mutex_unlock(memoryMutex);
 
   queue->push(crawlTaskResult);

@@ -99,11 +99,6 @@ void Crawl::crawlUrl(CkSpider &spider, Page &page,
   siteAttributes.addNumPages(1);
   std::string html(spider.lastHtml());
   siteAttributes.addToTotalPageSize(html.size());
-
-  if (page.getLevel() == 0) {
-    siteAttributes.addNumPagesLevel1(spider.get_NumUnspidered() +
-                                     spider.get_NumOutboundLinks());
-  }
 }
 
 } // namespace search_engine

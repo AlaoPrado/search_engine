@@ -67,18 +67,26 @@ void SchedulerPushAllTask::run() {
       pthread_mutex_unlock(memoryMutex);
 
       storePool->addTask(storePageTask);
+
+      int numPagesPushed;
       PushIntoScheduler::push(
           *pageGroupScheduler, *spider, *viewedUrls, numPagesToCrawl,
-          crawlTaskResult->getPage().getLevel(), memoryMutex);
+          crawlTaskResult->getPage().getLevel(), numPagesPushed, memoryMutex);
+
+      if (crawlTaskResult->getPage().getLevel() == 0) {
+        crawlTaskResult->getSiteAttributes()->addNumPagesLevel1(numPagesPushed);
+      }
 
       storeCounterFlag.wait();
 
       utils::assertTrue(storeSuccess, "Error: failed to store page" + url +
                                           ", trying another page");
 
+      std::cout << "Crawl success: " + url << std::endl;
+
       numCrawledPages++;
     } catch (std::exception &e) {
-      std::cout << "Error when crawling page " +
+      std::cout << "Error while crawling page " +
                        crawlTaskResult->getPage().getUrl()
                 << std::endl;
       std::cout << e.what() << std::endl;

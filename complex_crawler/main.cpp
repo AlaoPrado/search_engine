@@ -39,7 +39,7 @@ int main(const int argc, const char **argv) {
     std::ifstream seedFile(fileName);
 
     search_engine::utils::assertTrue(seedFile.is_open(),
-                                     "Error: invalid file name");
+                                     "Error: invalid input file name");
 
     std::vector<std::string> seedUrls;
     std::string line;

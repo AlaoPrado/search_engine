@@ -8,13 +8,13 @@ namespace search_engine {
 
 void PushIntoScheduler::push(PageScheduler &pageScheduler, Page &page,
                              std::map<std::string, bool> &viewedUrls,
+                             int &numPagesPushed,
                              pthread_mutex_t *memoryMutex) {
-
   std::string url = page.getUrl();
 
   if (utils::urlHasCountryCode(url, ".br") && !utils::urlHasInjection(url)) {
     page.setUrl(utils::standardUrl(url));
-    std::string urlWithoutProtocol = utils::removeUrlProtocol(url);
+    std::string urlWithoutProtocol = utils::removeUrlProtocol(page.getUrl());
     std::string urlWithoutStartingPart =
         utils::removeUrlWorldWideWeb(urlWithoutProtocol);
 
@@ -32,6 +32,8 @@ void PushIntoScheduler::push(PageScheduler &pageScheduler, Page &page,
         if (memoryMutex != NULL) {
           pthread_mutex_unlock(memoryMutex);
         }
+
+        numPagesPushed++;
       } catch (std::exception &e) {
         std::cout << "Error while Pushing " << e.what() << std::endl;
       }
@@ -42,29 +44,34 @@ void PushIntoScheduler::push(PageScheduler &pageScheduler, Page &page,
 void PushIntoScheduler::push(PageScheduler &pageScheduler,
                              std::vector<std::string> &urls,
                              std::map<std::string, bool> &viewedUrls,
-                             std::size_t numPagesToCrawl,
+                             std::size_t numPagesToCrawl, int &numPagesPushed,
                              pthread_mutex_t *memoryMutex) {
+  numPagesPushed = 0;
   for (auto url : urls) {
     if (viewedUrls.size() >= numPagesToCrawl) {
       break;
     }
 
     Page page(url, 0);
-    PushIntoScheduler::push(pageScheduler, page, viewedUrls, memoryMutex);
+    PushIntoScheduler::push(pageScheduler, page, viewedUrls, numPagesPushed,
+                            memoryMutex);
   }
 }
 
 void PushIntoScheduler::push(PageScheduler &pageScheduler, CkSpider &spider,
                              std::map<std::string, bool> &viewedUrls,
                              std::size_t numPagesToCrawl, int pageLevel,
+                             int &numPagesPushed,
                              pthread_mutex_t *memoryMutex) {
+  numPagesPushed = 0;
   for (int i = 0; i < spider.get_NumOutboundLinks(); i++) {
     if (viewedUrls.size() >= numPagesToCrawl) {
       break;
     }
 
     Page page(spider.getOutboundLink(i), 0);
-    PushIntoScheduler::push(pageScheduler, page, viewedUrls, memoryMutex);
+    PushIntoScheduler::push(pageScheduler, page, viewedUrls, numPagesPushed,
+                            memoryMutex);
   }
 
   if (pageLevel == 0) {
@@ -74,7 +81,8 @@ void PushIntoScheduler::push(PageScheduler &pageScheduler, CkSpider &spider,
       }
 
       Page page(spider.getUnspideredUrl(i), 1);
-      PushIntoScheduler::push(pageScheduler, page, viewedUrls, memoryMutex);
+      PushIntoScheduler::push(pageScheduler, page, viewedUrls, numPagesPushed,
+                              memoryMutex);
     }
   }
 }
