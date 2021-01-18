@@ -46,16 +46,18 @@ void SchedulerPushAllTask::run() {
   CounterFlag storeCounterFlag(0);
   size_t numCrawledPages = 0;
   while (numCrawledPages < numPagesToCrawl) {
+    std::cout << "Scheduler await spider" << std::endl;
     CrawlTaskResult *crawlTaskResult = crawlTaskResultQueue->pop();
     CkSpider *spider = crawlTaskResult->getSpider();
     try {
       std::string url = crawlTaskResult->getPage().getUrl();
+      pageGroupScheduler->finishWork(url);
+      std::cout << "Scheduler pop spider: " + url << std::endl;
 
       utils::assertTrue(crawlTaskResult->getSuccess(),
-                        "Error: failed to crawl page" + url +
-                            "trying another page");
+                        "Error: failed to crawl page " + url +
+                            ", trying another page");
 
-      pageGroupScheduler->finishWork(url);
       storeCounterFlag.reset(1);
 
       bool storeSuccess;
@@ -79,7 +81,7 @@ void SchedulerPushAllTask::run() {
 
       storeCounterFlag.wait();
 
-      utils::assertTrue(storeSuccess, "Error: failed to store page" + url +
+      utils::assertTrue(storeSuccess, "Error: failed to store page " + url +
                                           ", trying another page");
 
       std::cout << "Crawl success: " + url << std::endl;

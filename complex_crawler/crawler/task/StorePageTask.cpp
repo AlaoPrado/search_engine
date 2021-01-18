@@ -16,15 +16,17 @@ StorePageTask::StorePageTask(CounterFlag *counterFlag, std::string directory,
 StorePageTask::~StorePageTask() {}
 
 void StorePageTask::run() {
+  std::string url(spider->lastUrl());
   try {
+    std::cout << "Store url: " + url << std::endl;
     PageStorage::storePage(directory, *spider, pageId);
     *success = true;
   } catch (std::exception &e) {
-    std::string url(spider->lastUrl());
-    std::cout << "Error when crawling page " + url << std::endl;
+    std::cout << "Error while storing page " + url << std::endl;
     std::cout << e.what() << std::endl;
     *success = false;
   }
+  std::cout << "Store finished: " + url << std::endl;
   counterFlag->signal();
 }
 

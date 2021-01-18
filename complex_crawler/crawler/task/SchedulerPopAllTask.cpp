@@ -38,9 +38,13 @@ void SchedulerPopAllTask::run() {
     std::string baseUrl;
     bool useLastCrawlEndTime;
 
+    std::cout << "Scheduler pop await. Size: " +
+                     std::to_string(pageGroupScheduler->size())
+              << std::endl;
     PopFromScheduler::pop(*pageGroupScheduler, page, baseUrl,
                           useLastCrawlEndTime, *siteAttributesMap,
                           *lastCrawlEndTimeMap, memoryMutex);
+    std::cout << "Scheduler pop url: " + page.getUrl() << std::endl;
 
     // std::cout << "SchedulerPopAllTask new Spider " + url << std::endl;
     pthread_mutex_lock(memoryMutex);
