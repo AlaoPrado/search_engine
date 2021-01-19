@@ -30,6 +30,7 @@ private:
   std::map<std::string, bool> *viewedUrls;
   std::string storageDirectory;
   ThreadPool *storePool;
+  ThreadPool *pushPool;
 
 public:
   ProcessCrawlResultsTask(
@@ -43,7 +44,8 @@ public:
       std::map<std::string, SiteAttributes> *siteAttributesMap,
       std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
       ThreadPool *schedulerPopPool, std::map<std::string, bool> *viewedUrls,
-      std::string storageDirectory, ThreadPool *storePool);
+      std::string storageDirectory, ThreadPool *storePool,
+      ThreadPool *pushPool);
   ~ProcessCrawlResultsTask();
   void run() override;
 };
