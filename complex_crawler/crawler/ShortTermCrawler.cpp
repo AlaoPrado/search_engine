@@ -33,7 +33,6 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
   auto *crawlTaskResultQueue =
       new utils::SynchronizedQueue<CrawlTaskResult>(memoryMutex);
   auto *processCrawlPool = new ThreadPool(1, memoryMutex);
-  auto *schedulerPushPool = new ThreadPool(1, memoryMutex);
   auto *schedulerPopPool = new ThreadPool(1, memoryMutex);
   auto *storePool = new ThreadPool(1, memoryMutex);
   auto *crawlPool = new ThreadPool(this->numThreads, memoryMutex);
@@ -69,8 +68,7 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
             numPagesToCrawl, (std::size_t)numPagesCrawled, pageScheduler,
             crawlPool, crawlTaskResultQueue, &mustMatchPatterns, &avoidPatterns,
             siteAttributesMap, lastCrawlEndTimeMap, schedulerPopPool,
-            this->viewedUrls, this->storageDirectory, storePool,
-            schedulerPushPool);
+            this->viewedUrls, this->storageDirectory, storePool);
 
     schedulerPopPool->addTask(schedulerPopAllTask);
     processCrawlPool->addTask(processCrawlResultsTask);
@@ -84,7 +82,6 @@ void ShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
   delete pageScheduler;
   delete crawlTaskResultQueue;
   delete processCrawlPool;
-  delete schedulerPushPool;
   delete schedulerPopPool;
   delete storePool;
   delete crawlPool;

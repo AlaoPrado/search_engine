@@ -4,16 +4,17 @@
 
 namespace search_engine {
 
-SchedulerPushTask::SchedulerPushTask(pthread_mutex_t *memoryMutex,
+SchedulerPushTask::SchedulerPushTask(CounterFlag *pushCounterFlag,
+                                     pthread_mutex_t *memoryMutex,
                                      PageScheduler *pageScheduler,
                                      CrawlTaskResult *crawlTaskResult,
                                      std::map<std::string, bool> *viewedUrls,
                                      std::size_t numPagesToCrawl,
                                      CounterFlag *processCounterFlag)
-    : memoryMutex(memoryMutex), pageScheduler(pageScheduler),
-      crawlTaskResult(crawlTaskResult), viewedUrls(viewedUrls),
-      numPagesToCrawl(numPagesToCrawl), processCounterFlag(processCounterFlag) {
-}
+    : pushCounterFlag(pushCounterFlag), memoryMutex(memoryMutex),
+      pageScheduler(pageScheduler), crawlTaskResult(crawlTaskResult),
+      viewedUrls(viewedUrls), numPagesToCrawl(numPagesToCrawl),
+      processCounterFlag(processCounterFlag) {}
 
 SchedulerPushTask::~SchedulerPushTask() {}
 
@@ -31,6 +32,8 @@ void SchedulerPushTask::run() {
   delete crawlTaskResult;
   delete processCounterFlag;
   pthread_mutex_unlock(memoryMutex);
+
+  pushCounterFlag->signal();
 }
 
 } // namespace search_engine

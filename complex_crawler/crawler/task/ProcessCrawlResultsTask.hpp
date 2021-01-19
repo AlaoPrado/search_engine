@@ -44,8 +44,7 @@ public:
       std::map<std::string, SiteAttributes> *siteAttributesMap,
       std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
       ThreadPool *schedulerPopPool, std::map<std::string, bool> *viewedUrls,
-      std::string storageDirectory, ThreadPool *storePool,
-      ThreadPool *pushPool);
+      std::string storageDirectory, ThreadPool *storePool);
   ~ProcessCrawlResultsTask();
   void run() override;
 };

@@ -31,7 +31,7 @@ ProcessCrawlResultsTask::ProcessCrawlResultsTask(
     std::map<std::string, SiteAttributes> *siteAttributesMap,
     std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
     ThreadPool *schedulerPopPool, std::map<std::string, bool> *viewedUrls,
-    std::string storageDirectory, ThreadPool *storePool, ThreadPool *pushPool)
+    std::string storageDirectory, ThreadPool *storePool)
     : counterFlag(counterFlag), memoryMutex(memoryMutex),
       numPagesToCrawlNext(numPagesToCrawlNext),
       numPagesToCrawl(numPagesToCrawl),
@@ -42,14 +42,13 @@ ProcessCrawlResultsTask::ProcessCrawlResultsTask(
       siteAttributesMap(siteAttributesMap),
       lastCrawlEndTimeMap(lastCrawlEndTimeMap),
       schedulerPopPool(schedulerPopPool), viewedUrls(viewedUrls),
-      storageDirectory(storageDirectory), storePool(storePool),
-      pushPool(pushPool) {}
+      storageDirectory(storageDirectory), storePool(storePool) {}
 
 ProcessCrawlResultsTask::~ProcessCrawlResultsTask() {}
 
 void ProcessCrawlResultsTask::run() {
   size_t numCrawledPages = 0;
-  CounterFlag storeCounterFlag(1);
+  CounterFlag storeCounterFlag(0);
 
   while (numCrawledPages < numPagesToCrawlNext) {
     std::cout << "Scheduler await spider" << std::endl;
@@ -70,21 +69,23 @@ void ProcessCrawlResultsTask::run() {
       bool storeSuccess;
 
       pthread_mutex_lock(memoryMutex);
-
       StorePageTask *storePageTask = new StorePageTask(
           &storeCounterFlag, storageDirectory, spider,
           numCrawledPagesUntilNow + numCrawledPages, &storeSuccess);
-      CounterFlag *processCounterFlag = new CounterFlag(1);
-      SchedulerPushTask *schedulerPushTask = new SchedulerPushTask(
-          memoryMutex, pageGroupScheduler, crawlTaskResult, viewedUrls,
-          numPagesToCrawl, processCounterFlag);
       pthread_mutex_unlock(memoryMutex);
 
       storePool->addTask(storePageTask);
-      pushPool->addTask(schedulerPushTask);
+
+      int numPagesPushed;
+      PushIntoScheduler::push(
+          *pageGroupScheduler, *spider, *viewedUrls, numPagesToCrawl,
+          crawlTaskResult->getPage().getLevel(), numPagesPushed, memoryMutex);
+
+      if (crawlTaskResult->getPage().getLevel() == 0) {
+        crawlTaskResult->getSiteAttributes()->addNumPagesLevel1(numPagesPushed);
+      }
 
       storeCounterFlag.wait();
-      processCounterFlag->signal();
 
       utils::assertTrue(storeSuccess, "Error: failed to store page " + url +
                                           ", trying another page");
@@ -109,6 +110,11 @@ void ProcessCrawlResultsTask::run() {
 
       schedulerPopPool->addTask(schedulerPopAllTask);
     }
+
+    pthread_mutex_lock(memoryMutex);
+    delete spider;
+    delete crawlTaskResult;
+    pthread_mutex_unlock(memoryMutex);
   }
 
   counterFlag->signal();

@@ -12,6 +12,7 @@ namespace search_engine {
 
 class SchedulerPushTask : public Task {
 private:
+  CounterFlag *pushCounterFlag;
   pthread_mutex_t *memoryMutex;
   PageScheduler *pageScheduler;
   CrawlTaskResult *crawlTaskResult;
@@ -20,7 +21,8 @@ private:
   CounterFlag *processCounterFlag;
 
 public:
-  SchedulerPushTask(pthread_mutex_t *memoryMutex, PageScheduler *pageScheduler,
+  SchedulerPushTask(CounterFlag *pushCounterFlag, pthread_mutex_t *memoryMutex,
+                    PageScheduler *pageScheduler,
                     CrawlTaskResult *crawlTaskResult,
                     std::map<std::string, bool> *viewedUrls,
                     std::size_t numPagesToCrawl,
