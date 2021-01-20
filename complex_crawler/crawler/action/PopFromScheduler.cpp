@@ -19,22 +19,21 @@ void PopFromScheduler::pop(
   page = pageScheduler.pop();
   baseUrl = utils::baseUrl(page.getUrl());
 
+  if (memoryMutex != NULL) {
+    pthread_mutex_lock(memoryMutex);
+  }
+  
   auto it = lastCrawlEndTimeMap.find(baseUrl);
-
   if (it == lastCrawlEndTimeMap.end()) {
-    if (memoryMutex != NULL) {
-      pthread_mutex_lock(memoryMutex);
-    }
-
     siteAttributesMap.operator[](baseUrl) = SiteAttributes();
     lastCrawlEndTimeMap.operator[](baseUrl) = std::chrono::steady_clock::now();
     useLastCrawlEndTime = false;
-
-    if (memoryMutex != NULL) {
-      pthread_mutex_unlock(memoryMutex);
-    }
   } else {
     useLastCrawlEndTime = true;
+  }
+
+  if (memoryMutex != NULL) {
+    pthread_mutex_unlock(memoryMutex);
   }
 }
 
