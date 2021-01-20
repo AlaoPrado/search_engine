@@ -27,8 +27,7 @@ public:
                        std::vector<std::string> &avoidPatterns,
                        SiteAttributes &siteAttributes,
                        Crawl::timePoint &lastCrawlEndTime,
-                       bool useLastCrawlEndTime = false,
-                       pthread_mutex_t *memoryMutex = NULL);
+                       bool useLastCrawlEndTime = false);
 };
 
 } // namespace search_engine

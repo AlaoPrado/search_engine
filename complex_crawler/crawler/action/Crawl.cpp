@@ -26,7 +26,7 @@ void Crawl::crawlUrl(CkSpider &spider, Page &page,
                      std::vector<std::string> &avoidPatterns,
                      SiteAttributes &siteAttributes,
                      Crawl::timePoint &lastCrawlEndTime,
-                     bool useLastCrawlEndTime, pthread_mutex_t *memoryMutex) {
+                     bool useLastCrawlEndTime) {
   bool crawlSuccess;
   Crawl::timePoint currentTime;
   Crawl::millis duration;
@@ -38,11 +38,6 @@ void Crawl::crawlUrl(CkSpider &spider, Page &page,
                                    "Error(Crawl): invalid crawler");
 
   // std::cout << "Crawl initialize with " + url << std::endl;
-
-  if (memoryMutex != NULL) {
-    pthread_mutex_lock(memoryMutex);
-    // std::cout << "Crawl lock memory " + url << std::endl
-  }
 
   spider.Initialize(url.c_str());
 
@@ -63,11 +58,6 @@ void Crawl::crawlUrl(CkSpider &spider, Page &page,
 
   spider.put_Utf8(true);
 
-  if (memoryMutex != NULL) {
-    // std::cout << "Crawl unlock memory " + url << std::endl;
-    pthread_mutex_unlock(memoryMutex);
-  }
-
   // std::cout << "Crawl init finish " + url << std::endl;
 
   if (useLastCrawlEndTime) {
@@ -75,19 +65,7 @@ void Crawl::crawlUrl(CkSpider &spider, Page &page,
   }
 
   currentTime = std::chrono::steady_clock::now();
-
-  if (memoryMutex != NULL) {
-    pthread_mutex_lock(memoryMutex);
-    // std::cout << "Crawl lock memory " + url << std::endl;
-  }
-
   crawlSuccess = spider.CrawlNext();
-
-  if (memoryMutex != NULL) {
-    // std::cout << "Crawl unlock memory " + url << std::endl;
-    pthread_mutex_unlock(memoryMutex);
-  }
-
   lastCrawlEndTime = std::chrono::steady_clock::now();
 
   search_engine::utils::assertTrue(crawlSuccess, spider.lastErrorText());

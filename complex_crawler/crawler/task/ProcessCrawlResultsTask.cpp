@@ -47,7 +47,8 @@ ProcessCrawlResultsTask::ProcessCrawlResultsTask(
 ProcessCrawlResultsTask::~ProcessCrawlResultsTask() {}
 
 void ProcessCrawlResultsTask::run() {
-  size_t numCrawledPages = 0;
+  std::size_t numCrawledPages = 0;
+  std::size_t numFailedPages = 0;
   CounterFlag storeCounterFlag(0);
 
   while (numCrawledPages < numPagesToCrawlNext) {
@@ -77,9 +78,10 @@ void ProcessCrawlResultsTask::run() {
       storePool->addTask(storePageTask);
 
       int numPagesPushed;
-      PushIntoScheduler::push(
-          *pageGroupScheduler, *spider, *viewedUrls, numPagesToCrawl,
-          crawlTaskResult->getPage().getLevel(), numPagesPushed, memoryMutex);
+      PushIntoScheduler::push(*pageGroupScheduler, *spider, *viewedUrls,
+                              numPagesToCrawl + numFailedPages,
+                              crawlTaskResult->getPage().getLevel(),
+                              numPagesPushed, memoryMutex);
 
       if (crawlTaskResult->getPage().getLevel() == 0) {
         crawlTaskResult->getSiteAttributes()->addNumPagesLevel1(numPagesPushed);
@@ -98,6 +100,8 @@ void ProcessCrawlResultsTask::run() {
                        crawlTaskResult->getPage().getUrl()
                 << std::endl;
       std::cout << e.what() << std::endl;
+
+      numFailedPages++;
 
       const int numExtraPops = 1;
 

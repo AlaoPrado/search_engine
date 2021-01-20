@@ -28,8 +28,7 @@ void CrawlTask::run() {
   bool success;
   try {
     Crawl::crawlUrl(*spider, page, *mustMatchPatterns, *avoidPatterns,
-                    *siteAttribute, *lastCrawlEndTime, useLastCrawlEndTime,
-                    memoryMutex);
+                    *siteAttribute, *lastCrawlEndTime, useLastCrawlEndTime);
     std::cout << "CrawlTask success: " + page.getUrl() << std::endl;
     success = true;
   } catch (std::exception &e) {

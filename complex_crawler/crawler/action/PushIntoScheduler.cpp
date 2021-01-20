@@ -47,9 +47,10 @@ void PushIntoScheduler::push(PageScheduler &pageScheduler,
                              std::map<std::string, bool> &viewedUrls,
                              std::size_t numPagesToCrawl, int &numPagesPushed,
                              pthread_mutex_t *memoryMutex) {
+  const double extraMargin = 1.2;
   numPagesPushed = 0;
   for (auto url : urls) {
-    if (viewedUrls.size() >= numPagesToCrawl) {
+    if (viewedUrls.size() >= (std::size_t)(numPagesToCrawl * extraMargin)) {
       break;
     }
 
@@ -64,9 +65,10 @@ void PushIntoScheduler::push(PageScheduler &pageScheduler, CkSpider &spider,
                              std::size_t numPagesToCrawl, int pageLevel,
                              int &numPagesPushed,
                              pthread_mutex_t *memoryMutex) {
+  const double extraMargin = 1.2;
   numPagesPushed = 0;
   for (int i = 0; i < spider.get_NumOutboundLinks(); i++) {
-    if (viewedUrls.size() >= numPagesToCrawl) {
+    if (viewedUrls.size() >= (std::size_t)(numPagesToCrawl * extraMargin)) {
       break;
     }
 
