@@ -20,17 +20,20 @@ private:
 public:
   static void push(PageScheduler &pageScheduler, Page &page,
                    std::map<std::string, bool> &viewedUrls, int &numPagesPushed,
-                   pthread_mutex_t *mutex = NULL);
+                   pthread_mutex_t *memoryMutex = NULL,
+                   pthread_mutex_t *pushMutex = NULL);
 
   static void push(PageScheduler &pageScheduler, std::vector<std::string> &urls,
                    std::map<std::string, bool> &viewedUrls,
                    std::size_t numPagesToCrawl, int &numPagesPushed,
-                   pthread_mutex_t *mutex = NULL);
+                   pthread_mutex_t *memoryMutex = NULL,
+                   pthread_mutex_t *pushMutex = NULL);
 
   static void push(PageScheduler &pageScheduler, CkSpider &spider,
                    std::map<std::string, bool> &viewedUrls,
                    std::size_t numPagesToCrawl, int pageLevel,
-                   int &numPagesPushed, pthread_mutex_t *mutex = NULL);
+                   int &numPagesPushed, pthread_mutex_t *memoryMutex = NULL,
+                   pthread_mutex_t *pushMutex = NULL);
 };
 
 } // namespace search_engine

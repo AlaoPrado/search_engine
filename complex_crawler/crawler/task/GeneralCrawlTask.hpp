@@ -22,19 +22,20 @@ private:
   std::map<std::string, bool> *viewedUrls;
   std::map<std::string, SiteAttributes> *siteAttributesMap;
   std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap;
-  pthread_mutex_t *popMutex, *storeMutex, *pushMutex;
+  pthread_mutex_t *popMutex, *storeMutex, *pushMutex, *memoryMutex;
 
 public:
-  GeneralCrawlTask(std::string storageDirectory,
-                   std::vector<std::string> *mustMatchPatterns,
-                   std::vector<std::string> *avoidPatterns,
-                   std::size_t numPagesToCrawl, PageScheduler *pageScheduler,
-                   std::map<std::string, bool> *viewedUrls,
-                   std::map<std::string, SiteAttributes> *siteAttributesMap,
-                   std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
-                   pthread_mutex_t *popMutex, pthread_mutex_t *storeMutex,
-                   pthread_mutex_t *pushMutex);
+  GeneralCrawlTask();
   ~GeneralCrawlTask();
+  void set(std::string storageDirectory,
+           std::vector<std::string> *mustMatchPatterns,
+           std::vector<std::string> *avoidPatterns, std::size_t numPagesToCrawl,
+           PageScheduler *pageScheduler,
+           std::map<std::string, bool> *viewedUrls,
+           std::map<std::string, SiteAttributes> *siteAttributesMap,
+           std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
+           pthread_mutex_t *popMutex, pthread_mutex_t *storeMutex,
+           pthread_mutex_t *pushMutex, pthread_mutex_t *memoryMutex);
   void run() override;
 };
 

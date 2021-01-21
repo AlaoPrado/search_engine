@@ -15,22 +15,31 @@
 
 namespace search_engine {
 
-GeneralCrawlTask::GeneralCrawlTask(
+GeneralCrawlTask::GeneralCrawlTask() {}
+
+GeneralCrawlTask::~GeneralCrawlTask() {}
+
+void GeneralCrawlTask::set(
     std::string storageDirectory, std::vector<std::string> *mustMatchPatterns,
     std::vector<std::string> *avoidPatterns, std::size_t numPagesToCrawl,
     PageScheduler *pageScheduler, std::map<std::string, bool> *viewedUrls,
     std::map<std::string, SiteAttributes> *siteAttributesMap,
     std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
     pthread_mutex_t *popMutex, pthread_mutex_t *storeMutex,
-    pthread_mutex_t *pushMutex)
-    : storageDirectory(storageDirectory), mustMatchPatterns(mustMatchPatterns),
-      avoidPatterns(avoidPatterns), numPagesToCrawl(numPagesToCrawl),
-      pageScheduler(pageScheduler), viewedUrls(viewedUrls),
-      siteAttributesMap(siteAttributesMap),
-      lastCrawlEndTimeMap(lastCrawlEndTimeMap), popMutex(popMutex),
-      storeMutex(storeMutex), pushMutex(pushMutex) {}
-
-GeneralCrawlTask::~GeneralCrawlTask() {}
+    pthread_mutex_t *pushMutex, pthread_mutex_t *memoryMutex) {
+  this->storageDirectory = storageDirectory;
+  this->mustMatchPatterns = mustMatchPatterns;
+  this->avoidPatterns = avoidPatterns;
+  this->numPagesToCrawl = numPagesToCrawl;
+  this->pageScheduler = pageScheduler;
+  this->viewedUrls = viewedUrls;
+  this->siteAttributesMap = siteAttributesMap;
+  this->lastCrawlEndTimeMap = lastCrawlEndTimeMap;
+  this->popMutex = popMutex;
+  this->storeMutex = storeMutex;
+  this->pushMutex = pushMutex;
+  this->memoryMutex = memoryMutex;
+}
 
 void GeneralCrawlTask::run() {
   std::size_t numCrawledPages = 0;
@@ -57,7 +66,7 @@ void GeneralCrawlTask::run() {
       numCrawledPages++;
       PushIntoScheduler::push(*pageScheduler, spider, *viewedUrls,
                               numPagesToCrawl, page.getLevel(), numPagesPushed,
-                              pushMutex);
+                              memoryMutex, pushMutex);
     } catch (std::exception &e) {
       std::cout << "Error while crawling page " + page.getUrl() << std::endl;
       std::cout << e.what() << std::endl;
