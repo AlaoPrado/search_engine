@@ -63,12 +63,14 @@ void GeneralCrawlTask::run() {
     std::string baseUrl;
     bool useLastCrawlEndTime;
 
-    // std::cout << "Await " << threadId << std::endl;
+    std::cout << "Await " + std::to_string(threadId) +
+                     " size:" + std::to_string(pageScheduler->size())
+              << std::endl;
     PopFromScheduler::pop(*pageScheduler, page, baseUrl, useLastCrawlEndTime,
                           *siteAttributesMap, *lastCrawlEndTimeMap, memoryMutex,
                           popMutex);
-    // std::cout << "Pop " + std::to_string(threadId) + " " + page.getUrl()
-    //           << std::endl;
+    std::cout << "Pop " + std::to_string(threadId) + " " + page.getUrl()
+              << std::endl;
 
     CkSpider spider;
     SiteAttributes *siteAttributes = &(siteAttributesMap->operator[](baseUrl));
@@ -78,9 +80,8 @@ void GeneralCrawlTask::run() {
     try {
       Crawl::crawlUrl(spider, page, *mustMatchPatterns, *avoidPatterns,
                       *siteAttributes, *lastCrawlEndTime, useLastCrawlEndTime);
-      // std::cout << "Finish " + std::to_string(threadId) + " " + page.getUrl()
-                // << std::endl;
-      pageScheduler->finishWork(page.getUrl());
+      std::cout << "Finish " + std::to_string(threadId) + " " + page.getUrl()
+                << std::endl;
       PageStorage::storePage(storageDirectory, spider,
                              numCrawledPages + threadId * numPagesToCrawl,
                              storeMutex);
@@ -106,6 +107,7 @@ void GeneralCrawlTask::run() {
     }
   }
 
+  pageScheduler->finishWork(page.getUrl());
   counterFlag->signal();
 }
 
