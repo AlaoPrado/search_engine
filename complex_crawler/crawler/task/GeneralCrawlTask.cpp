@@ -15,22 +15,31 @@
 
 namespace search_engine {
 
-GeneralCrawlTask::GeneralCrawlTask() {}
+GeneralCrawlTask::GeneralCrawlTask()
+    : storageDirectory(""), mustMatchPatterns(NULL), avoidPatterns(NULL),
+      numPagesToCrawl(0), allNumPagesToCrawl(NULL), pageScheduler(NULL),
+      viewedUrls(NULL), siteAttributesMap(NULL), lastCrawlEndTimeMap(NULL),
+      popMutex(NULL), storeMutex(NULL), pushMutex(NULL), memoryMutex(NULL),
+      failMutex(NULL), counterFlag(NULL), threadId(0) {}
 
 GeneralCrawlTask::~GeneralCrawlTask() {}
 
 void GeneralCrawlTask::set(
     std::string storageDirectory, std::vector<std::string> *mustMatchPatterns,
     std::vector<std::string> *avoidPatterns, std::size_t numPagesToCrawl,
-    PageScheduler *pageScheduler, std::map<std::string, bool> *viewedUrls,
+    std::size_t *allNumPagesToCrawl,
+    SynchonizedPageGroupScheduler *pageScheduler,
+    std::map<std::string, bool> *viewedUrls,
     std::map<std::string, SiteAttributes> *siteAttributesMap,
     std::map<std::string, Crawl::timePoint> *lastCrawlEndTimeMap,
     pthread_mutex_t *popMutex, pthread_mutex_t *storeMutex,
-    pthread_mutex_t *pushMutex, pthread_mutex_t *memoryMutex) {
+    pthread_mutex_t *pushMutex, pthread_mutex_t *memoryMutex,
+    pthread_mutex_t *failMutex, CounterFlag *counterFlag, int threadId) {
   this->storageDirectory = storageDirectory;
   this->mustMatchPatterns = mustMatchPatterns;
   this->avoidPatterns = avoidPatterns;
   this->numPagesToCrawl = numPagesToCrawl;
+  this->allNumPagesToCrawl = allNumPagesToCrawl;
   this->pageScheduler = pageScheduler;
   this->viewedUrls = viewedUrls;
   this->siteAttributesMap = siteAttributesMap;
@@ -39,19 +48,27 @@ void GeneralCrawlTask::set(
   this->storeMutex = storeMutex;
   this->pushMutex = pushMutex;
   this->memoryMutex = memoryMutex;
+  this->failMutex = failMutex;
+  this->counterFlag = counterFlag;
+  this->threadId = threadId;
 }
 
 void GeneralCrawlTask::run() {
   std::size_t numCrawledPages = 0;
   int numPagesPushed = 0;
 
+  // std::cout << "Thread " << threadId << std::endl;
   while (numCrawledPages < numPagesToCrawl) {
     Page page("");
     std::string baseUrl;
     bool useLastCrawlEndTime;
 
+    // std::cout << "Await " << threadId << std::endl;
     PopFromScheduler::pop(*pageScheduler, page, baseUrl, useLastCrawlEndTime,
-                          *siteAttributesMap, *lastCrawlEndTimeMap, popMutex);
+                          *siteAttributesMap, *lastCrawlEndTimeMap, memoryMutex,
+                          popMutex);
+    // std::cout << "Pop " + std::to_string(threadId) + " " + page.getUrl()
+    //           << std::endl;
 
     CkSpider spider;
     SiteAttributes *siteAttributes = &(siteAttributesMap->operator[](baseUrl));
@@ -61,17 +78,35 @@ void GeneralCrawlTask::run() {
     try {
       Crawl::crawlUrl(spider, page, *mustMatchPatterns, *avoidPatterns,
                       *siteAttributes, *lastCrawlEndTime, useLastCrawlEndTime);
-      PageStorage::storePage(storageDirectory, spider, numCrawledPages,
+      // std::cout << "Finish " + std::to_string(threadId) + " " + page.getUrl()
+                // << std::endl;
+      pageScheduler->finishWork(page.getUrl());
+      PageStorage::storePage(storageDirectory, spider,
+                             numCrawledPages + threadId * numPagesToCrawl,
                              storeMutex);
       numCrawledPages++;
+      std::cout << "Success: " + page.getUrl() << std::endl;
+      // std::cout << "allNumPagesToCrawl: " << *allNumPagesToCrawl <<
+      // std::endl;
       PushIntoScheduler::push(*pageScheduler, spider, *viewedUrls,
-                              numPagesToCrawl, page.getLevel(), numPagesPushed,
-                              memoryMutex, pushMutex);
+                              *allNumPagesToCrawl, page.getLevel(),
+                              numPagesPushed, memoryMutex, pushMutex);
+
+      if (page.getLevel() == 0) {
+        siteAttributes->addNumPagesLevel1(numPagesPushed);
+      }
+      // std::cout << "numPagesPushed: " << numPagesPushed << std::endl;
     } catch (std::exception &e) {
       std::cout << "Error while crawling page " + page.getUrl() << std::endl;
       std::cout << e.what() << std::endl;
+
+      pthread_mutex_lock(failMutex);
+      (*allNumPagesToCrawl)++;
+      pthread_mutex_unlock(failMutex);
     }
   }
+
+  counterFlag->signal();
 }
 
 } // namespace search_engine

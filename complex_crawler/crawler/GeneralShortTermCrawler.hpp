@@ -6,14 +6,14 @@
 
 namespace search_engine {
 
-class GeneralShorTermCrawler : public Crawler {
+class GeneralShortTermCrawler : public Crawler {
 private:
   int numThreads;
 
 public:
-  GeneralShorTermCrawler(std::string storageDirectory, bool verbose = true,
+  GeneralShortTermCrawler(std::string storageDirectory, bool verbose = true,
                    int numThreads = 1);
-  ~GeneralShorTermCrawler();
+  ~GeneralShortTermCrawler();
   virtual void crawl(std::vector<std::string> &seedUrls,
                      std::size_t numPagesToCrawl) override;
 };

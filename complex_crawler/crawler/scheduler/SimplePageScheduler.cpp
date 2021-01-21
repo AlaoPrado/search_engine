@@ -13,7 +13,7 @@ SimplePageScheduler::SimplePageScheduler() {
 SimplePageScheduler::~SimplePageScheduler() { delete this->urlQueue; }
 
 Page SimplePageScheduler::pop() {
-  utils::assertTrue(this->size() > 0,
+  utils::assertTrue(!this->empty(),
                     "Error(SimplePageScheduler): pop when scheduler is empty");
   PageEntry pageEntry = this->urlQueue->front();
   this->urlQueue->pop();

@@ -10,6 +10,16 @@ const std::string PageStorage::indexName("index.txt");
 
 void PageStorage::storePage(std::string directory, CkSpider &spider,
                             std::size_t pageId, pthread_mutex_t *mutex) {
+  std::string html(spider.lastHtml());
+
+  utils::assertTrue(html.size() > 0, "Error(PageStorage): page is empty");
+
+  const std::string fileExtension = ".html";
+  std::ofstream htmlFile(directory + std::to_string(pageId) + fileExtension,
+                         std::ofstream::out | std::ofstream::trunc);
+
+  htmlFile << html;
+  htmlFile.close();
 
   if (mutex != NULL) {
     pthread_mutex_lock(mutex);
@@ -27,17 +37,6 @@ void PageStorage::storePage(std::string directory, CkSpider &spider,
   if (mutex != NULL) {
     pthread_mutex_unlock(mutex);
   }
-
-  std::string html(spider.lastHtml());
-
-  utils::assertTrue(html.size() > 0, "Error(PageStorage): page is empty");
-
-  const std::string fileExtension = ".html";
-  std::ofstream htmlFile(directory + std::to_string(pageId) + fileExtension,
-                         std::ofstream::out | std::ofstream::trunc);
-
-  htmlFile << html;
-  htmlFile.close();
 }
 
 } // namespace search_engine

@@ -19,7 +19,8 @@ public:
                   std::string &baseUrl, bool &useLastCrawlEndTime,
                   std::map<std::string, SiteAttributes> &siteAttributesMap,
                   std::map<std::string, Crawl::timePoint> &lastCrawlEndTimeMap,
-                  pthread_mutex_t *memoryMutex = NULL);
+                  pthread_mutex_t *memoryMutex = NULL,
+                  pthread_mutex_t *popMutex = NULL);
 };
 
 } // namespace search_engine

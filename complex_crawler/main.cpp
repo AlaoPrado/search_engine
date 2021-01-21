@@ -1,5 +1,6 @@
 #include "../utils/Assert.hpp"
 #include "crawler/Crawler.hpp"
+#include "crawler/GeneralShortTermCrawler.hpp"
 #include "crawler/LongTermCrawler.hpp"
 #include "crawler/ShortTermCrawler.hpp"
 #include <exception>
@@ -14,6 +15,7 @@ int main(const int argc, const char **argv) {
   try {
     const int LONG_TERM_CRAWLER = 0;
     const int SHORT_TERM_CRAWLER = 1;
+    const int G_SHORT_TERM_CRAWLER = 2;
 
     search_engine::utils::assertTrue(
         argc > 1,
@@ -24,7 +26,8 @@ int main(const int argc, const char **argv) {
     const int crawlerType = argc > 3 ? std::stoi(argv[3]) : LONG_TERM_CRAWLER;
 
     search_engine::utils::assertTrue(
-        crawlerType == LONG_TERM_CRAWLER || crawlerType == SHORT_TERM_CRAWLER,
+        crawlerType == LONG_TERM_CRAWLER || crawlerType == SHORT_TERM_CRAWLER ||
+            crawlerType == G_SHORT_TERM_CRAWLER,
         "Error: the third parameter must be 0 (long term crawler) or 1 (short "
         "term crawler)");
 
@@ -48,12 +51,18 @@ int main(const int argc, const char **argv) {
     }
     seedFile.close();
 
-    crawler =
-        crawlerType == LONG_TERM_CRAWLER
-            ? (search_engine::Crawler *)new search_engine::LongTermCrawler(
-                  storageFolderDirectory)
-            : (search_engine::Crawler *)new search_engine::ShortTermCrawler(
-                  storageFolderDirectory, true, numThreads);
+    if (crawlerType == LONG_TERM_CRAWLER) {
+      crawler = (search_engine::Crawler *)new search_engine::LongTermCrawler(
+          storageFolderDirectory);
+    } else if (crawlerType == SHORT_TERM_CRAWLER) {
+      crawler = (search_engine::Crawler *)new search_engine::ShortTermCrawler(
+          storageFolderDirectory, true, numThreads);
+    } else if (crawlerType == G_SHORT_TERM_CRAWLER) {
+      crawler =
+          (search_engine::Crawler *)new search_engine::GeneralShortTermCrawler(
+              storageFolderDirectory, true, numThreads);
+    }
+
     crawler->crawl(seedUrls, numPagesToCrawl);
 
     delete crawler;

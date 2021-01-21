@@ -45,7 +45,7 @@ Page PageGroupScheduler::pop() {
       this->pageGroupQueue->front().getPageScheduler();
 
   utils::assertTrue(
-      pageGroupQueue != NULL && !pageGroupQueue->empty(),
+      pageScheduler != NULL && !pageScheduler->empty(),
       "Error(PageGroupScheulder/pop): trying to pop empty pageGroup");
 
   Page page = pageScheduler->pop();
@@ -69,6 +69,10 @@ void PageGroupScheduler::push(Page page) {
   this->pageGroupScheduler->operator[](baseUrl)->push(page);
 
   if (!this->pageGroupInWork->operator[](baseUrl)) {
+    // std::cout << "PageGroup push " + page.getUrl() + " - " + baseUrl + ": " +
+    //                  std::to_string(
+    //                      this->pageGroupScheduler->operator[](baseUrl)->size())
+    //           << std::endl;
     this->pageGroupQueue->push(
         PageGroupEntry(baseUrl, this->pageGroupScheduler->operator[](baseUrl)));
     this->pageGroupInWork->operator[](baseUrl) = true;
@@ -93,12 +97,16 @@ void PageGroupScheduler::finishWork(std::string url) {
       it != this->pageGroupInWork->end(),
       "Error(PageGroupScheduler): the input URL does not belong to any groups");
 
-  if (it->second) {
-    this->pageGroupInWork->operator[](baseUrl) = false;
+  utils::assertTrue(it->second,
+                    "Error(PageGroupScheduler): finish finished work: " + url +
+                        " : " + baseUrl);
 
+  if (it->second) {
     if (!this->pageGroupScheduler->operator[](baseUrl)->empty()) {
       this->pageGroupQueue->push(PageGroupEntry(
           baseUrl, this->pageGroupScheduler->operator[](baseUrl)));
+    } else {
+      this->pageGroupInWork->operator[](baseUrl) = false;
     }
   }
 
