@@ -105,9 +105,9 @@ void GeneralCrawlTask::run() {
       (*allNumPagesToCrawl)++;
       pthread_mutex_unlock(failMutex);
     }
+    pageScheduler->finishWork(page.getUrl());
   }
 
-  pageScheduler->finishWork(page.getUrl());
   counterFlag->signal();
 }
 
