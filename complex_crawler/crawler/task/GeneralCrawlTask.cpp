@@ -26,8 +26,8 @@ GeneralCrawlTask::~GeneralCrawlTask() {}
 
 void GeneralCrawlTask::set(
     std::string storageDirectory, std::vector<std::string> *mustMatchPatterns,
-    std::vector<std::string> *avoidPatterns, std::size_t numPagesToCrawl,
-    std::size_t *allNumPagesToCrawl,
+    std::vector<std::string> *avoidPatterns, std::size_t initialNumPageToCrawl,
+    std::size_t numPagesToCrawl, std::size_t *allNumPagesToCrawl,
     SynchonizedPageGroupScheduler *pageScheduler,
     std::map<std::string, bool> *viewedUrls,
     std::map<std::string, SiteAttributes> *siteAttributesMap,
@@ -38,6 +38,7 @@ void GeneralCrawlTask::set(
   this->storageDirectory = storageDirectory;
   this->mustMatchPatterns = mustMatchPatterns;
   this->avoidPatterns = avoidPatterns;
+  this->initialNumPageToCrawl = initialNumPageToCrawl;
   this->numPagesToCrawl = numPagesToCrawl;
   this->allNumPagesToCrawl = allNumPagesToCrawl;
   this->pageScheduler = pageScheduler;
@@ -64,7 +65,7 @@ void GeneralCrawlTask::run() {
     bool useLastCrawlEndTime;
 
     std::cout << "Await " + std::to_string(threadId) +
-                     " size:" + std::to_string(pageScheduler->size())
+                     " size: " + std::to_string(pageScheduler->size())
               << std::endl;
     PopFromScheduler::pop(*pageScheduler, page, baseUrl, useLastCrawlEndTime,
                           *siteAttributesMap, *lastCrawlEndTimeMap, memoryMutex,
@@ -83,7 +84,7 @@ void GeneralCrawlTask::run() {
       std::cout << "Finish " + std::to_string(threadId) + " " + page.getUrl()
                 << std::endl;
       PageStorage::storePage(storageDirectory, spider,
-                             numCrawledPages + threadId * numPagesToCrawl,
+                             initialNumPageToCrawl + numCrawledPages,
                              storeMutex);
       numCrawledPages++;
       std::cout << "Success: " + page.getUrl() << std::endl;

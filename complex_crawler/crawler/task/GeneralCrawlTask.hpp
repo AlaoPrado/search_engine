@@ -18,7 +18,7 @@ class GeneralCrawlTask : public Task {
 private:
   std::string storageDirectory;
   std::vector<std::string> *mustMatchPatterns, *avoidPatterns;
-  std::size_t numPagesToCrawl, *allNumPagesToCrawl;
+  std::size_t initialNumPageToCrawl, numPagesToCrawl, *allNumPagesToCrawl;
   SynchonizedPageGroupScheduler *pageScheduler;
   std::map<std::string, bool> *viewedUrls;
   std::map<std::string, SiteAttributes> *siteAttributesMap;
@@ -32,7 +32,8 @@ public:
   ~GeneralCrawlTask();
   void set(std::string storageDirectory,
            std::vector<std::string> *mustMatchPatterns,
-           std::vector<std::string> *avoidPatterns, std::size_t numPagesToCrawl,
+           std::vector<std::string> *avoidPatterns,
+           std::size_t initialNumPageToCrawl, std::size_t numPagesToCrawl,
            std::size_t *allNumPagesToCrawl,
            SynchonizedPageGroupScheduler *pageScheduler,
            std::map<std::string, bool> *viewedUrls,

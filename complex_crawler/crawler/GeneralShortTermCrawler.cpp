@@ -44,10 +44,10 @@ void GeneralShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
     if (numPagesThreads > 0) {
       generalCrawlTasks[i].set(
           this->storageDirectory, &this->mustMatchPatterns,
-          &this->avoidPatterns, numPagesThreads, &numPagesToCrawl,
-          pageScheduler, this->viewedUrls, this->siteAttributesMap,
-          this->lastCrawlEndTimeMap, &popMutex, &storeMutex, &pushMutex,
-          &memoryMutex, &failMutex, &counterFlag, i);
+          &this->avoidPatterns, numPagesThreads * i, numPagesThreads,
+          &numPagesToCrawl, pageScheduler, this->viewedUrls,
+          this->siteAttributesMap, this->lastCrawlEndTimeMap, &popMutex,
+          &storeMutex, &pushMutex, &memoryMutex, &failMutex, &counterFlag, i);
       generalCrawlPool.addTask(&generalCrawlTasks[i]);
     }
   }
@@ -55,7 +55,8 @@ void GeneralShortTermCrawler::crawl(std::vector<std::string> &seedUrls,
   if (numPagesFinalThread > 0) {
     generalCrawlTasks[numThreads - 1].set(
         this->storageDirectory, &this->mustMatchPatterns, &this->avoidPatterns,
-        numPagesFinalThread, &numPagesToCrawl, pageScheduler, this->viewedUrls,
+        numPagesThreads * (numThreads - 1), numPagesFinalThread,
+        &numPagesToCrawl, pageScheduler, this->viewedUrls,
         this->siteAttributesMap, this->lastCrawlEndTimeMap, &popMutex,
         &storeMutex, &pushMutex, &memoryMutex, &failMutex, &counterFlag,
         numThreads - 1);
