@@ -11,7 +11,7 @@ void InvertedList::add(InvertedListEntry entry) {
 std::size_t InvertedList::size() { return this->entriyList.size(); }
 
 std::size_t InvertedList::getNumBytes() {
-  std::size_t numBytes = 0;
+  std::size_t numBytes = sizeof(this->entriyList);
 
   for (auto &&entry : this->entriyList) {
     numBytes += entry.getNumBytes();

@@ -14,7 +14,9 @@ std::size_t InvertedListEntry::getNumOcurrences() {
 }
 
 std::size_t InvertedListEntry::getNumBytes() {
-  return sizeof(std::size_t) + sizeof(std::size_t) * this->ocurrenceList.size();
+  return sizeof(this->documentId) +
+         sizeof(std::size_t) * this->ocurrenceList.size() +
+         sizeof(this->ocurrenceList);
 }
 
 } // namespace search_engine
