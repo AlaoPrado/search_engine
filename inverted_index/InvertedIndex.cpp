@@ -2,7 +2,7 @@
 
 namespace search_engine {
 
-InvertedIndex::InvertedIndex(std::string collectionDirecory) {
+InvertedIndex::InvertedIndex(std::vector<Document> &documentList) {
   this->invertedListMap = new std::map<std::string, InvertedList *>();
   this->urlMap = new std::map<std::size_t, std::string>();
 }

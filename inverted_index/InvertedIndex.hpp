@@ -1,9 +1,11 @@
 #pragma once
 
 #include "InvertedList.hpp"
+#include "document/Document.hpp"
 #include <cstddef>
 #include <map>
 #include <string>
+#include <vector>
 
 namespace search_engine {
 
@@ -13,7 +15,7 @@ private:
   std::map<std::size_t, std::string> *urlMap;
 
 public:
-  InvertedIndex(std::string collectionDirecory);
+  InvertedIndex(std::vector<Document> &documentList);
   ~InvertedIndex();
 };
 

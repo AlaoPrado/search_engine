@@ -6,8 +6,11 @@ PROGRAM = a.out
 
 all: build link
 
-build:
+build: build_document
 	$(CXX) -c $(CXXFILES) $(COMMONBUILDFLAGS)
+
+build_document:
+	$(CXX) -c document/$(CXXFILES) $(COMMONBUILDFLAGS)
 
 link:
 	$(CXX) -o $(PROGRAM) $(OBJFILES)
