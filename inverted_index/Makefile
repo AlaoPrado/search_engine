@@ -6,8 +6,14 @@ PROGRAM = a.out
 
 all: build link
 
-build: build_document
+build: build_utils build_html_parser build_document
 	$(CXX) -c $(CXXFILES) $(COMMONBUILDFLAGS)
+
+build_utils:
+	$(CXX) -c ../utils/$(CXXFILES) $(COMMONBUILDFLAGS)
+
+build_html_parser:
+	$(CXX) -c ../html_parser/$(CXXFILES) $(COMMONBUILDFLAGS)
 
 build_document:
 	$(CXX) -c document/$(CXXFILES) $(COMMONBUILDFLAGS)

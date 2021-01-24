@@ -1,3 +1,4 @@
+#include "../html_parser/HtmlParser.hpp"
 #include "../utils/Assert.hpp"
 #include "../utils/File.hpp"
 #include "InvertedIndex.hpp"
@@ -22,6 +23,10 @@ int main(const int argc, const char **argv) {
 
     search_engine::InvertedIndex invertedIndex(documentList);
     const std::size_t bytesPerKBytes = 1000;
+
+    std::string text;
+    search_engine::HtmlParser::readText(documentList[0].getDirectory(), text);
+    search_engine::utils::fileWrite("out.html", text);
 
     std::cout << std::setprecision(3) << std::fixed;
     std::cout << "Whole inverted index size (Kbytes): "
