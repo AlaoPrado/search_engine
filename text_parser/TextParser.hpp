@@ -12,7 +12,7 @@ private:
   TextParser();
 
   static void extractNextWord(const std::string text, std::size_t beginPosition,
-                              std::string &lastSeparator, std::string &word);
+                              std::string &word, std::size_t &endPosition);
 
   static void extractNextOccurence(const std::string text,
                                    std::vector<Occurrence> &occurenceList);

@@ -1,15 +1,22 @@
 #include "TextParser.hpp"
+#include "../utils/Character.hpp"
 #include "../utils/Text.hpp"
 
 namespace search_engine {
 
 void TextParser::extractNextWord(const std::string text,
-                                 std::size_t beginPosition,
-                                 std::string &lastSeparator,
-                                 std::string &word) {
-  lastSeparator = "";
+                                 std::size_t beginPosition, std::string &word,
+                                 std::size_t &endPosition) {
+  endPosition = beginPosition;
   word = "";
-  for (std::size_t i = beginPosition; i < text.length(); i++) {
+  for (endPosition = beginPosition; endPosition < text.length();
+       endPosition++) {
+    if (utils::isSpacing(text[endPosition]) ||
+        utils::isMisc(text[endPosition])) {
+      break;
+    }
+
+    word += text[endPosition];
   }
 }
 
