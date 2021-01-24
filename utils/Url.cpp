@@ -1,6 +1,5 @@
 #include "Url.hpp"
 #include "Assert.hpp"
-#include <CkSpider.h>
 #include <iostream>
 #include <string>
 #include <vector>
