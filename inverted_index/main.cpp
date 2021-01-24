@@ -4,6 +4,7 @@
 #include "document/Document.hpp"
 #include "document/DocumentCollection.hpp"
 #include <cstddef>
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -19,10 +20,26 @@ int main(const int argc, const char **argv) {
     std::vector<search_engine::Document> documentList =
         documentCollection.getDocumentList();
 
-    search_engine::utils::fileWrite("document_collection.txt",
-                                    documentCollection.toString() + "\n");
-
     search_engine::InvertedIndex invertedIndex(documentList);
+    const std::size_t bytesPerKBytes = 1000;
+
+    std::cout << std::setprecision(3) << std::fixed;
+    std::cout << "Whole inverted index size (Kbytes): "
+              << invertedIndex.getNumBytes() / bytesPerKBytes << std::endl;
+    std::cout << "Size of inverted list structure (Kbytes): "
+              << invertedIndex.getInvertedListStructureNumBytes() /
+                     bytesPerKBytes
+              << std::endl;
+    std::cout << "Size of url map (Kbytes): "
+              << invertedIndex.getUrlMapNumBytes() / bytesPerKBytes
+              << std::endl;
+
+    std::cout << std::setprecision(0);
+    std::cout << "Vocabulary size (number of distinct terms): "
+              << invertedIndex.getVocabularySize() << std::endl;
+
+    std::cout << "Average number of documents per inverted list: "
+              << invertedIndex.getAverageInvertedListSize() << std::endl;
   } catch (std::exception &e) {
     std::cout << e.what() << std::endl;
     return 1;
