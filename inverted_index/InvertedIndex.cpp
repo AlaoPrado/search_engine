@@ -1,4 +1,9 @@
 #include "InvertedIndex.hpp"
+#include "../html_parser/HtmlParser.hpp"
+#include "../text_parser/Occurrence.hpp"
+#include "../text_parser/TextParser.hpp"
+#include <iostream>
+#include <vector>
 
 namespace search_engine {
 
@@ -7,10 +12,21 @@ InvertedIndex::InvertedIndex(std::vector<Document> &documentList) {
   this->urlMap = new std::map<std::size_t, std::string>();
 
   std::size_t documentId = 0;
-  for (auto &&document : documentList) {
-    this->urlMap->operator[](documentId) = document.getUrl();
+  std::string documentText("");
+  // for (auto &&document : documentList) {
+    this->urlMap->operator[](documentId) = documentList[0].getUrl();
     documentId++;
-  }
+    HtmlParser::readText(documentList[0].getDirectory(), documentText);
+
+    std::vector<Occurrence> occurenceList;
+
+    TextParser::extractOccurenceList(documentText, occurenceList);
+
+    for (auto &&occurence : occurenceList) {
+      std::cout << occurence.getWord() << ", " << occurence.getPosition()
+                << std::endl;
+    }
+  // }
 }
 
 InvertedIndex::~InvertedIndex() {

@@ -5,7 +5,7 @@
 namespace search_engine {
 namespace utils {
 
-static void textToLowerCase(std::string &text);
+std::string textToLowerCaseUtf8(std::string text);
 
 } // namespace utils
 } // namespace search_engine

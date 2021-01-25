@@ -14,8 +14,9 @@ void HtmlParser::readText(const std::string fileDirectory, std::string &text) {
   std::string textToParse((std::istreambuf_iterator<char>(file)),
                           (std::istreambuf_iterator<char>()));
 
-  text = "Esse é um texto de exemplo. Ele tem ponto, vírgula; também outros "
-         "tipos de pontuação: como ponto e vígula e dois pontos.";
+  text =
+      "Esse é um texto de exemplo. Ele tem ponto, vírgula; também tem outros "
+      "tipos de pontuação: como ponto e vírgula e dois pontos.";
 }
 
 } // namespace search_engine
