@@ -9,7 +9,8 @@ void HtmlParser::readText(const std::string fileDirectory, std::string &text) {
 
   file.open(fileDirectory);
 
-  utils::assertTrue(file.is_open(), "Error(HtmlParser): failed to open file");
+  utils::assertTrue(file.is_open(),
+                    "Error(HtmlParser): failed to open file " + fileDirectory);
 
   std::string textToParse((std::istreambuf_iterator<char>(file)),
                           (std::istreambuf_iterator<char>()));

@@ -5,18 +5,18 @@ namespace search_engine {
 InvertedListEntry::InvertedListEntry(std::size_t documentId)
     : documentId(documentId) {}
 
-void InvertedListEntry::add(std::size_t ocurrence) {
-  this->ocurrenceList.push_back(ocurrence);
+void InvertedListEntry::add(std::size_t ocurrencePosition) {
+  this->ocurrencePositionList.push_back(ocurrencePosition);
 }
 
 std::size_t InvertedListEntry::getNumOcurrences() {
-  return this->ocurrenceList.size();
+  return this->ocurrencePositionList.size();
 }
 
 std::size_t InvertedListEntry::getNumBytes() {
   return sizeof(this->documentId) +
-         sizeof(std::size_t) * this->ocurrenceList.size() +
-         sizeof(this->ocurrenceList);
+         sizeof(std::size_t) * this->ocurrencePositionList.size() +
+         sizeof(this->ocurrencePositionList);
 }
 
 } // namespace search_engine

@@ -2,10 +2,30 @@
 #include "../html_parser/HtmlParser.hpp"
 #include "../text_parser/Occurrence.hpp"
 #include "../text_parser/TextParser.hpp"
+#include <exception>
 #include <iostream>
 #include <vector>
 
 namespace search_engine {
+
+void InvertedIndex::addDocument(std::size_t documentId,
+                                std::vector<Occurrence> &occurenceList) {
+  std::map<std::string, InvertedList *>::iterator it;
+  for (auto &&occurence : occurenceList) {
+    std::string word = occurence.getWord();
+    it = this->invertedListMap->find(word);
+
+    if (it == this->invertedListMap->end()) {
+      this->invertedListMap->operator[](word) = new InvertedList();
+    }
+
+    this->invertedListMap->operator[](word)->add(InvertedListEntry(documentId));
+
+    std::size_t lastEntry = this->invertedListMap->operator[](word)->size() - 1;
+    this->invertedListMap->operator[](word)->get(lastEntry).add(
+        occurence.getPosition());
+  }
+}
 
 InvertedIndex::InvertedIndex(std::vector<Document> &documentList) {
   this->invertedListMap = new std::map<std::string, InvertedList *>();
@@ -13,20 +33,20 @@ InvertedIndex::InvertedIndex(std::vector<Document> &documentList) {
 
   std::size_t documentId = 0;
   std::string documentText("");
-  // for (auto &&document : documentList) {
-    this->urlMap->operator[](documentId) = documentList[0].getUrl();
-    documentId++;
-    HtmlParser::readText(documentList[0].getDirectory(), documentText);
+  for (auto &&document : documentList) {
+    try {
+      HtmlParser::readText(document.getDirectory(), documentText);
 
-    std::vector<Occurrence> occurenceList;
+      std::vector<Occurrence> occurenceList;
 
-    TextParser::extractOccurenceList(documentText, occurenceList);
-
-    for (auto &&occurence : occurenceList) {
-      std::cout << occurence.getWord() << ", " << occurence.getPosition()
-                << std::endl;
+      TextParser::extractOccurenceList(documentText, occurenceList);
+      this->urlMap->operator[](documentId) = document.getUrl();
+      documentId++;
+      this->addDocument(documentId, occurenceList);
+    } catch (std::exception &e) {
+      std::cout << e.what() << std::endl;
     }
-  // }
+  }
 }
 
 InvertedIndex::~InvertedIndex() {
