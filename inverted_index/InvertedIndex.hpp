@@ -16,7 +16,7 @@ private:
   std::map<std::size_t, std::string> *urlMap;
 
   void addDocument(std::size_t documentId,
-                   std::vector<Occurrence> &occurenceList);
+                   std::map<std::string, std::vector<std::size_t>> &occurenceMap);
 
 public:
   InvertedIndex(std::vector<Document> &documentList);

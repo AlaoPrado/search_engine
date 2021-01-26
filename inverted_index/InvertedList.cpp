@@ -10,8 +10,8 @@ void InvertedList::add(InvertedListEntry entry) {
   this->entriyList.push_back(entry);
 }
 
-InvertedListEntry InvertedList::get(std::size_t index) {
-  return this->entriyList.operator[](index);
+InvertedListEntry *InvertedList::get(std::size_t index) {
+  return &(this->entriyList.operator[](index));
 }
 
 std::size_t InvertedList::size() { return this->entriyList.size(); }

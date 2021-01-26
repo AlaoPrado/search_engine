@@ -4,26 +4,33 @@
 #include "../text_parser/TextParser.hpp"
 #include <exception>
 #include <iostream>
-#include <vector>
 
 namespace search_engine {
 
-void InvertedIndex::addDocument(std::size_t documentId,
-                                std::vector<Occurrence> &occurenceList) {
-  std::map<std::string, InvertedList *>::iterator it;
-  for (auto &&occurence : occurenceList) {
-    std::string word = occurence.getWord();
-    it = this->invertedListMap->find(word);
+void InvertedIndex::addDocument(
+    std::size_t documentId,
+    std::map<std::string, std::vector<std::size_t>> &occurenceListMap) {
+  std::map<std::string, InvertedList *>::iterator invertedListPair;
 
-    if (it == this->invertedListMap->end()) {
+  for (auto occurenceListPair = occurenceListMap.begin();
+       occurenceListPair != occurenceListMap.end(); occurenceListPair++) {
+    std::string word = occurenceListPair->first;
+
+    invertedListPair = this->invertedListMap->find(word);
+
+    if (invertedListPair == this->invertedListMap->end()) {
       this->invertedListMap->operator[](word) = new InvertedList();
     }
 
-    this->invertedListMap->operator[](word)->add(InvertedListEntry(documentId));
+    auto &&currentInvListEntry = this->invertedListMap->operator[](word);
 
-    std::size_t lastEntry = this->invertedListMap->operator[](word)->size() - 1;
-    this->invertedListMap->operator[](word)->get(lastEntry).add(
-        occurence.getPosition());
+    currentInvListEntry->add(InvertedListEntry(documentId));
+
+    for (auto &&occurencePosition : occurenceListPair->second) {
+      std::size_t lastEntry = currentInvListEntry->size() - 1;
+
+      currentInvListEntry->get(lastEntry)->add(occurencePosition);
+    }
   }
 }
 
@@ -37,12 +44,12 @@ InvertedIndex::InvertedIndex(std::vector<Document> &documentList) {
     try {
       HtmlParser::readText(document.getDirectory(), documentText);
 
-      std::vector<Occurrence> occurenceList;
+      std::map<std::string, std::vector<std::size_t>> occurenceListMap;
 
-      TextParser::extractOccurenceList(documentText, occurenceList);
+      TextParser::extractOccurenceListMap(documentText, occurenceListMap);
       this->urlMap->operator[](documentId) = document.getUrl();
       documentId++;
-      this->addDocument(documentId, occurenceList);
+      this->addDocument(documentId, occurenceListMap);
     } catch (std::exception &e) {
       std::cout << e.what() << std::endl;
     }

@@ -14,7 +14,7 @@ public:
   InvertedList();
   ~InvertedList();
   void add(InvertedListEntry entry);
-  InvertedListEntry get(std::size_t index);
+  InvertedListEntry *get(std::size_t index);
   std::size_t size();
   std::size_t getNumBytes();
 };

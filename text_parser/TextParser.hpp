@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Occurrence.hpp"
 #include <cstddef>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -18,14 +18,15 @@ private:
   static void extractNextWord(const std::string text, std::size_t beginPosition,
                               std::string &word, std::size_t &endPosition);
 
-  static void extractNextOccurence(const std::string text,
-                                   std::size_t &textPostion,
-                                   std::vector<Occurrence> &occurenceList,
-                                   std::size_t &occurencePositon);
+  static void extractNextOccurence(
+      const std::string text, std::size_t &textPostion,
+      std::map<std::string, std::vector<std::size_t>> &occurenceListMap,
+      std::size_t &occurencePositon, bool &succcess);
 
 public:
-  static void extractOccurenceList(const std::string text,
-                                   std::vector<Occurrence> &occurenceList);
+  static void extractOccurenceListMap(
+      const std::string text,
+      std::map<std::string, std::vector<std::size_t>> &occuoccurenceListMaprenceMap);
 };
 
 } // namespace search_engine

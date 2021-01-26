@@ -34,36 +34,43 @@ void TextParser::extractNextWord(const std::string text,
   }
 }
 
-void TextParser::extractNextOccurence(const std::string text,
-                                      std::size_t &textPostion,
-                                      std::vector<Occurrence> &occurenceList,
-                                      std::size_t &occurencePositon) {
+void TextParser::extractNextOccurence(
+    const std::string text, std::size_t &textPostion,
+    std::map<std::string, std::vector<std::size_t>> &occurenceListMap,
+    std::size_t &occurencePositon, bool &succcess) {
   std::string word;
   TextParser::extractNextWord(text, textPostion, word, textPostion);
+  succcess = word.size() > 0;
 
-  if (word.size() > 0) {
+  if (succcess) {
     word = utils::textToLowerCaseUtf8(word);
     bool isSpace;
 
     TextParser::extractNextSeparator(text, textPostion, isSpace, textPostion);
-    occurenceList.push_back(Occurrence(word, occurencePositon));
 
+    auto it = occurenceListMap.find(word);
+
+    if (it == occurenceListMap.end()) {
+      occurenceListMap.operator[](word) = std::vector<std::size_t>();
+    }
+
+    occurenceListMap.operator[](word).push_back(occurencePositon);
     occurencePositon += isSpace ? 1 : 2;
   }
 }
 
-void TextParser::extractOccurenceList(const std::string text,
-                                      std::vector<Occurrence> &occurenceList) {
+void TextParser::extractOccurenceListMap(
+    const std::string text,
+    std::map<std::string, std::vector<std::size_t>> &occurenceListMap) {
   std::size_t textPosition = 0;
   std::size_t occurencePosition = 0;
-  std::size_t previousNumOccurences = occurenceList.size();
-  TextParser::extractNextOccurence(text, textPosition, occurenceList,
-                                   occurencePosition);
+  bool success;
+  TextParser::extractNextOccurence(text, textPosition, occurenceListMap,
+                                   occurencePosition, success);
 
-  while (previousNumOccurences < occurenceList.size()) {
-    previousNumOccurences = occurenceList.size();
-    TextParser::extractNextOccurence(text, textPosition, occurenceList,
-                                     occurencePosition);
+  while (success) {
+    TextParser::extractNextOccurence(text, textPosition, occurenceListMap,
+                                     occurencePosition, success);
   }
 }
 
