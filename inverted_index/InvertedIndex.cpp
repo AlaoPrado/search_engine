@@ -40,7 +40,7 @@ InvertedIndex::InvertedIndex(std::vector<Document> &documentList) {
 
   std::size_t documentId = 0;
   std::string documentText("");
-  for(std::size_t i = 0; i < 1000; i++){
+  for (std::size_t i = 0; i < 100; i++) {
     try {
       HtmlParser::extractText(documentList[i].getDirectory(), documentText);
 
@@ -104,6 +104,17 @@ std::size_t InvertedIndex::getAverageInvertedListSize() {
   }
 
   return averageSize;
+}
+
+std::vector<std::string> InvertedIndex::getVocabulary() {
+  std::vector<std::string> vocabulary;
+
+  for (auto it = this->invertedListMap->begin();
+       it != this->invertedListMap->end(); it++) {
+    vocabulary.push_back(it->first);
+  }
+
+  return vocabulary;
 }
 
 } // namespace search_engine

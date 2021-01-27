@@ -26,6 +26,7 @@ public:
   std::size_t getNumBytes();
   std::size_t getVocabularySize();
   std::size_t getAverageInvertedListSize();
+  std::vector<std::string> getVocabulary();
 };
 
 } // namespace search_engine

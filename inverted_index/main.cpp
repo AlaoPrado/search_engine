@@ -21,11 +21,16 @@ int main(const int argc, const char **argv) {
     std::vector<search_engine::Document> documentList =
         documentCollection.getDocumentList();
 
-    std::string text;
-    search_engine::HtmlParser::extractText(documentList[0].getDirectory(), text);
-    search_engine::utils::fileWrite("out.html", text);
-
     search_engine::InvertedIndex invertedIndex(documentList);
+    std::vector<std::string> vocabulary = invertedIndex.getVocabulary();
+    std::string vocabularyText("");
+
+    for (auto &&term : vocabulary) {
+      vocabularyText += term + "\n";
+    }
+
+    search_engine::utils::fileWrite("outs/vocabulary.txt", vocabularyText);
+
     const std::size_t bytesPerKBytes = 1000;
 
     std::cout << std::setprecision(3) << std::fixed;
