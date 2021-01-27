@@ -4,22 +4,39 @@
 
 namespace search_engine {
 
-std::string HtmlParser::cleantext(GumboNode *node) {
+bool HtmlParser::isTagContentAvoidable(GumboTag tag) {
+  return tag == GUMBO_TAG_SCRIPT || tag == GUMBO_TAG_STYLE ||
+         tag == GUMBO_TAG_UNKNOWN;
+}
+
+std::string HtmlParser::getTagSeparator(GumboTag tag) {
+  if (tag == GUMBO_TAG_P || tag == GUMBO_TAG_TITLE || tag == GUMBO_TAG_H1 ||
+      tag == GUMBO_TAG_H2 || tag == GUMBO_TAG_H3 || tag == GUMBO_TAG_H4 ||
+      tag == GUMBO_TAG_H5 || tag == GUMBO_TAG_H6) {
+    return "\n";
+  }
+
+  return " ";
+}
+
+std::string HtmlParser::cleanText(GumboNode *node) {
   if (node->type == GUMBO_NODE_TEXT) {
     return std::string(node->v.text.text);
   } else if (node->type == GUMBO_NODE_ELEMENT &&
-             node->v.element.tag != GUMBO_TAG_SCRIPT &&
-             node->v.element.tag != GUMBO_TAG_STYLE) {
+             !isTagContentAvoidable(node->v.element.tag)) {
 
     std::string childrenText = "";
     GumboVector *children = &node->v.element.children;
 
     for (std::size_t i = 0; i < children->length; ++i) {
-      const std::string childText = cleantext((GumboNode *)children->data[i]);
+      const std::string childText = cleanText((GumboNode *)children->data[i]);
 
       if (!childText.empty()) {
-        childrenText += childText + " ";
+        childrenText += childText;
       }
+    }
+    if (!childrenText.empty()) {
+      childrenText += getTagSeparator(node->v.element.tag);
     }
 
     return childrenText;
@@ -43,7 +60,7 @@ void HtmlParser::extractText(const std::string fileDirectory,
   file.close();
 
   GumboOutput *output = gumbo_parse(textToParse.c_str());
-  text = cleantext(output->root);
+  text = cleanText(output->root);
   gumbo_destroy_output(&kGumboDefaultOptions, output);
 }
 
