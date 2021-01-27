@@ -29,7 +29,8 @@ int main(const int argc, const char **argv) {
       vocabularyText += term + "\n";
     }
 
-    search_engine::utils::fileWrite("outs/vocabulary.txt", vocabularyText);
+    search_engine::utils::fileWrite("storage_vocabulary/vocabulary.txt",
+                                    vocabularyText);
 
     const std::size_t bytesPerKBytes = 1000;
 
