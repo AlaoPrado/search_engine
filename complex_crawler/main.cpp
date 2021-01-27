@@ -28,8 +28,8 @@ int main(const int argc, const char **argv) {
     search_engine::utils::assertTrue(
         crawlerType == LONG_TERM_CRAWLER || crawlerType == SHORT_TERM_CRAWLER ||
             crawlerType == G_SHORT_TERM_CRAWLER,
-        "Error: the third parameter must be 0 (long term crawler) or 1 (short "
-        "term crawler)");
+        "Error: the third parameter must be 0 (long term crawler), 1 (short "
+        "term crawler) or 2 (general short term crawler)");
 
     const std::size_t numPagesToCrawl =
         (std::size_t)(argc > 4 ? std::stoi(argv[4]) : 10);
