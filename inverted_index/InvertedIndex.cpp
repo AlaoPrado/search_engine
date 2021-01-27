@@ -42,7 +42,7 @@ InvertedIndex::InvertedIndex(std::vector<Document> &documentList) {
   std::string documentText("");
   for (auto &&document : documentList) {
     try {
-      HtmlParser::readText(document.getDirectory(), documentText);
+      HtmlParser::extractText(document.getDirectory(), documentText);
 
       std::map<std::string, std::vector<std::size_t>> occurenceListMap;
 

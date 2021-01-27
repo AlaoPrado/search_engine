@@ -1,6 +1,5 @@
 #include "TextUtf8.hpp"
 #include <CkString.h>
-#include <cctype>
 
 namespace search_engine {
 namespace utils {
