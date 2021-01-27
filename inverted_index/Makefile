@@ -6,8 +6,16 @@ PROGRAM = a.out
 CHILKATPATH = /home/alan/Downloads/chilkat/chilkat-9.5.0-x86_64-linux-gcc
 CHILKATINC = $(CHILKATPATH)/include
 CHILKATLIB =  $(CHILKATPATH)/lib
-BUILDFLAGS = $(COMMONBUILDFLAGS) -I$(CHILKATINC)
-LINKFLAGS = -Wl,-rpath=$(CHILKATLIB) -L$(CHILKATLIB) -lchilkat-9.5.0 -lresolv -lpthread
+CHILKATLDFLAGS = -lchilkat-9.5.0 -lresolv -lpthread
+GUMBOPARSERPATH = /usr/local
+GUMBOPARSERINC = $(GUMBOPARSERPATH)/include
+GUMBOPARSERLIB =  $(GUMBOPARSERPATH)/lib
+GUMBOPARSERCFLAGS = `pkg-config --cflags gumbo`
+GUMBOPARSERLDFLAGS = `pkg-config --libs gumbo`
+BUILDFLAGS = $(COMMONBUILDFLAGS) -I$(CHILKATINC) $(GUMBOPARSERCFLAGS)
+LINKFLAGS = -Wl,-rpath=$(CHILKATLIB) -L$(CHILKATLIB) \
+						-Wl,-rpath=$(GUMBOPARSERLIB) -L$(GUMBOPARSERLIB) \
+						$(CHILKATLDFLAGS) $(GUMBOPARSERLDFLAGS)
 
 all: build link
 

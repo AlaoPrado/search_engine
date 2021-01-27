@@ -40,14 +40,14 @@ InvertedIndex::InvertedIndex(std::vector<Document> &documentList) {
 
   std::size_t documentId = 0;
   std::string documentText("");
-  for (auto &&document : documentList) {
+  for(std::size_t i = 0; i < 1000; i++){
     try {
-      HtmlParser::extractText(document.getDirectory(), documentText);
+      HtmlParser::extractText(documentList[i].getDirectory(), documentText);
 
       std::map<std::string, std::vector<std::size_t>> occurenceListMap;
 
       TextParser::extractOccurenceListMap(documentText, occurenceListMap);
-      this->urlMap->operator[](documentId) = document.getUrl();
+      this->urlMap->operator[](documentId) = documentList[i].getUrl();
       documentId++;
       this->addDocument(documentId, occurenceListMap);
     } catch (std::exception &e) {
