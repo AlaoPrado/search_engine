@@ -20,12 +20,6 @@ int main(const int argc, const char **argv) {
     search_engine::DocumentCollection documentCollection(collectionDirectory);
     std::vector<search_engine::Document> documentList =
         documentCollection.getDocumentList();
-
-    std::string text;
-    search_engine::HtmlParser::extractText(documentList[0].getDirectory(),
-                                           text);
-    search_engine::utils::fileWrite("out.html", text);
-
     search_engine::InvertedIndex invertedIndex(documentList);
     std::vector<std::string> vocabulary = invertedIndex.getVocabulary();
     std::string vocabularyText("");
@@ -41,13 +35,14 @@ int main(const int argc, const char **argv) {
 
     std::cout << std::setprecision(3) << std::fixed;
     std::cout << "Whole inverted index size (Kbytes): "
-              << invertedIndex.getNumBytes() / bytesPerKBytes << std::endl;
+              << (double)invertedIndex.getNumBytes() / bytesPerKBytes
+              << std::endl;
     std::cout << "Size of inverted list structure (Kbytes): "
-              << invertedIndex.getInvertedListStructureNumBytes() /
+              << (double)invertedIndex.getInvertedListStructureNumBytes() /
                      bytesPerKBytes
               << std::endl;
     std::cout << "Size of url map (Kbytes): "
-              << invertedIndex.getUrlMapNumBytes() / bytesPerKBytes
+              << (double)invertedIndex.getUrlMapNumBytes() / bytesPerKBytes
               << std::endl;
 
     std::cout << std::setprecision(0);
