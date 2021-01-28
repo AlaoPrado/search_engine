@@ -1,6 +1,5 @@
 #include "InvertedIndex.hpp"
 #include "../html_parser/HtmlParser.hpp"
-#include "../text_parser/Occurrence.hpp"
 #include "../text_parser/TextParser.hpp"
 #include <exception>
 #include <iostream>

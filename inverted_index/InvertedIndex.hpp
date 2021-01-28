@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../text_parser/Occurrence.hpp"
 #include "InvertedList.hpp"
 #include "document/Document.hpp"
 #include <cstddef>
@@ -15,8 +14,9 @@ private:
   std::map<std::string, InvertedList *> *invertedListMap;
   std::map<std::size_t, std::string> *urlMap;
 
-  void addDocument(std::size_t documentId,
-                   std::map<std::string, std::vector<std::size_t>> &occurenceMap);
+  void
+  addDocument(std::size_t documentId,
+              std::map<std::string, std::vector<std::size_t>> &occurenceMap);
 
 public:
   InvertedIndex(std::vector<Document> &documentList);
