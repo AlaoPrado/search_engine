@@ -4,6 +4,7 @@
 #include "InvertedIndex.hpp"
 #include "document/Document.hpp"
 #include "document/DocumentCollection.hpp"
+#include <chrono>
 #include <cstddef>
 #include <iomanip>
 #include <iostream>
@@ -17,6 +18,7 @@ int main(const int argc, const char **argv) {
         "Error: an collection directory must be passed by parameter.");
 
     const std::string collectionDirectory = argv[1];
+    
     search_engine::DocumentCollection documentCollection(collectionDirectory);
     std::vector<search_engine::Document> documentList =
         documentCollection.getDocumentList();

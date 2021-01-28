@@ -39,7 +39,7 @@ InvertedIndex::InvertedIndex(std::vector<Document> &documentList) {
 
   std::size_t documentId = 0;
   std::string documentText("");
-  for (std::size_t i = 0; i < 100; i++) {
+  for (std::size_t i = 0; i < documentList.size(); i++) {
     try {
       HtmlParser::extractText(documentList[i].getDirectory(), documentText);
 

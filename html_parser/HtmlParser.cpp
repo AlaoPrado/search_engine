@@ -45,13 +45,11 @@ std::string HtmlParser::cleanText(GumboNode *node) {
       const std::string childText = cleanText((GumboNode *)children->data[i]);
 
       if (!childText.empty()) {
-        childrenText += childText;
+        childrenText += childText + " ";
       }
     }
 
-    if (!childrenText.empty()) {
-      childrenText += getTagSeparator(node->v.element.tag);
-    }
+    childrenText += getTagSeparator(node->v.element.tag);
 
     return childrenText;
   } else {
