@@ -3,6 +3,6 @@
 .vscode
 *.html
 complex_crawler/outs/
-inverted_index/storage_vocabulary/*.txt
+inverted_index/storage/*.txt
 complex_crawler/storage/*.txt
 complex_crawler/storage_extra/*.txt
