@@ -105,6 +105,22 @@ std::size_t InvertedIndex::getAverageInvertedListSize() {
   return averageSize;
 }
 
+std::size_t InvertedIndex::getAverageInveredListNumOccurences() {
+  size_t averageNumOccurences = 0;
+  size_t vocabularySize = this->getVocabularySize();
+
+  if (vocabularySize > 0) {
+    for (auto it = this->invertedListMap->begin();
+         it != this->invertedListMap->end(); it++) {
+      averageNumOccurences += it->second->getNumOccurences();
+    }
+
+    averageNumOccurences /= vocabularySize;
+  }
+
+  return averageNumOccurences;
+}
+
 std::vector<std::string> InvertedIndex::getVocabulary() {
   std::vector<std::string> vocabulary;
 

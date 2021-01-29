@@ -16,6 +16,7 @@ private:
 public:
   DocumentCollection(std::string collectionDirectory);
   std::vector<Document> getDocumentList();
+  std::size_t getNumBytes();
   std::string toString();
 };
 

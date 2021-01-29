@@ -1,5 +1,6 @@
 #include "DocumentCollection.hpp"
 #include "../../utils/Assert.hpp"
+#include "../../utils/File.hpp"
 #include <exception>
 #include <fstream>
 #include <stdexcept>
@@ -44,6 +45,14 @@ DocumentCollection::DocumentCollection(std::string collectionDirectory) {
 
 std::vector<Document> DocumentCollection::getDocumentList() {
   return this->documentList;
+}
+
+std::size_t DocumentCollection::getNumBytes() {
+  std::size_t numBytes = 0;
+  for (auto &&document : documentList) {
+    numBytes += utils::fileSize(document.getDirectory());
+  }
+  return numBytes;
 }
 
 std::string DocumentCollection::toString() {

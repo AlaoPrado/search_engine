@@ -32,8 +32,6 @@ int main(const int argc, const char **argv) {
     duration =
         std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-    std::cout << "Indexing time (Millis): " << duration.count() << std::endl;
-
     std::vector<std::string> vocabulary = invertedIndex.getVocabulary();
     std::string vocabularyText("");
 
@@ -46,6 +44,17 @@ int main(const int argc, const char **argv) {
 
     const std::size_t bytesPerKBytes = 1000;
 
+    // mini-collection
+    std::cout << "Number of documents in the mini-collection: "
+              << documentList.size() << std::endl;
+    std::cout << std::setprecision(3) << std::fixed;
+    std::cout << "Mini-collection size (Kbytes): "
+              << (double)documentCollection.getNumBytes() / bytesPerKBytes
+              << std::endl;
+
+    // inverted index
+    std::cout << std::setprecision(0) << std::fixed;
+    std::cout << "Indexing time (Millis): " << duration.count() << std::endl;
     std::cout << std::setprecision(3) << std::fixed;
     std::cout << "Whole inverted index size (Kbytes): "
               << (double)invertedIndex.getNumBytes() / bytesPerKBytes
@@ -58,11 +67,16 @@ int main(const int argc, const char **argv) {
               << (double)invertedIndex.getUrlMapNumBytes() / bytesPerKBytes
               << std::endl;
 
+    // vocabulary
     std::cout << std::setprecision(0);
     std::cout << "Vocabulary size (number of distinct terms): "
               << invertedIndex.getVocabularySize() << std::endl;
 
-    std::cout << "Average number of documents per inverted list: "
+    // inverted list
+    std::cout << "Average number of occurences per term: "
+              << invertedIndex.getAverageInveredListNumOccurences()
+              << std::endl;
+    std::cout << "Average number of documents per term: "
               << invertedIndex.getAverageInvertedListSize() << std::endl;
   } catch (std::exception &e) {
     std::cout << e.what() << std::endl;

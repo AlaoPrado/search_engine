@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Assert.hpp"
+#include <cstddef>
 #include <fstream>
 #include <string>
 
@@ -15,6 +16,21 @@ void inline fileWrite(const std::string directory, const std::string text) {
 
   file << text;
   file.close();
+}
+
+std::size_t inline fileSize(const std::string directory) {
+  std::ifstream file(directory, std::ifstream::binary);
+
+  utils::assertTrue(file.is_open(),
+                    "Error(utils/fileSize): failed to open file");
+
+  file.seekg(0, file.end);
+
+  std::size_t numBytes = file.tellg();
+
+  file.close();
+
+  return numBytes;
 }
 
 } // namespace utils

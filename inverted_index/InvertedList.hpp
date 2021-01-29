@@ -17,6 +17,7 @@ public:
   InvertedListEntry *get(std::size_t index);
   std::size_t size();
   std::size_t getNumBytes();
+  std::size_t getNumOccurences();
 };
 
 } // namespace search_engine

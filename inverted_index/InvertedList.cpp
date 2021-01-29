@@ -26,4 +26,14 @@ std::size_t InvertedList::getNumBytes() {
   return numBytes;
 }
 
+std::size_t InvertedList::getNumOccurences() {
+  std::size_t numOccurences = 0;
+
+  for (auto it = this->entriyList.begin(); it != this->entriyList.end(); it++) {
+    numOccurences += it->getNumOcurrences();
+  }
+
+  return numOccurences;
+}
+
 } // namespace search_engine
