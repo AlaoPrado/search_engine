@@ -21,14 +21,21 @@ void InvertedIndex::addDocument(
       this->invertedListMap->operator[](word) = new InvertedList();
     }
 
-    auto &&currentInvListEntry = this->invertedListMap->operator[](word);
+    auto &&currentInvList = this->invertedListMap->operator[](word);
 
-    currentInvListEntry->add(InvertedListEntry(documentId));
+    InvertedListEntry invListEntry(documentId,
+                                   occurenceListPair->second.size());
+
+    currentInvList->add(invListEntry);
+
+    std::size_t occurenceIndex = 0;
 
     for (auto &&occurencePosition : occurenceListPair->second) {
-      std::size_t lastEntry = currentInvListEntry->size() - 1;
+      std::size_t lastEntry = currentInvList->size() - 1;
 
-      currentInvListEntry->get(lastEntry)->add(occurencePosition);
+      currentInvList->get(lastEntry)->setOccurrence(occurenceIndex,
+                                                    occurencePosition);
+      occurenceIndex++;
     }
   }
 }
@@ -68,7 +75,7 @@ std::size_t InvertedIndex::getInvertedListStructureNumBytes() {
   size_t numBytes = sizeof(std::map<std::string, InvertedList *>);
   for (auto it = this->invertedListMap->begin();
        it != this->invertedListMap->end(); it++) {
-    numBytes += it->second->getNumBytes();
+    numBytes += it->first.size() + it->second->getNumBytes();
   }
   return numBytes;
 }
@@ -76,7 +83,7 @@ std::size_t InvertedIndex::getInvertedListStructureNumBytes() {
 std::size_t InvertedIndex::getUrlMapNumBytes() {
   size_t numBytes = sizeof(this->urlMap);
   for (auto it = this->urlMap->begin(); it != this->urlMap->end(); it++) {
-    numBytes += it->second.size();
+    numBytes += sizeof(std::size_t) + it->second.size();
   }
   return numBytes;
 }

@@ -2,11 +2,17 @@
 
 namespace search_engine {
 
-InvertedListEntry::InvertedListEntry(std::size_t documentId)
-    : documentId(documentId) {}
+InvertedListEntry::InvertedListEntry(std::size_t documentId,
+                                     std::size_t numOccurences)
+    : documentId(documentId), ocurrencePositionList(numOccurences) {}
 
-void InvertedListEntry::add(std::size_t ocurrencePosition) {
-  this->ocurrencePositionList.push_back(ocurrencePosition);
+void InvertedListEntry::setOccurrence(std::size_t index,
+                                     std::size_t ocurrencePosition) {
+  this->ocurrencePositionList[index] = ocurrencePosition;
+}
+
+std::size_t InvertedListEntry::getOccurrence(std::size_t index) {
+  return this->ocurrencePositionList[index];
 }
 
 std::size_t InvertedListEntry::getNumOcurrences() {

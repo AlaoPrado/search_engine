@@ -11,8 +11,9 @@ private:
   std::vector<std::size_t> ocurrencePositionList;
 
 public:
-  InvertedListEntry(std::size_t documentId);
-  void add(std::size_t ocurrencePosition);
+  InvertedListEntry(std::size_t documentId, std::size_t numOccurences);
+  void setOccurrence(std::size_t index, std::size_t ocurrencePosition);
+  std::size_t getOccurrence(std::size_t index);
   std::size_t getNumOcurrences();
   std::size_t getNumBytes();
 };

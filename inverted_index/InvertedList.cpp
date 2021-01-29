@@ -6,7 +6,7 @@ InvertedList::InvertedList() {}
 
 InvertedList::~InvertedList() {}
 
-void InvertedList::add(InvertedListEntry entry) {
+void InvertedList::add(InvertedListEntry &entry) {
   this->entriyList.push_back(entry);
 }
 
