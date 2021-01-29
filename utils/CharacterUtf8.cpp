@@ -15,7 +15,7 @@ bool isCharUtf8LatinMisc(unsigned short c) {
 }
 
 int getCharUtf8NumBytes(const unsigned char c) {
-  if (c < 128) {
+  if (c < 128 + 64) {
     return 1;
   }
 

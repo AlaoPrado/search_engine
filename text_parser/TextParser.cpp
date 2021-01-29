@@ -87,10 +87,8 @@ void TextParser::extractNextOccurence(
 
   if (succcess) {
     word = utils::textToLowerCaseUtf8(word);
+
     bool isSpace;
-
-    TextParser::extractNextSeparator(text, textPostion, isSpace, textPostion);
-
     auto it = occurenceListMap.find(word);
 
     if (it == occurenceListMap.end()) {
@@ -98,6 +96,7 @@ void TextParser::extractNextOccurence(
     }
 
     occurenceListMap.operator[](word).push_back(occurencePositon);
+    TextParser::extractNextSeparator(text, textPostion, isSpace, textPostion);
     occurencePositon += isSpace ? 1 : 2;
   }
 }

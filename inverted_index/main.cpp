@@ -18,11 +18,22 @@ int main(const int argc, const char **argv) {
         "Error: an collection directory must be passed by parameter.");
 
     const std::string collectionDirectory = argv[1];
-    
+
     search_engine::DocumentCollection documentCollection(collectionDirectory);
     std::vector<search_engine::Document> documentList =
         documentCollection.getDocumentList();
+
+    std::chrono::steady_clock::time_point start, end;
+    std::chrono::milliseconds duration;
+
+    start = std::chrono::steady_clock::now();
     search_engine::InvertedIndex invertedIndex(documentList);
+    end = std::chrono::steady_clock::now();
+    duration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+    std::cout << "Indexing time (Millis): " << duration.count() << std::endl;
+
     std::vector<std::string> vocabulary = invertedIndex.getVocabulary();
     std::string vocabularyText("");
 
