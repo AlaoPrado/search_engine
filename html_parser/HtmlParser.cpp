@@ -5,7 +5,9 @@
 namespace search_engine {
 
 bool HtmlParser::isTagContentAvoidable(GumboTag tag) {
-  return tag == GUMBO_TAG_SCRIPT || tag == GUMBO_TAG_STYLE ||
+  return tag == GUMBO_TAG_LINK || tag == GUMBO_TAG_META ||
+         tag == GUMBO_TAG_STYLE || tag == GUMBO_TAG_SCRIPT ||
+         tag == GUMBO_TAG_NOSCRIPT || tag == GUMBO_TAG_SVG ||
          tag == GUMBO_TAG_UNKNOWN;
 }
 
@@ -78,8 +80,13 @@ void HtmlParser::extractText(const std::string fileDirectory,
 
   file.close();
 
+  text = "";
   GumboOutput *output = gumbo_parse(textToParse.c_str());
-  text = cleanText(output->root);
+
+  if (output->root->type == GUMBO_NODE_ELEMENT) {
+    text += cleanText(output->root);
+  }
+
   gumbo_destroy_output(&kGumboDefaultOptions, output);
 }
 

@@ -12,12 +12,6 @@ void InvertedIndex::addDocument(
     std::size_t documentId,
     std::map<std::string, std::vector<std::size_t>> &occurenceListMap) {
   std::map<std::string, InvertedList *>::iterator invertedListPair;
-
-  utils::assertTrue(
-      occurenceListMap.size() > 0,
-      "Warning(InvertedIndex/addDocument): empty document with url " +
-          this->urlMap->operator[](documentId));
-
   for (auto occurenceListPair = occurenceListMap.begin();
        occurenceListPair != occurenceListMap.end(); occurenceListPair++) {
     std::string word = occurenceListPair->first;
@@ -41,7 +35,7 @@ InvertedIndex::InvertedIndex(std::vector<Document> &documentList) {
 
   std::size_t documentId = 0;
   std::string documentText("");
-  for (std::size_t i = 0; i < 1000; i++) {
+  for (std::size_t i = 0; i < documentList.size(); i++) {
     try {
       HtmlParser::extractText(documentList[i].getDirectory(), documentText);
 
