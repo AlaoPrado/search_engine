@@ -1,6 +1,7 @@
 #include "InvertedIndex.hpp"
 #include "../html_parser/HtmlParser.hpp"
 #include "../text_parser/TextParser.hpp"
+#include "../utils/Assert.hpp"
 #include <exception>
 #include <iostream>
 
@@ -10,6 +11,9 @@ void InvertedIndex::addDocument(
     std::size_t documentId,
     std::map<std::string, std::vector<std::size_t>> &occurenceListMap) {
   std::map<std::string, InvertedList *>::iterator invertedListPair;
+
+  utils::assertTrue(occurenceListMap.size() > 0,
+                    "Error(InvertedIndex/addDocument): empty document");
 
   for (auto occurenceListPair = occurenceListMap.begin();
        occurenceListPair != occurenceListMap.end(); occurenceListPair++) {
@@ -23,20 +27,8 @@ void InvertedIndex::addDocument(
 
     auto &&currentInvList = this->invertedListMap->operator[](word);
 
-    InvertedListEntry invListEntry(documentId,
-                                   occurenceListPair->second.size());
-
-    currentInvList->add(invListEntry);
-
-    std::size_t occurenceIndex = 0;
-
-    for (auto &&occurencePosition : occurenceListPair->second) {
-      std::size_t lastEntry = currentInvList->size() - 1;
-
-      currentInvList->get(lastEntry)->setOccurrence(occurenceIndex,
-                                                    occurencePosition);
-      occurenceIndex++;
-    }
+    currentInvList->add(documentId, occurenceListPair->second.size(),
+                        occurenceListPair->second);
   }
 }
 

@@ -8,12 +8,13 @@ namespace search_engine {
 class InvertedListEntry {
 private:
   std::size_t documentId;
-  std::vector<std::size_t> ocurrencePositionList;
+  std::size_t numOccurences;
+  std::size_t *ocurrenceListBegin;
 
 public:
-  InvertedListEntry(std::size_t documentId, std::size_t numOccurences);
-  void setOccurrence(std::size_t index, std::size_t ocurrencePosition);
-  std::size_t getOccurrence(std::size_t index);
+  InvertedListEntry(std::size_t documentId, std::size_t numOccurences,
+                    std::size_t *ocurrenceListBegin);
+  const std::size_t *getOcurrenceListBegin();
   std::size_t getNumOcurrences();
   std::size_t getNumBytes();
 };

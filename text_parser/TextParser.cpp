@@ -83,7 +83,7 @@ void TextParser::extractNextOccurence(
   std::string word;
 
   TextParser::extractNextWord(text, textPostion, word, textPostion);
-  succcess = word.size() > 0;
+  succcess = textPostion < text.length();
 
   if (succcess) {
     word = utils::textToLowerCaseUtf8(word);
