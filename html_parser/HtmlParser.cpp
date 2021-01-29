@@ -33,7 +33,7 @@ std::string HtmlParser::getTagSeparator(GumboTag tag) {
     return "\n";
   }
 
-  return " ";
+  return "";
 }
 
 std::string HtmlParser::cleanText(GumboNode *node) {
@@ -54,10 +54,13 @@ std::string HtmlParser::cleanText(GumboNode *node) {
 
       childrenText += childText;
     }
-    childrenText += getTagSeparator(node->v.element.tag);
+    if (!childrenText.empty()) {
+      childrenText += getTagSeparator(node->v.element.tag);
+    }
+
     return childrenText;
   } else {
-    return " ";
+    return "";
   }
 }
 

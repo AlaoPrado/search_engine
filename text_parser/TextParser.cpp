@@ -80,24 +80,28 @@ void TextParser::extractNextOccurence(
     const std::string text, std::size_t &textPostion,
     std::map<std::string, std::vector<std::size_t>> &occurenceListMap,
     std::size_t &occurencePositon, bool &succcess) {
-  std::string word;
+  std::string word("");
 
   TextParser::extractNextWord(text, textPostion, word, textPostion);
   succcess = textPostion < text.length();
 
   if (succcess) {
-    word = utils::textToLowerCaseUtf8(word);
-
     bool isSpace;
-    auto it = occurenceListMap.find(word);
-
-    if (it == occurenceListMap.end()) {
-      occurenceListMap.operator[](word) = std::vector<std::size_t>();
-    }
-
-    occurenceListMap.operator[](word).push_back(occurencePositon);
     TextParser::extractNextSeparator(text, textPostion, isSpace, textPostion);
-    occurencePositon += isSpace ? 1 : 2;
+
+    if (!word.empty()) {
+      word = utils::textToLowerCaseUtf8(word);
+
+      auto it = occurenceListMap.find(word);
+
+      if (it == occurenceListMap.end()) {
+        occurenceListMap.operator[](word) = std::vector<std::size_t>();
+      }
+
+      occurenceListMap.operator[](word).push_back(occurencePositon);
+
+      occurencePositon += isSpace ? 1 : 2;
+    }
   }
 }
 

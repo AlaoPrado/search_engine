@@ -3,6 +3,7 @@
 #include "../text_parser/TextParser.hpp"
 #include "../utils/Assert.hpp"
 #include <exception>
+#include <fstream>
 #include <iostream>
 
 namespace search_engine {
@@ -12,8 +13,10 @@ void InvertedIndex::addDocument(
     std::map<std::string, std::vector<std::size_t>> &occurenceListMap) {
   std::map<std::string, InvertedList *>::iterator invertedListPair;
 
-  utils::assertTrue(occurenceListMap.size() > 0,
-                    "Error(InvertedIndex/addDocument): empty document");
+  utils::assertTrue(
+      occurenceListMap.size() > 0,
+      "Warning(InvertedIndex/addDocument): empty document with url " +
+          this->urlMap->operator[](documentId));
 
   for (auto occurenceListPair = occurenceListMap.begin();
        occurenceListPair != occurenceListMap.end(); occurenceListPair++) {
@@ -38,7 +41,7 @@ InvertedIndex::InvertedIndex(std::vector<Document> &documentList) {
 
   std::size_t documentId = 0;
   std::string documentText("");
-  for (std::size_t i = 0; i < documentList.size(); i++) {
+  for (std::size_t i = 0; i < 1000; i++) {
     try {
       HtmlParser::extractText(documentList[i].getDirectory(), documentText);
 
@@ -46,8 +49,8 @@ InvertedIndex::InvertedIndex(std::vector<Document> &documentList) {
 
       TextParser::extractOccurenceListMap(documentText, occurenceListMap);
       this->urlMap->operator[](documentId) = documentList[i].getUrl();
-      documentId++;
       this->addDocument(documentId, occurenceListMap);
+      documentId++;
     } catch (std::exception &e) {
       std::cout << e.what() << std::endl;
     }
@@ -129,6 +132,27 @@ std::vector<std::string> InvertedIndex::getVocabulary() {
   }
 
   return vocabulary;
+}
+
+void InvertedIndex::store(std::string fileName) {
+  std::ofstream file(fileName, std::ofstream::out);
+
+  utils::assertTrue(file.is_open(),
+                    "Error(InvertedIndex/store): failed to open file");
+
+  file << this->invertedListMap->size() << std::endl;
+  for (auto it = this->invertedListMap->begin();
+       it != this->invertedListMap->end(); it++) {
+    file << it->first << " " << it->second->size() << std::endl;
+    for (size_t i = 0; i < it->second->size(); i++) {
+      file << it->second->get(i)->toString() << std::endl;
+    }
+  }
+  file << this->urlMap->size() << std::endl;
+  for (auto it = this->urlMap->begin(); it != this->urlMap->end(); it++) {
+    file << it->first << " " << it->second << std::endl;
+  }
+  file.close();
 }
 
 } // namespace search_engine

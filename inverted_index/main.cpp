@@ -32,6 +32,8 @@ int main(const int argc, const char **argv) {
     duration =
         std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
+    invertedIndex.store("storage/index.txt");
+
     std::vector<std::string> vocabulary = invertedIndex.getVocabulary();
     std::string vocabularyText("");
 

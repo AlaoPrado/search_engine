@@ -2,6 +2,7 @@
 
 #include "InvertedListEntry.hpp"
 #include <cstddef>
+#include <list>
 #include <vector>
 
 namespace search_engine {
@@ -9,7 +10,7 @@ namespace search_engine {
 class InvertedList {
 private:
   std::vector<InvertedListEntry> entriyList;
-  std::vector<std::size_t> ocurrencePositionList;
+  std::list<std::vector<size_t>> ocurrencePositionListOfList;
 
 public:
   InvertedList();

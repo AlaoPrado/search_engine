@@ -28,6 +28,7 @@ public:
   std::size_t getAverageInvertedListSize();
   std::size_t getAverageInveredListNumOccurences();
   std::vector<std::string> getVocabulary();
+  void store(std::string fileName);
 };
 
 } // namespace search_engine
