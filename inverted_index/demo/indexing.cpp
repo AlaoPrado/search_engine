@@ -37,14 +37,10 @@ int main(const int argc, const char **argv) {
     invertedIndex.store(indexFileName);
 
     std::vector<std::string> vocabulary = invertedIndex.getVocabulary();
-    std::string vocabularyText("");
 
-    for (auto &&term : vocabulary) {
-      vocabularyText += term + "\n";
-    }
-
-    search_engine::utils::fileWrite(storageFolderDirectory + "vocabulary.txt",
-                                    vocabularyText);
+    search_engine::utils::fileWrite(
+        storageFolderDirectory + "vocabulary.txt",
+        invertedIndex.getVocabularyAverageOcurrenceString());
 
     const std::size_t bytesPerKBytes = 1000;
 

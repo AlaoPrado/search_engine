@@ -195,6 +195,24 @@ std::vector<std::string> InvertedIndex::getVocabulary() {
   return vocabulary;
 }
 
+std::string InvertedIndex::getVocabularyAverageOcurrenceString() {
+  std::string s("");
+  double averageNumOccurencesAllDocuments;
+
+  for (auto it = this->invertedListMap->begin();
+       it != this->invertedListMap->end(); it++) {
+    if (this->urlMap->empty()) {
+      averageNumOccurencesAllDocuments = 0;
+    } else {
+      averageNumOccurencesAllDocuments =
+          (double)it->second->getNumOccurences() / this->urlMap->size();
+    }
+    s += it->first + " " + std::to_string(averageNumOccurencesAllDocuments) +
+         "\n";
+  }
+  return s;
+}
+
 void InvertedIndex::store(std::string fileName) {
   std::ofstream file(fileName);
 
