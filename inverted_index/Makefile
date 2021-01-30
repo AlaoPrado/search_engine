@@ -33,4 +33,7 @@ clean:
   rm -rf $(OBJFILES)
   rm -rf $(DEMOOBJFILES)
 
+clean_storage:
+  rm -rf storage/*.txt
+
 .PHONY: all clean
