@@ -221,13 +221,15 @@ void InvertedIndex::store(std::string fileName) {
 
 void InvertedIndex::search(std::string term,
                            std::vector<std::string> &urlList) {
+  constexpr size_t MAX_NUM_RESULTS = 10;
   auto it = this->invertedListMap->find(term);
 
   if (it != this->invertedListMap->end()) {
     auto &&invList = this->invertedListMap->operator[](term);
     std::size_t documentId;
 
-    for (size_t i = 0; i < std::min(invList->size(), (std::size_t)5); i++) {
+    for (size_t i = 0;
+         i < std::min(invList->size(), (std::size_t)MAX_NUM_RESULTS); i++) {
       documentId = invList->get(i)->getDocumentId();
       urlList.push_back(this->urlMap->operator[](documentId));
     }

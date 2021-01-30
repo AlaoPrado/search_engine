@@ -15,7 +15,17 @@ int main(const int argc, const char **argv) {
 
     const std::string indexFileName = argv[1];
     const std::string searchTerm = argv[2];
+    std::chrono::steady_clock::time_point start, end;
+    std::chrono::milliseconds duration;
+
+    start = std::chrono::steady_clock::now();
     search_engine::InvertedIndex invertedIndex(indexFileName);
+    end = std::chrono::steady_clock::now();
+    duration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+    std::cout << "Index load time (Millis): " << duration.count() << std::endl;
+
     std::vector<std::string> urlList;
 
     invertedIndex.search(searchTerm, urlList);
