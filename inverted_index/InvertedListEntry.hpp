@@ -15,8 +15,9 @@ private:
 public:
   InvertedListEntry(std::size_t documentId, std::size_t numOccurences,
                     std::vector<std::size_t> *ocurrenceListBegin);
-  const std::size_t *getOcurrenceListBegin();
+  std::size_t getDocumentId();
   std::size_t getNumOcurrences();
+  const std::size_t *getOcurrenceListBegin();
   std::size_t getNumBytes();
   std::string toString();
 };

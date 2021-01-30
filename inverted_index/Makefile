@@ -26,8 +26,8 @@ all: $(OBJFILES) $(DEMOOBJFILES) $(DEMOOUTFILES)
 %.o: %.cpp
 	$(CXX) -c $< -o $@ $(BUILDFLAGS)
 
-%.out: %.cpp
-	$(CXX) -o $@ $(OBJFILES) $(DEMOOBJFILES) $(LDFLAGS)
+%.out: %.o $(OBJFILES) 
+	$(CXX) -o $@ $< $(OBJFILES) $(LDFLAGS)
 
 clean:
 	rm -rf $(OBJFILES)

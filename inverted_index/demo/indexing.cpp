@@ -1,4 +1,3 @@
-#include "../../html_parser/HtmlParser.hpp"
 #include "../../utils/Assert.hpp"
 #include "../../utils/File.hpp"
 #include "../InvertedIndex.hpp"
@@ -18,11 +17,12 @@ int main(const int argc, const char **argv) {
         "Error: an collection directory must be passed by parameter.");
 
     const std::string collectionDirectory = argv[1];
+    const std::string storageFolderDirectory =
+        argc > 2 ? argv[2] : "../storage/";
 
     search_engine::DocumentCollection documentCollection(collectionDirectory);
     std::vector<search_engine::Document> documentList =
         documentCollection.getDocumentList();
-
     std::chrono::steady_clock::time_point start, end;
     std::chrono::milliseconds duration;
 
@@ -32,7 +32,9 @@ int main(const int argc, const char **argv) {
     duration =
         std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-    invertedIndex.store("../storage/inverted_index.txt");
+    std::string indexFileName = storageFolderDirectory + "inverted_index.txt";
+
+    invertedIndex.store(indexFileName);
 
     std::vector<std::string> vocabulary = invertedIndex.getVocabulary();
     std::string vocabularyText("");
@@ -41,7 +43,8 @@ int main(const int argc, const char **argv) {
       vocabularyText += term + "\n";
     }
 
-    search_engine::utils::fileWrite("../storage/vocabulary.txt", vocabularyText);
+    search_engine::utils::fileWrite(storageFolderDirectory + "vocabulary.txt",
+                                    vocabularyText);
 
     const std::size_t bytesPerKBytes = 1000;
 
@@ -57,6 +60,10 @@ int main(const int argc, const char **argv) {
     std::cout << std::setprecision(0) << std::fixed;
     std::cout << "Indexing time (Millis): " << duration.count() << std::endl;
     std::cout << std::setprecision(3) << std::fixed;
+    std::cout << "Inverted index file size (Kbytes): "
+              << (double)search_engine::utils::fileSize(indexFileName) /
+                     bytesPerKBytes
+              << std::endl;
     std::cout << "Whole inverted index size (Kbytes): "
               << (double)invertedIndex.getNumBytes() / bytesPerKBytes
               << std::endl;

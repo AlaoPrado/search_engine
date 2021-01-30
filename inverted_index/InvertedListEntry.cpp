@@ -8,13 +8,18 @@ InvertedListEntry::InvertedListEntry(
     : documentId(documentId), numOccurences(numOccurences),
       ocurrenceListBegin(ocurrenceListBegin) {}
 
-const std::size_t *InvertedListEntry::getOcurrenceListBegin() {
-  return this->ocurrenceListBegin->data();
+std::size_t InvertedListEntry::getDocumentId(){
+  return this->documentId;
 }
 
 std::size_t InvertedListEntry::getNumOcurrences() {
   return this->numOccurences;
 }
+
+const std::size_t *InvertedListEntry::getOcurrenceListBegin() {
+  return this->ocurrenceListBegin->data();
+}
+
 
 std::size_t InvertedListEntry::getNumBytes() {
   return sizeof(this->documentId) + sizeof(this->numOccurences) +
