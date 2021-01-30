@@ -14,7 +14,7 @@ all: $(OBJFILES) $(OUTFILES)
 %.o: %.cpp
 	$(CXX) -c $< -o $@ $(BUILDFLAGS)
 
-%.out: %.cpp
+%.out: $(OBJFILES)
 	$(CXX) -o $@ $(OBJFILES) $(LDFLAGS)
 
 clean:
