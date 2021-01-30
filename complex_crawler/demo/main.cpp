@@ -1,8 +1,8 @@
-#include "../utils/Assert.hpp"
-#include "crawler/Crawler.hpp"
-#include "crawler/GeneralShortTermCrawler.hpp"
-#include "crawler/LongTermCrawler.hpp"
-#include "crawler/ShortTermCrawler.hpp"
+#include "../../utils/Assert.hpp"
+#include "../crawler/Crawler.hpp"
+#include "../crawler/GeneralShortTermCrawler.hpp"
+#include "../crawler/LongTermCrawler.hpp"
+#include "../crawler/ShortTermCrawler.hpp"
 #include <exception>
 #include <fstream>
 #include <iostream>

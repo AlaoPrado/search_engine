@@ -1,47 +1,30 @@
 include ../Makefile.inc
 
-CXXFILES = *.cpp
-OBJFILES = *.o
-PROGRAM = a.out
+CXXFILES = $(wildcard ../utils/*.cpp ../threadpool/*.cpp crawler/*.cpp \
+	crawler/action/*.cpp crawler/scheduler/*.cpp crawler/scheduler/sync/*.cpp \
+	crawler/task/*.cpp)
+OBJFILES = $(CXXFILES:.cpp=.o)
 CHILKATPATH = /home/alan/Downloads/chilkat/chilkat-9.5.0-x86_64-linux-gcc
 CHILKATINC = $(CHILKATPATH)/include
 CHILKATLIB =  $(CHILKATPATH)/lib
-CHILKBUILDFLAGS = $(COMMONBUILDFLAGS) -I$(CHILKATINC)
-LINKFLAGS = -Wl,-rpath=$(CHILKATLIB) -L$(CHILKATLIB) -lchilkat-9.5.0 -lresolv -lpthread
+BUILDFLAGS = $(CXXFLAGS) -I$(CHILKATINC)
 
-all: build link
+DEMOCXXFILES = $(wildcard demo/*.cpp)
+DEMOOBJFILES = $(DEMOCXXFILES:.cpp=.o)
+DEMOOUTFILES = $(DEMOCXXFILES:.cpp=.out)
+LDFLAGS = -Wl,-rpath=$(CHILKATLIB) -L$(CHILKATLIB) -lchilkat-9.5.0 -lresolv -lpthread
 
-build: build_crawler build_threadpool build_utils
-	$(CXX) -c $(CXXFILES) $(CHILKBUILDFLAGS)
+all: $(OBJFILES) $(DEMOOBJFILES) $(DEMOOUTFILES)
 
-build_crawler: buid_crawler_action build_crawler_scheduler \
-								build_crawler_scheduler_sync build_crawler_task
-	$(CXX) -c crawler/$(CXXFILES) $(CHILKBUILDFLAGS)
+%.o: %.cpp
+	$(CXX) -c $< -o $@ $(BUILDFLAGS)
 
-buid_crawler_action:
-	$(CXX) -c crawler/action/$(CXXFILES) $(CHILKBUILDFLAGS)
-
-build_crawler_scheduler: 
-	$(CXX) -c crawler/scheduler/$(CXXFILES) $(CHILKBUILDFLAGS)
-
-build_crawler_scheduler_sync:
-	$(CXX) -c crawler/scheduler/sync/$(CXXFILES) $(CHILKBUILDFLAGS)
-
-build_crawler_task:
-	$(CXX) -c crawler/task/$(CXXFILES) $(CHILKBUILDFLAGS)
-
-build_threadpool:
-	$(CXX) -c ../threadpool/$(CXXFILES) $(CHILKBUILDFLAGS)
-
-build_utils:
-	$(CXX) -c ../utils/$(CXXFILES) $(CHILKBUILDFLAGS)
-
-link:
-	$(CXX) -o $(PROGRAM) $(OBJFILES) $(LINKFLAGS)
+%.out: %.cpp
+	$(CXX) -o $@ $(OBJFILES) $(DEMOOBJFILES) $(LDFLAGS)
 
 clean:
-	rm -rf *.o
-	rm -rf *.out
+	rm -rf $(OBJFILES)
+	rm -rf $(DEMOOBJFILES)
 
 clean_storage:
 	rm -rf storage/*.html
@@ -51,6 +34,4 @@ clean_storage_extra:
 	rm -rf storage_extra/*.html
 	rm -rf storage_extra/*.txt
 
-.PHONY: all build build_crawler buid_crawler_action \
-				build_crawler_scheduler_sync build_crawler_scheduler 
-				build_utils link clean clean_storage clean_storage_extra
+.PHONY: all clean clean_storage clean_storage_extr

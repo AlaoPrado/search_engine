@@ -1,9 +1,9 @@
-#include "../html_parser/HtmlParser.hpp"
-#include "../utils/Assert.hpp"
-#include "../utils/File.hpp"
-#include "InvertedIndex.hpp"
-#include "document/Document.hpp"
-#include "document/DocumentCollection.hpp"
+#include "../../html_parser/HtmlParser.hpp"
+#include "../../utils/Assert.hpp"
+#include "../../utils/File.hpp"
+#include "../InvertedIndex.hpp"
+#include "../document/Document.hpp"
+#include "../document/DocumentCollection.hpp"
 #include <chrono>
 #include <cstddef>
 #include <iomanip>
@@ -32,7 +32,7 @@ int main(const int argc, const char **argv) {
     duration =
         std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-    invertedIndex.store("storage/inverted_index.txt");
+    invertedIndex.store("../storage/inverted_index.txt");
 
     std::vector<std::string> vocabulary = invertedIndex.getVocabulary();
     std::string vocabularyText("");
@@ -41,8 +41,7 @@ int main(const int argc, const char **argv) {
       vocabularyText += term + "\n";
     }
 
-    search_engine::utils::fileWrite("storage/vocabulary.txt",
-                                    vocabularyText);
+    search_engine::utils::fileWrite("../storage/vocabulary.txt", vocabularyText);
 
     const std::size_t bytesPerKBytes = 1000;
 
