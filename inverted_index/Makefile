@@ -18,19 +18,19 @@ DEMOCXXFILES = $(wildcard demo/*.cpp)
 DEMOOBJFILES = $(DEMOCXXFILES:.cpp=.o)
 DEMOOUTFILES = $(DEMOCXXFILES:.cpp=.out)
 LDFLAGS = -Wl,-rpath=$(CHILKATLIB) -L$(CHILKATLIB) \
-						-Wl,-rpath=$(GUMBOPARSERLIB) -L$(GUMBOPARSERLIB) \
-						$(CHILKATLDFLAGS) $(GUMBOPARSERLDFLAGS)
+  -Wl,-rpath=$(GUMBOPARSERLIB) -L$(GUMBOPARSERLIB) \
+  $(CHILKATLDFLAGS) $(GUMBOPARSERLDFLAGS)
 
 all: $(OBJFILES) $(DEMOOBJFILES) $(DEMOOUTFILES)
 
 %.o: %.cpp
-	$(CXX) -c $< -o $@ $(BUILDFLAGS)
+  $(CXX) -c $< -o $@ $(BUILDFLAGS)
 
 %.out: %.o $(OBJFILES) 
-	$(CXX) -o $@ $< $(OBJFILES) $(LDFLAGS)
+  $(CXX) -o $@ $< $(OBJFILES) $(LDFLAGS)
 
 clean:
-	rm -rf $(OBJFILES)
-	rm -rf $(DEMOOBJFILES)
+  rm -rf $(OBJFILES)
+  rm -rf $(DEMOOBJFILES)
 
 .PHONY: all clean
