@@ -28,6 +28,7 @@ public:
   std::size_t getUrlMapNumBytes();
   std::size_t getNumBytes();
   std::size_t getVocabularySize();
+  std::string getVocabularyAverageOcurrenceString();
   std::size_t getAverageInvertedListSize();
   std::size_t getAverageInveredListNumOccurences();
   std::vector<std::string> getVocabulary();
