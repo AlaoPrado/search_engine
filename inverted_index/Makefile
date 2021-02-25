@@ -3,15 +3,6 @@ include ../Makefile.inc
 CXXFILES = $(wildcard ../utils/*.cpp ../html_parser/*.cpp ../text_parser/*.cpp \
 	*.cpp document/*.cpp)
 OBJFILES = $(CXXFILES:.cpp=.o)
-CHILKATPATH = /home/alan/Downloads/chilkat/chilkat-9.5.0-x86_64-linux-gcc
-CHILKATINC = $(CHILKATPATH)/include
-CHILKATLIB =  $(CHILKATPATH)/lib
-CHILKATLDFLAGS = -lchilkat-9.5.0 -lresolv -lpthread
-GUMBOPARSERPATH = /usr/local
-GUMBOPARSERINC = $(GUMBOPARSERPATH)/include
-GUMBOPARSERLIB =  $(GUMBOPARSERPATH)/lib
-GUMBOPARSERCXXFLAGS = `pkg-config --cflags gumbo`
-GUMBOPARSERLDFLAGS = `pkg-config --libs gumbo`
 BUILDFLAGS = $(CXXFLAGS) -I$(CHILKATINC) $(GUMBOPARSERCXXFLAGS)
 
 DEMOCXXFILES = $(wildcard demo/*.cpp)
@@ -32,6 +23,7 @@ all: $(OBJFILES) $(DEMOOBJFILES) $(DEMOOUTFILES)
 clean:
 	rm -rf $(OBJFILES)
 	rm -rf $(DEMOOBJFILES)
+	rm -rf $(DEMOOUTFILES)
 
 clean_storage:
   rm -rf storage/*.txt
