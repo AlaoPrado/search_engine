@@ -26,6 +26,6 @@ clean:
 	rm -rf $(DEMOOUTFILES)
 
 clean_storage:
-  rm -rf storage/*.txt
+	rm -rf storage/*.txt
 
 .PHONY: all clean
