@@ -115,3 +115,7 @@ $ sudo apt-get install clang-format
 ```
 $ clang-format -i <file>
 ```
+
+## LICENCE
+
+All files of this software, except `HtmlParser.cpp`, are distributed under the MIT License. The `HtmlParser.cpp` file is distributed under the Apache License, Version 2.0.
