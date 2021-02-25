@@ -4,16 +4,13 @@ CXXFILES = $(wildcard ../utils/*.cpp ../threadpool/*.cpp crawler/*.cpp \
 	crawler/action/*.cpp crawler/scheduler/*.cpp crawler/scheduler/sync/*.cpp \
 	crawler/task/*.cpp)
 OBJFILES = $(CXXFILES:.cpp=.o)
-CHILKATPATH = /home/alan/Downloads/chilkat/chilkat-9.5.0-x86_64-linux-gcc
-CHILKATINC = $(CHILKATPATH)/include
-CHILKATLIB =  $(CHILKATPATH)/lib
 BUILDFLAGS = $(CXXFLAGS) -I$(CHILKATINC)
 
 DEMOCXXFILES = $(wildcard demo/*.cpp)
 DEMOOBJFILES = $(DEMOCXXFILES:.cpp=.o)
 DEMOOUTFILES = $(DEMOCXXFILES:.cpp=.out)
 LDFLAGS = -Wl,-rpath=$(CHILKATLIB) -L$(CHILKATLIB) \
-	-lchilkat-9.5.0 -lresolv -lpthread
+	$(CHILKATLDFLAGS)
 
 all: $(OBJFILES) $(DEMOOBJFILES) $(DEMOOUTFILES)
 
@@ -26,6 +23,7 @@ all: $(OBJFILES) $(DEMOOBJFILES) $(DEMOOUTFILES)
 clean:
 	rm -rf $(OBJFILES)
 	rm -rf $(DEMOOBJFILES)
+	rm -rf $(DEMOOUTFILES)
 
 clean_storage:
 	rm -rf storage/*.html
